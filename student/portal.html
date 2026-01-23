@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="student.css">
+</head>
+<body>
+    <h2>STUDENT PORTAL</h2>
+    <div class="dashboard">
+<!--student portal-->
+    <section>
+        <h3>My Profile</h3>
+        <input id="name" placeholder="Name">
+        <input id="regNo" placeholder="Registration Number">
+        <button onclick="updateProfile()">Update Profile</button>
+    </section>    
+
+<!--github-->
+    <section>
+        <h3>GitHub Repository</h3>
+        <input id="github" placeholder="http://github.com/username/project">
+        <button onclick="saveGithub()">Save Link</button>
+    </section>
+
+<!--submissions-->
+    <section>
+        <h3>Project Submissions</h3>
+
+        <label>Project Title</label>
+        <input id="title">
+        <button onclick="submitTitle()">Sumbit Title</button>
+
+        <label>Proposal</label>
+        <input type="file" id="Proposal">
+        <button onclick="submitProposal()">Upload Proposal</button>
+
+        <label>Final Report</label>
+        <input type="file" id="report">
+        <button onclick="submitReport()">Upload Report</button>
+    </section>
+
+<!--status-->
+    <section>
+        <h3>Submission Status</h3>
+        <ul id="statusList"></ul>
+    </section>
+
+<!--comments-->
+    <section>
+        <h3>Supervisor Feedback</h3>
+        <ul id="comments"></ul>
+    </section>
+
+<!--countdown-->
+    <section>
+        <h3>Deadlines</h3>
+        <ul id="deadlines"></ul>
+    </section>
+
+<!--notifications-->
+    <section>
+        <h3>Notifications</h3>
+        <ul id="notifications"></ul>
+    </section>
+    </div>
+
+    <script src="student.js"></script>
+    
+</body>
+</html>

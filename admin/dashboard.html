@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src=""></script>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle">🌙 Dark Mode</div>
+    <h2>ADMIN DASHBOARD<h2>
+<!--KPI CARDS-->
+    <div class="kpi-containers">
+        <div class="kpi">Users <span id="users">0</span></div>
+        <div class="kpi">Students <span id="students">0</span></div>
+        <div class="kpi">Supervisors <span id="supervisors">0</span></div>
+        <div class="kpi">Projects <span id="projects">0</span></div>
+    </div>
+
+<!--CHARTS-->
+    <div class="charts">
+        <canvas id="roleChart"></canvas>
+        <canvas id="submissionChart"></canvas>
+    </div>
+
+<!--LINKS-->
+    <div class="links">
+        <a href="assign-supervisor.html">Assign Supervisors</a>
+        <a href="activity-log.html">View Activity Logs</a>
+    </div>
+    <script src="admin-dashboard.js"></script>
+
+</body>
+</html>
