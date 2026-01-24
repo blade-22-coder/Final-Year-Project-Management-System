@@ -7,64 +7,92 @@
     <link rel="stylesheet" href="student.css">
 </head>
 <body>
-    <h2>STUDENT PORTAL</h2>
-    <div class="dashboard">
-<!--student portal-->
-    <section>
-        <h3>My Profile</h3>
-        <input id="name" placeholder="Name">
-        <input id="regNo" placeholder="Registration Number">
-        <button onclick="updateProfile()">Update Profile</button>
-    </section>    
 
-<!--github-->
-    <section>
-        <h3>GitHub Repository</h3>
-        <input id="github" placeholder="http://github.com/username/project">
-        <button onclick="saveGithub()">Save Link</button>
+    <!--<div class="header">
+        <img src="university_logo.png" alt="University Logo" class="logo">
+        <h1>University Student Portal</h1>
+    </div>>-->
+    <div class="app">
+        <!--sidebar-->
+        <aside class="sidebar-glass">
+            <div class="profile-box">
+                <img id="profileImage" src="images/default-avatar.jpg" alt="Profile">
+                <input type="file" id="imageUpload" hidden>
+                <button onclick="uploadImage()">Change Photo</button>
+                <h4 id="studentName"> Student Name</h4>
+            </div>
+
+            <nav>
+                <a href="#profile">Profile</a>
+                <a href="#github">GitHub</a>
+                <a href="#submissions">Submissions</a>
+                <a href="#status">Status</a>    
+                <a href="#comments">Comments</a>
+                <a href="#deadlines">Deadlines</a>  
+                <a href="#notifications">Notifications</a>  
+                
+            </nav>
+        </aside>
+    </div>
+
+    <!--main content-->
+    <main class="content">
+        <h2>STUDENT PORTAL</h2>
+        <div class="dashboard">
+
+    <!--student portal-->
+        <section id="profile" class="glass-card">
+            <h3>My Profile</h3>
+            <input id="name" placeholder="Name">
+            <input id="regNo" placeholder="Registration Number">
+            <button onclick="updateProfile()">Update Profile</button>
     </section>
 
-<!--submissions-->
-    <section>
-        <h3>Project Submissions</h3>
-
-        <label>Project Title</label>
-        <input id="title">
-        <button onclick="submitTitle()">Sumbit Title</button>
-
-        <label>Proposal</label>
-        <input type="file" id="Proposal">
-        <button onclick="submitProposal()">Upload Proposal</button>
-
-        <label>Final Report</label>
-        <input type="file" id="report">
-        <button onclick="submitReport()">Upload Report</button>
+    <!--github-->
+        <section id="github" class="glass-card">
+            <h3>GitHub Repository</h3>
+            <input id="github" placeholder="http://github.com/username/project">
+            <button onclick="saveGithub()">Save Link</button>
     </section>
 
-<!--status-->
-    <section>
-        <h3>Submission Status</h3>
-        <ul id="statusList"></ul>
-    </section>
+    <!--submissions-->
+        <section id="submission" class="glass-card">
+            <h3>Project Submissions</h3>
 
-<!--comments-->
-    <section>
-        <h3>Supervisor Feedback</h3>
-        <ul id="comments"></ul>
-    </section>
+            <label>Project Title</label>
+            <input id="title">
+            <button onclick="submitTitle()">Sumbit Title</button>
 
-<!--countdown-->
-    <section>
-        <h3>Deadlines</h3>
+            <label>Proposal</label>
+            <input type="file" id="Proposal">
+            <button onclick="submitProposal()">Upload Proposal</button>
+
+            <label>Final Report</label>
+            <input type="file" id="report">
+            <button onclick="submitReport()">Upload Report</button>
+        </section>
+
+         <!--status-->
+        <section id="status" class="glass-card">
+            <h3>Submission Status</h3>
+            <ul id="statusList"></ul>
+        </section>
+
+        <!--comments-->
+        <section id="comments" class="glass-card">
+            <h3>Supervisor Feedback</h3>
+            <ul id="comments"></ul>
+        </section>
+
+        <!--countdown-->
+    <section id="feedback" class="glass-card">
+        <h3>Deadlines & Notifications</h3>
         <ul id="deadlines"></ul>
-    </section>
-
-<!--notifications-->
-    <section>
-        <h3>Notifications</h3>
         <ul id="notifications"></ul>
     </section>
-    </div>
+    </main>
+   
+
 
     <script src="student.js"></script>
     

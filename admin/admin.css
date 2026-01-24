@@ -1,25 +1,15 @@
-.kpi-container {
-    display: flex;
-    gap: 15px;
+:root {
+    --bg: #020617;
+    --glass: rgba(255, 255, 255, 0.08);
+    --text: #e5e7eb;
 }
-.kpi {
-    background: white;
-    padding: 20px;
-    flex: 1;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 18px;
+.light {
+    --bg: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.6);
+    --text: #020617;
 }
-.charts {
-    display: flex;
-    margin-top: 30px;
-    gap: 20px;
-}
-.links {
-    margin-top: 20px;
-}
-.links a {
-    margin-right: 15px;
-    text-decoration: none;
-    font-weight: bold;
+body {
+    background: 
+        /* linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),*/ url('../images/check.jpg') center/cover no repeat fixed; 
+        /* color: var(--text); */
 }

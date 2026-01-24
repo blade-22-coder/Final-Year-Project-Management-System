@@ -8,14 +8,132 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <div class="theme-toggle" id="themeToggle">🌙 Dark Mode</div>
-    <h2>ADMIN DASHBOARD<h2>
-<!--KPI CARDS-->
-    <div class="kpi-containers">
-        <div class="kpi">Users <span id="users">0</span></div>
-        <div class="kpi">Students <span id="students">0</span></div>
-        <div class="kpi">Supervisors <span id="supervisors">0</span></div>
-        <div class="kpi">Projects <span id="projects">0</span></div>
+    <div class="theme-toggle" id="themeToggle">🌙</div>
+
+    <div class="admin-container">
+
+        <!--SIDEBAR-->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li onclick="showSection('overview')">📊Overview</li>
+                    <li onclick="showSection('students')">🎓Students</li>
+                    <li onclick="showSection('supervisors')">🧑🏻‍🏫Supervisors</li>
+                    <li onclick="showSection('projects')">📂Projects</li>
+                    <li onclick="showSection('settings')">⚙️Settings</li>
+                    <li class="logout">🚪Logout</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!--MAIN CONTENT-->
+        <main class="content">
+            <!--overview-->
+            <section id="overview" class="section active">
+                <h2>System Overview</h2>
+                <div class="cards">
+                    <div class="kpi">Students <span id="students">120</span></div>
+                    <div class="kpi">Supervisors <span id="supervisors">15</span></div>
+                    <div class="kpi">Proposals <span id="proposals">98</span></div>
+                    <div class="kpi">Reports <span id="reports">75</span></div>
+                </div>
+
+                <canvas id="projectChart"></canvas>
+            </section>
+
+            <!--students-->
+            <section id="students" class="section">
+                <h2>Manage Students</h2>
+                <table>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Reg No.</th>
+                        <th>Email</th>
+                        <th>Project Title</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td>Kitara Okello Emmanuel</td>
+                        <td>BU/UP/2023/1495</td>
+                        <td>ekitara22@gmail.com</td>
+                        <td>Final Year Project Management System</td>
+                        <td>Active</td>
+                    </tr>
+                </table>
+            </section>
+            <!--supervisors-->
+            <section id="supevisors" class="section">
+                <h2>Manage Supervisors</h2>
+                <table>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Email</th>
+                        <th>Students Assigned</th>
+                    </tr>
+                    <tr>
+                        <td>Dr. Irene Nandutu</td>
+                        <td>Computer Studies</td>
+                        <td>inandutu.sci@busitema.ac.ug</td>
+                        <td>10</td>
+                </table>
+            </section>
+
+            <!--projects-->
+            <section id="projects" class="section">
+                <h2>Project Submissions</h2>
+                <table>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Supervisor</th>
+                        <th>Student</th>
+                        <th>Document</th>
+                        <th>GitHub</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>Final Year Project Management System</td>
+                        <td>Dr. Irene Nandutu</td>
+                        <td>Kitara Okello Emmanuel</td>
+                        <td><a href="#">Download📩</a></td>
+                        <td><a href="#">🔗GitHub Repository</a></td>
+                        <td>
+                            <button class="Approve">✅</button>
+                            <button class="reject">⛔</button>
+                        </td>
+                </table>
+            </section>
+
+            <!--assign supervisors-->
+            <section id="assign-supervisors" class="section">
+                <h2>Assign Supervisors</h2>
+                <form>
+                    <label for="student">Select Student:</label>
+                    <select id="student" name="student">
+                        <option value="student1">Kitara Okello Emmanuel</option>
+                    </select>
+
+                    <label for="supervisor">Select Supervisor:</label>
+                    <select id="supervisor" name="supervisor">
+                        <option value="supervisor1">Dr. Irene Nandutu</option>
+                    </select>
+
+                    <button type="submit">Assign Supervisor</button>
+                </form>
+            </section>
+
+            <!--settings-->
+            <section id="settings" class="section">
+                <h2>System Settings</h2>
+                <!-- Settings content -->
+            </section>
+
+        </main>
+    </div>
+
     </div>
 
 <!--CHARTS-->

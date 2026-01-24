@@ -88,3 +88,23 @@ document.getElementById("signup-form")?.addEventListener("submit",async e => {
         alert("Signup failed. Please try again.");
     } 
 });
+
+//active transition btn login/signup
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("authContainer");
+    const toSignUp = document.getElementById("toSignUp");
+    const toLogIn = document.getElementById("toLogIn");
+
+    if (!container || !toSignUp || !toLogIn) {
+        console.error("Auth elements not found");
+    return;
+    }
+
+    toSignUp.addEventListener("click", () => {
+        container.classList.add("active");
+    });
+
+    toLogIn.addEventListener("click", () => {
+        container.classList.remove("active");
+    });     
+});
