@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <script src=""></script>
+    <script src="http://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -19,12 +19,24 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li onclick="showSection('overview')">📊Overview</li>
-                    <li onclick="showSection('students')">🎓Students</li>
-                    <li onclick="showSection('supervisors')">🧑🏻‍🏫Supervisors</li>
-                    <li onclick="showSection('projects')">📂Projects</li>
-                    <li onclick="showSection('settings')">⚙️Settings</li>
-                    <li class="logout">🚪Logout</li>
+                    <li data-target="overview">
+                        <span class="icon">📊</span>
+                        <span class="label">Overview</span></li>
+                    <li data-target="students">
+                        <span class="icon">🎓</span> 
+                        <span class="label">Students</span></li>
+                    <li data-target="supervisors">
+                        <span class="icon"> 🧑🏻‍🏫</span>
+                        <span class="label">Supervisors</span></li>
+                    <li data-target="projects">
+                        <span class="icon">📂</span> 
+                        <span class="label">Projects</span></li>
+                    <li data-target="settings">
+                        <span class="icon">⚙️</span> 
+                        <span class="label">Settings</span></li>
+                    <li class="logout">
+                        <span class="icon">🚪</span>
+                        <span class="label">Logout</span></li>
                 </ul>
             </nav>
         </aside>
@@ -32,16 +44,24 @@
         <!--MAIN CONTENT-->
         <main class="content">
             <!--overview-->
-            <section id="overview" class="section active">
+            <section id="overview" class="section-active">
                 <h2>System Overview</h2>
                 <div class="cards">
-                    <div class="kpi">Students <span id="students">120</span></div>
-                    <div class="kpi">Supervisors <span id="supervisors">15</span></div>
-                    <div class="kpi">Proposals <span id="proposals">98</span></div>
-                    <div class="kpi">Reports <span id="reports">75</span></div>
+                    <div class="kpi">Students <span id="kpistudents">120</span></div>
+                    <div class="kpi">Supervisors <span id="kpisupervisors">15</span></div>
+                    <div class="kpi">Proposals <span id="kpiproposals">98</span></div>
+                    <div class="kpi">Reports <span id="kpireports">54</span></div>
                 </div>
 
-                <canvas id="projectChart"></canvas>
+                <!--CHARTS-->
+                <div class="charts-grid">
+                    <div class="chart-box">
+                        <canvas id="projectChart"></canvas></div>
+                    <div class="chart-box">
+                        <canvas id="roleChart"></canvas></div>
+                    <div class="chart-box wide">
+                        <canvas id="submissionChart"></canvas></div>
+                </div>
             </section>
 
             <!--students-->
@@ -65,7 +85,7 @@
                 </table>
             </section>
             <!--supervisors-->
-            <section id="supevisors" class="section">
+            <section id="supervisors" class="section">
                 <h2>Manage Supervisors</h2>
                 <table>
                     <tr>
@@ -136,11 +156,7 @@
 
     </div>
 
-<!--CHARTS-->
-    <div class="charts">
-        <canvas id="roleChart"></canvas>
-        <canvas id="submissionChart"></canvas>
-    </div>
+
 
 <!--LINKS-->
     <div class="links">

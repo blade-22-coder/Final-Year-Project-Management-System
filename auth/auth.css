@@ -22,9 +22,9 @@ body {
     
 }
 .auth-container{
-    background: var(--glass);
+    background: transparent;
     backdrop-filter: blur(20px);
-    /* -webkit-backdrop-filter: blur(18px); */
+    -webkit-backdrop-filter: blur(18px);
     grid-template-columns: 1fr 1fr;
     display: grid;
     overflow: hidden;
@@ -38,8 +38,8 @@ body {
 .image-panel {
     background: url("../images/busitema-university-seeklogo.png") center/cover no-repeat;
     transition: transform 0.6s ease;
-    border-radius: 50%;
-    object-fit: fill;
+    object-fit: contain;
+
 }
 .form-panel {
     overflow: hidden;
