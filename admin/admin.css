@@ -16,13 +16,30 @@ body::before {
     background: rgba(0, 0, 0, 0.6);
     z-index: -1;
 }
-.theme-toggle {
+.top-bar {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    left: 55%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    width: 260px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    height: 20px;
+}
+.theme-toggle {
     font-size: 22px;
     cursor: pointer;
-    z-index: 1000;
 }
 .admin-container {
     display: flex;
@@ -112,6 +129,8 @@ body::before {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
+    position: relative;
+    padding: 100px 30px 30px;
 }
 .section {
     display: none;

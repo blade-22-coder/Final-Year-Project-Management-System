@@ -7,93 +7,132 @@
     <link rel="stylesheet" href="student.css">
 </head>
 <body>
-
-    <!--<div class="header">
-        <img src="university_logo.png" alt="University Logo" class="logo">
-        <h1>University Student Portal</h1>
-    </div>>-->
+    <div class="top-bar">
+        <div class="search-box">
+            <input type="search" id="searchinput" placeholder="Search...">
+            <span class="icon">🔍</span>
+        </div>
+        <div class="theme-toggle" id="themeToggle">🌙</div>
+    </div>
     <div class="app">
         <!--sidebar-->
         <aside class="sidebar-glass">
-            <div class="profile-box">
-                <img id="profileImage" src="../images/default-avatar.jpg" alt="Profile">
-                <input type="file" id="imageUpload" hidden>
-                <button onclick="uploadImage()">Change Photo</button>
-                <h4 id="studentName"> Student Name</h4>
+            <div class="side-header">
+                <h2>STUDENT PORTAL</h2>
             </div>
-
-            <nav>
-                <a href="#profile">Profile</a>
-                <a href="#github">GitHub</a>
-                <a href="#submissions">Submissions</a>
-                <a href="#status">Status</a>    
-                <a href="#comments">Comments</a>
-                <a href="#deadlines">Deadlines</a>  
-                <a href="#notifications">Notifications</a>  
-                
+            <div class="profile-box">
+                <div class="avatar">
+                    <img id="profileImage" src="../images/default-avatar.jpg" alt="Profile">
+                    <input type="file" id="imageUpload" hidden>
+                    <button onclick="uploadImage()">Change Photo</button>
+                </div>
+                <div class="student-info">
+                    <span class="icon">🫡</span>
+                    <h3>Kitara Okello Emmanuel</h3>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li data-target="profile">
+                        <span class="icon">🧒🏻</span>
+                        <span class="label">Profile</span></li>
+                    <li data-target="github">
+                        <span class="icon"><img src="../images/github-seeklogo.png" class="icon"></span> 
+                        <span class="label">GitHub</span></li>
+                    <li data-target="submissions">
+                        <span class="icon">✉️</span>
+                        <span class="label">Submissions</span></li>
+                    <li data-target="status">
+                        <span class="icon">🚦</span> 
+                        <span class="label">Status</span></li>
+                    <li data-target="comments">
+                        <span class="icon">📫</span> 
+                        <span class="label">Comments</span></li>
+                    <li data-target="deadlines">
+                        <span class="icon">⏳</span>
+                        <span class="label">Deadlines</span></li>
+                    <li data-target="notifications">
+                        <span class="icon">🔔</span>
+                        <span class="label">Notifications</span></li>
+                    <li class="logout">
+                        <span class="icon">🚪</span>
+                        <span class="label">Logout</span></li>
+                </ul>             
             </nav>
         </aside>
+    
+
+        <!--main content-->
+
+    
+        <main class="content">
+
+            <!--floating battery container-->
+            <div class="battery-widget">
+                <div class="battery-container">
+                    <div class="battery-body">
+                        <div class="battery-fill" id="batteryFill"></div>
+                    </div>
+                    <div class="battery-tip"></div>
+                    <p id="batteryPercent">0%</p>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <!--student portal-->
+                <section id="profile" class="glass card active">
+                    <h3>My Profile</h3>
+                    <input id="name" placeholder="Name">
+                    <input id="regNo" placeholder="Registration Number">
+                    <button onclick="updateProfile()">Update Profile</button>
+                </section>
+
+                <!--github-->
+                <section id="github" class="glass card">
+                    <h3>GitHub Repository</h3>
+                    <input id="githubLink" placeholder="http://github.com/username/project">
+                    <button onclick="saveGithub()">Save Link</button>
+                </section>
+
+                <!--submissions-->
+                <section id="submissions" class="glass card">
+                    <h3>Project Submissions</h3>
+
+                    <label>Project Title</label>
+                        <input id="title">
+                    <button onclick="submitTitle()">Sumbit Title</button>
+
+                    <label>Proposal</label>
+                    <input type="file" id="Proposal">
+                    <button onclick="submitProposal()">Upload Proposal</button>
+
+                    <label>Final Report</label>
+                    <input type="file" id="report">
+                    <button onclick="submitReport()">Upload Report</button>
+                </section>
+
+                <!--status-->
+                <section id="status" class="glass card">
+                    <h3>Submission Status</h3>
+                    <ul id="statusList"></ul>
+                </section>
+
+                <!--comments-->
+                <section id="comments" class="glass card">
+                    <h3>Supervisor Feedback</h3>
+                    <ul id="comments"></ul>
+                </section>
+
+                <!--countdown-->
+                <section id="feedback" class="glass card">
+                    <h3>Deadlines & Notifications</h3>
+                    <ul id="deadlines"></ul>
+                    <ul id="notifications"></ul>
+                </section>
+            </div>
+        </main>
     </div>
-
-    <!--main content-->
-    <main class="content">
-        <h2>STUDENT PORTAL</h2>
-        <div class="dashboard">
-
-    <!--student portal-->
-        <section id="profile" class="glass-card">
-            <h3>My Profile</h3>
-            <input id="name" placeholder="Name">
-            <input id="regNo" placeholder="Registration Number">
-            <button onclick="updateProfile()">Update Profile</button>
-    </section>
-
-    <!--github-->
-        <section id="github" class="glass-card">
-            <h3>GitHub Repository</h3>
-            <input id="github" placeholder="http://github.com/username/project">
-            <button onclick="saveGithub()">Save Link</button>
-    </section>
-
-    <!--submissions-->
-        <section id="submission" class="glass-card">
-            <h3>Project Submissions</h3>
-
-            <label>Project Title</label>
-            <input id="title">
-            <button onclick="submitTitle()">Sumbit Title</button>
-
-            <label>Proposal</label>
-            <input type="file" id="Proposal">
-            <button onclick="submitProposal()">Upload Proposal</button>
-
-            <label>Final Report</label>
-            <input type="file" id="report">
-            <button onclick="submitReport()">Upload Report</button>
-        </section>
-
-         <!--status-->
-        <section id="status" class="glass-card">
-            <h3>Submission Status</h3>
-            <ul id="statusList"></ul>
-        </section>
-
-        <!--comments-->
-        <section id="comments" class="glass-card">
-            <h3>Supervisor Feedback</h3>
-            <ul id="comments"></ul>
-        </section>
-
-        <!--countdown-->
-    <section id="feedback" class="glass-card">
-        <h3>Deadlines & Notifications</h3>
-        <ul id="deadlines"></ul>
-        <ul id="notifications"></ul>
-    </section>
-    </main>
-   
-
-
     <script src="student.js"></script>
     
 </body>

@@ -3,6 +3,15 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     padding: 25px;
 }
+.top-bar {
+    position: fixed;
+    top: 15px;
+    left: 55%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
 .navbar {
     display: flex;
     justify-content: space-between;
