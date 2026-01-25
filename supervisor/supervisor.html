@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Dashboard</title>
+    <link rel="stylesheet" href="supervisor.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="search-box">
+            <input type="search" id="searchinput" placeholder="Search...">
+            <span class="icon">🔍</span>
+        </div>
+        <div class="theme-toggle" id="themeToggle">🌙</div>
+    </div>
+
+    <div class="app">
+        <aside class="sidebar-glass">
+            <div class="side-header">
+                <h2>SUPERVISOR PORTAL</h2>
+            </div>
+            <div class="profile-box">
+                <div class="avatar">
+                    <img id="profileImage" src="../images/emoji-sorrindo-com-oculos-seeklogo.png" alt="Profile">
+                    <input type="file" id="imageUpload" hidden>
+                    <button onclick="uploadImage()">Change Photo</button>
+                </div>
+                <div class="supervisor-info">
+                    <h3>Dr. Irene Nandutu</h3>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li data-target="profile">
+                        <span class="icon">👤</span>
+                        <span class="label">Profile</span></li>
+                    <li data-target="assigned">
+                        <span class="icon">🎓</span> 
+                        <span class="label">Assigned Students</span></li>
+                    <li data-target="documents" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">📁</span>
+                            <span class="label">Documentation</span>
+                        </div>
+                            <ul class="submenu">
+                                <li data-target="proposals">
+                                    <span class="icon">📄</span>
+                                    <span class="label">Proposals</span>
+                                </li>
+                                <li data-target="reports">
+                                    <span class="icon">📃</span>
+                                    <span class="label">Reports</span>
+                                </li>
+                            </ul>
+                        </li>
+                    <li data-target="repo" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">📦</span> 
+                            <span class="label">Repository</span></li>
+                        </div>
+                        <ul class="submenu">
+                            <li data-target="github">
+                                <span class="icon"><img src="../images/github-seeklogo.png"></span>
+                                <span class="label">GitHub</span>
+                            </li>
+                            <li data-target="snapshots">
+                                <span class="icon">📷</span>
+                                <span class="label">Snapshots</span>
+                            </li>
+                        </ul>
+                    <li data-target="analytics">
+                        <span class="icon">📊</span>
+                        <span class="label">Analytics</span></li>
+                    <li class="logout">
+                        <span class="icon">🚪</span>
+                        <span class="label">Logout</span></li>
+                </ul>             
+            </nav>
+        </aside>
+    
+        <main class="dashboard">
+
+            <!--profile-->
+            <section id="profile" class="glass card active">
+                <h3>Profile</h3>
+                <input id="name" placeholder="Name">
+                <input id="email" placeholder="Email">
+                <input id="department" placeholder="Department">
+                <button onclick="updateProfile()">Update</button>
+            </section>
+
+            <!--assigned students-->
+            <section id="assigned" class="glass card">
+                <h3>Assigned Students</h3>
+                <table>
+                    <tr>
+                        <th>No.</th>
+                        <th>Full Name</th>
+                        <th>Reg No.</th>
+                        <th>Project Title</th>
+                    </tr>
+                    <tr>
+                        <td>01.</td>
+                        <td>Kitara Emmmanuel Okello</td>
+                        <td>BU/UP/2023/1495</td>
+                        <td>Final Year Project Management System</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!--documentation-->
+            <section id="documents" class="glass card">
+                <h3>Documentation</h3>
+            </section>
+
+            <!--repository-->
+            <section id="repo" class="glass card">
+                <h3>Repository</h3>
+            </section>
+
+            <!--analytics-->
+            <section id="analytics" class="glass card">
+                <h3>Analytics</h3>
+                <canvas id="progressChart"></canvas>
+            </section>
+        </main>
+    </div>
+    <script src="supervisor.js"></script>
+</body>
+</html>
