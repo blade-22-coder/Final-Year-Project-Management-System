@@ -24,7 +24,8 @@
         <!--SIDEBAR-->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>ADMIN PANEL</h2>
+                <h2 class="logo">ADMIN PANEL</h2>
+                <button id="toogleSidebar" class="toggle-btn">☰</button>
             </div>
             <div class="admin-profile">
                 <div class="avatar">
@@ -34,13 +35,13 @@
                     <h4>Blade🪓</h4>
                     <span> System Administrator</span>
                 </div>
-            </div>
+            </div> 
             <nav class="sidebar-nav">
                 <ul>
                     <li data-target="overview">
                         <span class="icon">📊</span>
                         <span class="label">Overview</span></li>
-                    <li data-target="users" class="menu-item has-submenu">
+                    <li id="usersMenu" class="menu-item has-submenu no-direct-nav">
                         <div class="menu-title">
                             <span class="icon">👤</span>
                             <span class="label">Users</span>
@@ -173,27 +174,38 @@
             <!--settings-->
             <section id="settings" class="section">
                 <h2>System Settings</h2>
-                <div class="cards">
-                    <div class="kpi">
-                        <span>Theme Mode</span>
-                        <button id="themeToggle">Toggle Light/Dark</button>
+
+                <div class="settings-grid">
+
+                    <div class="setting-card">
+                        <h4>Theme</h4>
+                        <p>Switch between dark and light mode</p>
+                        <button onclick="toggleTheme()">Toggle Theme</button>
                     </div>
-                    <div class="kpi">
-                        <span>Notifications</span>
-                        <label>
-                            <input type="checkbox" id="notificationsToggle" checked>Enable Notifications
+
+                    <div class="setting-card">
+                        <h4>Notifications</h4>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="kpi">
-                        <span>Password change</span>
-                        <button onclick="alert('Change Password Clicked')">Change Password</button>
+
+                    <div class="setting-card">
+                        <h4>Password</h4>
+                        <p>Secure your admin account</p>
+                        <button>Change Password</button>
                     </div>
-                    <div class="kpi">
-                        <span>Database Backup</span>
-                        <button onclick="alert('Backup Started')">Backup Now</button>
+
+                    <div class="setting-card danger">
+                        <h4>System Backup</h4>
+                        <p>Download full database snapshot</p>
+                        <button>Backup Now</button>
                     </div>
+
                 </div>
             </section>
+
 
 
 
@@ -202,35 +214,8 @@
             <!--supervisors-->
             <section id="supervisors" class="section">
                 <h2>Supervisors</h2>
-                <div class="cards">
-                    <div class="kpi">1<span id="kpistudents">Dr. Irene Nandutu</span></div>
-                    <div class="kpi">2<span id="kpisupervisors">Dr. Richard Angole</span></div>
-                    <div class="kpi">3<span id="kpiproposals">Eddie Musana</span></div>
-                    <div class="kpi">4<span id="kpireports">Dr. Richard Mutungi</span></div>
-                </div>
+                <div id="supervisorsGrid" class="supervisors-grid"></div>
             </section>
-
-            
-
-            <!--assign supervisors-->
-            <section id="assign-supervisors" class="section">
-                <h2>Assign Supervisors</h2>
-                <form>
-                    <label for="student">Select Student:</label>
-                    <select id="student" name="student">
-                        <option value="student1">Kitara Okello Emmanuel</option>
-                    </select>
-
-                    <label for="supervisor">Select Supervisor:</label>
-                    <select id="supervisor" name="supervisor">
-                        <option value="supervisor1">Dr. Irene Nandutu</option>
-                    </select>
-
-                    <button type="submit">Assign Supervisor</button>
-                </form>
-            </section>
-
-            
 
         </main>
     </div>

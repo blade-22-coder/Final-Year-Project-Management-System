@@ -1,32 +1,142 @@
-//section navigation
+
+// //section navigation
 const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
 const sections = document.querySelectorAll(".section");
 
 navItems.forEach(item => {
-    item.addEventListener("click", () => {
+    item.addEventListener("click", (e) => {
+
+        // Ignore submenu parents
+        if (item.classList.contains("no-direct-nav")) return;
+
         const targetId = item.dataset.target;
 
         sections.forEach(sec => sec.classList.remove("active"));
         navItems.forEach(li => li.classList.remove("active"));
-    
+
         document.getElementById(targetId)?.classList.add("active");
         item.classList.add("active");
     });
 });
 
-//toggling a dropdown menu of sections
-document.querySelectorAll(".menu-title").forEach(title => {
-    title.addEventListener("click", () => {
-        const parent = title.parentElement;
+//users menu dropdown + section display
+document.addEventListener("DOMContentLoaded", () => {
 
-        document.querySelectorAll(".has-submenu").forEach(item => {
-            if (item !== parent) {
-                item.classList.remove("open");
-            }
-        });
-        parent.classList.toggle("open");
+    const usersMenu = document.getElementById("usersMenu");
+    const menuTitle = usersMenu.querySelector(".menu-title");
+    const submenu = usersMenu.querySelector(".submenu");
+
+    menuTitle.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        // Show USERS section
+        sections.forEach(sec => sec.classList.remove("active"));
+        document.getElementById("users")?.classList.add("active");
+
+        // Toggle submenu
+        usersMenu.classList.toggle("open");
+
+        if (usersMenu.classList.contains("open")) {
+            submenu.style.maxHeight = submenu.scrollHeight + "px";
+        } else {
+            submenu.style.maxHeight = null;
+        }
     });
 });
+
+//supervisor clicks
+document.querySelectorAll("#usersMenu .submenu li").forEach(item => {
+    item.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const targetId = item.dataset.target;
+
+        sections.forEach(sec => sec.classList.remove("active"));
+        document.getElementById(targetId)?.classList.add("active");
+
+        if (targetId === "supervisors") {
+            renderSupervisors();
+        }
+    });
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const usersMenu = document.querySelector(
+        '.menu-item.has-submenu[data-target="users"]'
+    );
+
+    const submenu = usersMenu.querySelector(".submenu");
+    const menuTitle = usersMenu.querySelector(".menu-title");
+
+    /* 🔽 TOGGLE USERS SUBMENU */
+    menuTitle.addEventListener("click", (e) => {
+        e.stopPropagation(); // prevent sidebar section switching
+
+        usersMenu.classList.toggle("open");
+
+        // Smooth height animation
+        if (usersMenu.classList.contains("open")) {
+            submenu.style.maxHeight = submenu.scrollHeight + "px";
+        } else {
+            submenu.style.maxHeight = null;
+        }
+    });
+
+    /*  SUBMENU NAVIGATION (SUPERVISORS) */
+    submenu.querySelectorAll("li").forEach(item => {
+        item.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            const targetId = item.dataset.target;
+
+            // Switch sections
+            document.querySelectorAll(".section")
+                .forEach(sec => sec.classList.remove("active"));
+
+            const targetSection = document.getElementById(targetId);
+            targetSection?.classList.add("active");
+
+            // Optional render hook
+            if (targetId === "supervisors") {
+                if (typeof renderSupervisors === "function") {
+                    renderSupervisors();
+                }
+            }
+
+            // Close submenu on mobile
+            if (window.innerWidth < 650) {
+                usersMenu.classList.remove("open");
+                submenu.style.maxHeight = null;
+            }
+        });
+    });
+
+});
+
+ 
+// //sidebar toggle
+// const sidebar = document.querySelector(".sidebar");
+// const toggleBtn = document.getElementById("toggleSidebar");
+
+// toggleBtn.addEventListener("click", () => {
+//     sidebar.classList.toggle("collapsed");
+// });
+// const usersMenu = document.getElementById("usersMenu");
+// const menuTitle = usersMenu.querySelector(".menu-title");
+
+// menuTitle.addEventListener("click", (e) => {
+//     e.stopPropagation();
+
+//     // prevent opening submenu when sidebar is collapsed
+//     if (document.querySelector(".sidebar").classList.contains("collapsed")) {
+//         return;
+//     }
+
+//     usersMenu.classList.toggle("open");
+// });
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -173,27 +283,22 @@ function closeDeadline() {
     document.getElementById("deadlineModal").classList.remove("active");
 }
 
-function saveDeadline() {
-    const title = document.getElementById("deadlineTitle").value;
-    if (!title) return;
-
-    adminCalendar.addEvent({
-        title,
-        start: selectedDate,
-        allDay: true
-    });
-
-    closeDeadline();
-    document.getElementById("deadlineTitle").value = "";
-}
 
 
 //saving deadlines from click
 function saveDeadline() {
-    const title = document.getElementById("deadlineTitle").value;
-    const description = document.getElementById("deadlinedecription").value;
+    if (!selectedDate) {
+        alert("Click a date first");
+        return;
+    }
 
-    if (!title || !selectedDate) return;
+    const title = document.getElementById("deadlineTitle").value.trim();
+    const description = document.getElementById("deadlineDescription")?.value || "";
+
+    if (!title) {
+        alert("Deadline title required");
+        return;
+    }
 
     const deadline = {
         id: "dl_" + Date.now(),
@@ -205,23 +310,24 @@ function saveDeadline() {
         createdAt: new Date().toISOString()
     };
 
-    //get existing deadlines
-    const deadlines  = JSON.parse(localStorage.getItem("deadlines")) || [];
-
+    //get exisitng deadlines
+    const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
     deadlines.push(deadline);
-
     localStorage.setItem("deadlines", JSON.stringify(deadlines));
 
     //adding calendar visually
     adminCalendar.addEvent({
         title: deadline.title,
         start: deadline.date,
-        allDay:true
+        allDay: true
     });
+
     closeDeadline();
     document.getElementById("deadlineTitle").value = "";
-    document.getElementById("deadlineDescription").value = "";
 }
+
+
+
 //logout
 function openLogout() {
     document.getElementById("logoutModal").classList.add("active");
@@ -242,6 +348,149 @@ document.getElementById("logoutModal").addEventListener("click", e => {
     if (e.target.id === "logoutModal") closeLogout();
 
 });
+
+
+            //data models
+//supervisors
+const supervisors = [
+    {id: "sup1", name: "Dr. Irene", image: "../images/1.JPG", capacity: 5},
+    {id: "sup2", name: "Dr. Angole", image: "../images/2.JPG", capacity: 2},
+    {id: "sup3", name: "Dr. Mutungi", image: "../images/3.JPG", capacity:4},
+    {id: "sup4", name: "Musana", image: "../images/4.JPG", capacity: 7}
+];
+//students
+let students = JSON.parse(localStorage.getItem("students")) || [
+    { id: "st1", name: "Emmanuel Kitara", assignedTo: null },
+    { id: "st2", name: "Stacy Martha", assignedTo: null },
+    { id: "st3", name: "Allan Azahiire", assignedTo: null },
+    { id: "st4", name: "Maxwell Okello", assignedTo: null }
+];
+
+
+//rendering supervisors as grid cards
+function renderSupervisors() {
+    const grid = document.getElementById("supervisorsGrid");
+    grid.innerHTML = "";
+
+    supervisors.forEach(sup => {
+        const assigned = students.filter(s => s.assignedTo === sup.id);
+
+        const card = document.createElement("div");
+        card.className = "supervisors-card";
+
+        card.innerHTML = `
+            <img src="${sup.image}">
+            <h4>${sup.name}</h4>
+            <small>${assigned.length} / ${sup.capacity} students</small>
+
+            <button class="assign-btn">
+                Manage Students <span>▾</span>
+            </button>
+
+            <div class="student-dropdown" style="display:none"></div>
+        `;
+
+        const btn = card.querySelector(".assign-btn");
+        const dropdown = card.querySelector(".student-dropdown");
+        const arrow = btn.querySelector("span");
+
+        btn.addEventListener("click", () => {
+            const open = dropdown.style.display === "block";
+            dropdown.style.display = open ? "none" : "block";
+            btn.classList.toggle("open", !open);
+            toggleStudentDropdown(dropdown, sup);
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+
+//assign/unassigned ...no duplicates
+function assignStudent(studentId, supervisorId) {
+    students = students.map(s =>
+        s.id === studentId
+            ? { ...s, assignedTo: supervisorId }
+            : s
+    );
+
+    persistAndRefresh();
+}
+
+function unassignStudent(studentId) {
+    students = students.map(s =>
+        s.id === studentId
+            ? { ...s, assignedTo: null }
+            : s
+    );
+
+    persistAndRefresh();
+}
+
+function persistAndRefresh() {
+    localStorage.setItem("students", JSON.stringify(students));
+    renderSupervisors();
+}
+
+
+
+//assigned student with unassign/ unassigned student if capacity allows
+function toggleStudentDropdown(dropdown, supervisor) {
+    dropdown.innerHTML = "";
+
+    const assigned = students.filter(s => s.assignedTo === supervisor.id);
+    const unassigned = students.filter(s => s.assignedTo === null);
+
+    // Assigned students
+    assigned.forEach(student => {
+        const item = document.createElement("div");
+        item.className = "student-item";
+
+        item.innerHTML = `
+            <span>${student.name}</span>
+            <span class="unassign">Unassign</span>
+        `;
+
+        item.querySelector(".unassign").addEventListener("click", () => {
+            unassignStudent(student.id);
+        });
+
+        dropdown.appendChild(item);
+    });
+
+    // Capacity rule
+    if (assigned.length >= supervisor.capacity) {
+        const full = document.createElement("p");
+        full.textContent = "Supervisor capacity reached";
+        full.style.opacity = "0.6";
+        dropdown.appendChild(full);
+        return;
+    }
+
+    // Divider
+    if (unassigned.length > 0) {
+        const divider = document.createElement("hr");
+        dropdown.appendChild(divider);
+    }
+
+    // Unassigned students
+    unassigned.forEach(student => {
+        const item = document.createElement("div");
+        item.className = "student-item";
+        item.textContent = student.name;
+
+        item.addEventListener("click", () => {
+            assignStudent(student.id, supervisor.id);
+        });
+
+        dropdown.appendChild(item);
+    });
+}
+
+
+
+
+
 
 
 
