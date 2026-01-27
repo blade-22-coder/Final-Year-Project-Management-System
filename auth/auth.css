@@ -183,8 +183,6 @@ button:hover {
   transform: translateX(0);
 }
 .overlay {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.85),
-  rgba(34, 211, 238, 0.85));
   position: relative;
   height: 100%;
   width: 200%;
@@ -242,7 +240,7 @@ button:hover {
     opacity: 1;
   }
   50% {
-    transform: translateX(8px) translateY(-6px) rotate(2deg);
+    transform: translateX(8px) translateY(-6px) rotate(10deg);
     opacity: 1;
   }
   100% {

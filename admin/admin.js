@@ -14,6 +14,20 @@ navItems.forEach(item => {
     });
 });
 
+//toggling a dropdown menu of sections
+document.querySelectorAll(".menu-title").forEach(title => {
+    title.addEventListener("click", () => {
+        const parent = title.parentElement;
+
+        document.querySelectorAll(".has-submenu").forEach(item => {
+            if (item !== parent) {
+                item.classList.remove("open");
+            }
+        });
+        parent.classList.toggle("open");
+    });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
 
     //theme toggling
@@ -93,6 +107,140 @@ document.addEventListener("DOMContentLoaded", () => {
             maintainAspectRatio: false
         }
     });
+});
+
+//calendar
+const publicHolidays = [
+    "2026-01-01", // New Year
+    "2026-03-08", // Women's Day
+    "2026-05-01", // Labour Day
+    "2026-10-09", // Independence Day
+];
+let adminCalendar;
+let selectedDate = null;
+document.addEventListener("DOMContentLoaded", function () {
+    const calendarEl = document.getElementById("adminCalendar");
+
+    adminCalendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        height: "auto",
+        selectable: true,
+        fixedWeekCount: false,
+        headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek"
+        },
+
+        dayCellClassNames(arg) {
+            const dateStr = arg.date.toISOString().split("T")[0];
+
+            if (arg.date.getDay() === 0 || arg.date.getDay() === 6) {
+                return ["fc-weekend"];
+            }
+
+            if (publicHolidays.includes(dateStr)) {
+                return ["fc-holiday"];
+            }
+        },
+
+        dateClick(info) {
+            selectedDate = info.dateStr;
+            document.getElementById("deadlineDate").value = selectedDate;
+            document.getElementById("deadlineModal").classList.add("active");
+        }
+    });
+});
+navItems.forEach(item => {
+    item.addEventListener("click", () => {
+        const targetId = item.dataset.target;
+
+        sections.forEach(sec => sec.classList.remove("active"));
+        navItems.forEach(li => li.classList.remove("active"));
+
+        const targetSection = document.getElementById(targetId);
+        targetSection?.classList.add("active");
+        item.classList.add("active");
+
+        if (targetId === "calendar") {
+            setTimeout(() => {
+                adminCalendar.render();
+            }, 50);
+        }
+    });
+});
+function closeDeadline() {
+    document.getElementById("deadlineModal").classList.remove("active");
+}
+
+function saveDeadline() {
+    const title = document.getElementById("deadlineTitle").value;
+    if (!title) return;
+
+    adminCalendar.addEvent({
+        title,
+        start: selectedDate,
+        allDay: true
+    });
+
+    closeDeadline();
+    document.getElementById("deadlineTitle").value = "";
+}
+
+
+//saving deadlines from click
+function saveDeadline() {
+    const title = document.getElementById("deadlineTitle").value;
+    const description = document.getElementById("deadlinedecription").value;
+
+    if (!title || !selectedDate) return;
+
+    const deadline = {
+        id: "dl_" + Date.now(),
+        title,
+        description,
+        date: selectedDate,
+        audience: "students",
+        createdBy: "blade",
+        createdAt: new Date().toISOString()
+    };
+
+    //get existing deadlines
+    const deadlines  = JSON.parse(localStorage.getItem("deadlines")) || [];
+
+    deadlines.push(deadline);
+
+    localStorage.setItem("deadlines", JSON.stringify(deadlines));
+
+    //adding calendar visually
+    adminCalendar.addEvent({
+        title: deadline.title,
+        start: deadline.date,
+        allDay:true
+    });
+    closeDeadline();
+    document.getElementById("deadlineTitle").value = "";
+    document.getElementById("deadlineDescription").value = "";
+}
+//logout
+function openLogout() {
+    document.getElementById("logoutModal").classList.add("active");
+}
+
+function closeLogout() {
+    document.getElementById("logoutModal").classList.remove("active");
+}
+
+function confirmLogout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("/index.html");
+}
+
+//closing module when clicking outside
+document.getElementById("logoutModal").addEventListener("click", e => {
+    if (e.target.id === "logoutModal") closeLogout();
+
 });
 
 

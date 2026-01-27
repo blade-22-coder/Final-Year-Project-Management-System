@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    box-shadow: border-box;
+    box-sizing: border-box;
     font-family: Arial,  sans-serif;
 }
 body {
@@ -14,6 +14,7 @@ body::before {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
 }
 .top-bar {
     position: fixed;
@@ -29,17 +30,17 @@ body::before {
     align-items: center;
     gap: 10px;
     padding: 10px 15px;
-    width: 260px;
+    width: 200px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     border: 2px solid rgba(255, 255, 255, 0.25);
     border-radius: 12px;
-    height: 20px;
 }
 .search-box input {
     background: transparent;
     border: none;
     width: 100%;
+    outline: none;
 }
 .theme-toggle {
     font-size: 22px;
@@ -135,8 +136,160 @@ body::before {
 .sidebar-nav li:hover .icon {
     transform: scale(1.2);
 }
+/* clickable title */
+.menu-title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+/* menu items */
+.menu-item {
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+}
+.menu-item:hover,
+.menu-item.active {
+    background: #1e293b;
+}
+.has-submenu::after {
+    position: absolute;
+    right: 12px;
+    transition: transform 0.3s;
+}
+/* Submenu parent */
+.has-submenu {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: stretch;
+}
+/* Submenu container */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 30px; /* visual indent */
+    margin-top: 6px;
+    transition: max-height 0.35s ease;
+}
+/* Submenu items */
+.submenu li {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    background: #020617;
+    font-size: 0.9rem;
+}
+.submenu li:hover {
+    background: #334155;
+}
+
+/* Open state */
+.has-submenu.open > .submenu {
+    max-height: 300px;
+}
+
+.has-submenu.open::after {
+    transform: rotate(180deg);
+}/* Submenu parent */
+.has-submenu {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: stretch;
+}
+/* Clickable menu title */
+.menu-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+/* Submenu container */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 30px; /* visual indent */
+    margin-top: 6px;
+    transition: max-height 0.35s ease;
+}
+/* Submenu items */
+.submenu li {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    background: #020617;
+    font-size: 0.9rem;
+}
+.has-submenu.open::after {
+    transform: rotate(180deg);
+}
 .logout {
     background: rgba(255, 0, 0, 0.1);
+}
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 10000;
+}
+.logout-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.logout-box {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 25px;
+    width: 320px;
+    text-align: center;
+    color: #fff;
+    animation: popIn 0.4s ease;
+}
+.logout-box h3 {
+    margin-bottom: 8px;
+}
+.logout-box p {
+    font-size: 14px;
+    opacity: 0.85;
+}
+.logout-actions button {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-no {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+.btn-yes {
+    background: #ff4d4d;
+    color: white;
+}
+@keyframes  popIn{
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 .content {
     flex: 1;
@@ -144,6 +297,7 @@ body::before {
     position: relative;
     padding: 110px 30px 30px;
 }
+
 .app {
     display: flex;
     min-height: 100vh;
@@ -174,11 +328,11 @@ body::before {
 }
 .battery-fill {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 0;
-    background: linear-gradient(90deg, #ff4c4c, #00ff6a);
+    background: linear-gradient(to top, #ff4c4c, #00ff6a);
     transition: height 0.5s ease-in-out;
 }
 .battery-tip {
@@ -220,4 +374,22 @@ body::before {
     );
     background-size: 40px 100%;
     animation: chargeStripes 1s linear infinite;
+}
+.deadline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.deadline-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 14px;
+    border-left:  5px solid cyan;
+}
+.deadline-card h3 {
+    margin-bottom: 6px;
+}
+.deadline-date {
+    font-size: 0.9rem;
+    opacity: 0.8;
 }

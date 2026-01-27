@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <script src="http://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
     <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
 </head>
 <body>
     <div class="top-bar">
@@ -37,19 +40,31 @@
                     <li data-target="overview">
                         <span class="icon">📊</span>
                         <span class="label">Overview</span></li>
-                    <li data-target="students">
-                        <span class="icon">🎓</span> 
-                        <span class="label">Students</span></li>
-                    <li data-target="supervisors">
-                        <span class="icon">🧑🏻‍🏫</span>
-                        <span class="label">Supervisors</span></li>
+                    <li data-target="users" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">👤</span>
+                            <span class="label">Users</span>
+                        </div>
+                            <ul class="submenu">
+                                <li data-target="supervisors">
+                                    <span class="icon">🧑🏻‍🏫</span>
+                                    <span class="label">Supervisors</span>
+                                </li>
+                            </ul>
+                    </li>
+                    <li data-target="calendar" class="menu-item">
+                        <div class="menu-title">
+                            <span class="icon">📆</span>
+                            <span class="label">Calendar</span>
+                        </div>
+                    </li>
                     <li data-target="projects">
                         <span class="icon">📂</span> 
                         <span class="label">Projects</span></li>
                     <li data-target="settings">
                         <span class="icon">⚙️</span> 
                         <span class="label">Settings</span></li>
-                    <li class="logout">
+                    <li class="logout" onclick="openLogout()">
                         <span class="icon">🚪</span>
                         <span class="label">Logout</span></li>
                 </ul>
@@ -76,16 +91,17 @@
                     <div class="chart-box">
                         <canvas id="submissionChart"></canvas></div>
                     <div class="chart-box">
-                        <canvas id="ActivityChart"></canvas>
+                        <canvas id="activityChart"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!--students-->
-            <section id="students" class="section">
-                <h2>Manage Students</h2>
+            <!--users-->
+            <section id="users" class="section">
+                <h2>Students</h2>
                 <table>
                     <tr>
+                        <th>No.</th>
                         <th>Full Name</th>
                         <th>Reg No.</th>
                         <th>Email</th>
@@ -93,6 +109,7 @@
                         <th>Status</th>
                     </tr>
                     <tr>
+                        <td>01.</td>
                         <td>Kitara Okello Emmanuel</td>
                         <td>BU/UP/2023/1495</td>
                         <td>ekitara22@gmail.com</td>
@@ -101,48 +118,99 @@
                     </tr>
                 </table>
             </section>
-            <!--supervisors-->
-            <section id="supervisors" class="section">
-                <h2>Manage Supervisors</h2>
-                <table>
-                    <tr>
-                        <th>Full Name</th>
-                        <th>Department</th>
-                        <th>Email</th>
-                        <th>Students Assigned</th>
-                    </tr>
-                    <tr>
-                        <td>Dr. Irene Nandutu</td>
-                        <td>Computer Studies</td>
-                        <td>inandutu.sci@busitema.ac.ug</td>
-                        <td>10</td>
-                </table>
+
+            <!--calendar-->
+            <section id="calendar" class="section">
+                <h2>Calendar</h2>
+                <div class="calendar-wrapper">
+                    <div id="adminCalendar"></div>
+                </div>
             </section>
 
             <!--projects-->
             <section id="projects" class="section">
-                <h2>Project Submissions</h2>
+                <h2>Summary</h2>
+                <div class="cards">
+                    <div class="kpi">TOTAL<span id="kpistudents">120</span></div>
+                    <div class="kpi">PROPOSALS<span id="kpisupervisors">83/91</span></div>
+                    <div class="kpi">REPORTS<span id="kpiproposals">67/89</span></div>
+                    <div class="kpi">APPROVED<span id="kpireports">45</span></div>
+                    <div class="kpi">REJECTED<span id="kpireports">6</span></div>
+                    </div>
+                <h2>Submissions</h2>
                 <table>
                     <tr>
+                        <th>No.</th>
+                        <th>Student</th>
                         <th>Project Title</th>
                         <th>Supervisor</th>
-                        <th>Student</th>
-                        <th>Document</th>
-                        <th>GitHub</th>
-                        <th>Action</th>
+                        <th>Status</th>
                     </tr>
                     <tr>
+                        <td>01.</td>
+                        <td>Emmanuel Kitara Okello</td>
                         <td>Final Year Project Management System</td>
-                        <td>Dr. Irene Nandutu</td>
-                        <td>Kitara Okello Emmanuel</td>
-                        <td><a href="#">Download📩</a></td>
-                        <td><a href="#">🔗GitHub Repository</a></td>
-                        <td>
-                            <button class="Approve">✅</button>
-                            <button class="reject">⛔</button>
-                        </td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>02.</td>
+                        <td>Stacy Martha Alowo Toto</td>
+                        <td>Online Library Management System</td>
+                        <td></td>
+                        <td>🟡</td>
+                    </tr>
+                    <tr>
+                        <td>03.</td>
+                        <td>Allan Azahiire</td>
+                        <td>Stats Management System</td>
+                        <td></td>
+                        <td>⛔</td>
+                    </tr>
                 </table>
             </section>
+
+            <!--settings-->
+            <section id="settings" class="section">
+                <h2>System Settings</h2>
+                <div class="cards">
+                    <div class="kpi">
+                        <span>Theme Mode</span>
+                        <button id="themeToggle">Toggle Light/Dark</button>
+                    </div>
+                    <div class="kpi">
+                        <span>Notifications</span>
+                        <label>
+                            <input type="checkbox" id="notificationsToggle" checked>Enable Notifications
+                        </label>
+                    </div>
+                    <div class="kpi">
+                        <span>Password change</span>
+                        <button onclick="alert('Change Password Clicked')">Change Password</button>
+                    </div>
+                    <div class="kpi">
+                        <span>Database Backup</span>
+                        <button onclick="alert('Backup Started')">Backup Now</button>
+                    </div>
+                </div>
+            </section>
+
+
+
+
+            <!--SUBSECTIONS-->
+            <!--supervisors-->
+            <section id="supervisors" class="section">
+                <h2>Supervisors</h2>
+                <div class="cards">
+                    <div class="kpi">1<span id="kpistudents">Dr. Irene Nandutu</span></div>
+                    <div class="kpi">2<span id="kpisupervisors">Dr. Richard Angole</span></div>
+                    <div class="kpi">3<span id="kpiproposals">Eddie Musana</span></div>
+                    <div class="kpi">4<span id="kpireports">Dr. Richard Mutungi</span></div>
+                </div>
+            </section>
+
+            
 
             <!--assign supervisors-->
             <section id="assign-supervisors" class="section">
@@ -162,23 +230,38 @@
                 </form>
             </section>
 
-            <!--settings-->
-            <section id="settings" class="section">
-                <h2>System Settings</h2>
-                <!-- Settings content -->
-            </section>
+            
 
         </main>
     </div>
 
     </div>
 
+    <!--deadline saving-->
+    <div class="logout-modal" id="deadlineModal">
+        <div class="logout-box">
+            <h3>Set Deadline</h3>
 
+            <input type="text" id="deadlineTitle" placeholder="Deadline Title">
+            <input type="date" id="deadlineDate">
 
-<!--LINKS-->
-    <div class="links">
-        <a href="assign-supervisor.html">Assign Supervisors</a>
-        <a href="activity-log.html">View Activity Logs</a>
+            <div class="logout-actions">
+                <button class="btn-no" onclick="closeDeadline()">Cancel</button>
+                <button class="btn-yes" onclick="saveDeadline()">Save</button>
+            </div>
+        </div>
+    </div>
+    <!--logout confirmation-->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-box">
+            <h3>logout</h3>
+            <p>Are you sure you want to leave?</p>
+
+            <div class="logout-actions">
+                <button class="btn-no" onclick="closeLogout()">No</button>
+                <button class="btn-yes" onclick="confirmLogout()">Yes</button>
+            </div>
+        </div>
     </div>
     <script src="admin.js"></script>
 

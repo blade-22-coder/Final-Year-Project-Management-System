@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal</title>
     <link rel="stylesheet" href="student.css">
+    <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
 </head>
 <body> 
     <div class="top-bar">
@@ -27,19 +28,24 @@
                     <button onclick="uploadImage()">Change Photo</button>
                 </div>
                 <div class="student-info">
-                    <span class="icon">🫡</span>
                     <h3>Emmanuel Kitara Okello</h3>
                 </div>
             </div>
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li data-target="profile">
-                        <span class="icon">🧒🏻</span>
-                        <span class="label">Profile</span></li>
-                    <li data-target="github">
-                        <span class="icon"><img src="../images/github-seeklogo.png" class="icon"></span> 
-                        <span class="label">GitHub</span></li>
+                    <li data-target="documents" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">👤</span>
+                            <span class="label">Profile</span>
+                        </div>
+                            <ul class="submenu">
+                                <li data-target="proposals">
+                                    <span class="icon">✏️</span>
+                                    <span class="label">Edit</span>
+                                </li>
+                            </ul>
+                    </li>
                     <li data-target="submissions">
                         <span class="icon">✉️</span>
                         <span class="label">Submissions</span></li>
@@ -50,12 +56,12 @@
                         <span class="icon">📫</span> 
                         <span class="label">Comments</span></li>
                     <li data-target="deadlines">
-                        <span class="icon">⏳</span>
+                        <span class="icon">⏰</span>
                         <span class="label">Deadlines</span></li>
                     <li data-target="notifications">
                         <span class="icon">🔔</span>
                         <span class="label">Notifications</span></li>
-                    <li class="logout">
+                    <li class="logout" onclick="openLogout()">
                         <span class="icon">🚪</span>
                         <span class="label">Logout</span></li>
                 </ul>             
@@ -125,13 +131,24 @@
                 </section>
 
                 <!--countdown-->
-                <section id="feedback" class="glass card">
-                    <h3>Deadlines & Notifications</h3>
-                    <ul id="deadlines"></ul>
-                    <ul id="notifications"></ul>
+                <section id="deadlines" class="glass card">
+                    <h3> Upcoming Deadlines</h3>
+                    <div id="deadlineList" class="deadline-list"></div>
                 </section>
             </div>
         </main>
+    </div>
+    <!--logout confirmation-->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-box">
+            <h3>logout</h3>
+            <p>Are you sure you want to leave?</p>
+
+            <div class="logout-actions">
+                <button class="btn-no" onclick="closeLogout()">No</button>
+                <button class="btn-yes" onclick="confirmLogout()">Yes</button>
+            </div>
+        </div>
     </div>
     <script src="student.js"></script>
     

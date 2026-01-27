@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supervisor Dashboard</title>
     <link rel="stylesheet" href="supervisor.css">
+    <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
 </head>
 <body>
     <div class="top-bar">
@@ -33,9 +34,18 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li data-target="profile">
-                        <span class="icon">👤</span>
-                        <span class="label">Profile</span></li>
+                    <li data-target="documents" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">👤</span>
+                            <span class="label">Profile</span>
+                        </div>
+                            <ul class="submenu">
+                                <li data-target="proposals">
+                                    <span class="icon">✏️</span>
+                                    <span class="label">Edit</span>
+                                </li>
+                            </ul>
+                    </li>
                     <li data-target="assigned">
                         <span class="icon">🎓</span> 
                         <span class="label">Assigned Students</span></li>
@@ -54,26 +64,36 @@
                                     <span class="label">Reports</span>
                                 </li>
                             </ul>
-                        </li>
+                    </li>
                     <li data-target="repo" class="menu-item has-submenu">
                         <div class="menu-title">
-                            <span class="icon">📦</span> 
-                            <span class="label">Repository</span></li>
+                            <span class="icon">📦</span>
+                            <span class="label">Repository</span>
                         </div>
-                        <ul class="submenu">
-                            <li data-target="github">
-                                <span class="icon"><img src="../images/github-seeklogo.png"></span>
-                                <span class="label">GitHub</span>
-                            </li>
-                            <li data-target="snapshots">
-                                <span class="icon">📷</span>
-                                <span class="label">Snapshots</span>
-                            </li>
-                        </ul>
-                    <li data-target="analytics">
-                        <span class="icon">📊</span>
-                        <span class="label">Analytics</span></li>
-                    <li class="logout">
+                            <ul class="submenu">
+                                <li data-target="github">
+                                    <span class="icon-github"><img src="../images/github-seeklogo.png"></span>
+                                    <span class="label">GitHub</span>
+                                </li>
+                                <li data-target="reports">
+                                    <span class="icon">📷</span>
+                                    <span class="label">Snapshots</span>
+                                </li>
+                            </ul>
+                    </li>
+                    <li data-target="repo" class="menu-item has-submenu">
+                        <div class="menu-title">
+                            <span class="icon">📊</span>
+                            <span class="label">Analytics</span>
+                        </div>
+                            <ul class="submenu">
+                                <li data-target="graphs">
+                                    <span class="icon-github">📈</span>
+                                    <span class="label">Graphs</span>
+                                </li>
+                            </ul>
+                    </li>
+                    <li class="logout" onclick="openLogout()">
                         <span class="icon">🚪</span>
                         <span class="label">Logout</span></li>
                 </ul>             
@@ -126,6 +146,18 @@
                 <canvas id="progressChart"></canvas>
             </section>
         </main>
+    </div>
+    <!--logout confirmation-->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-box">
+            <h3>logout</h3>
+            <p>Are you sure you want to leave?</p>
+
+            <div class="logout-actions">
+                <button class="btn-no" onclick="closeLogout()">No</button>
+                <button class="btn-yes" onclick="confirmLogout()">Yes</button>
+            </div>
+        </div>
     </div>
     <script src="supervisor.js"></script>
 </body>
