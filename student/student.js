@@ -8,6 +8,37 @@
     });
 
 
+ //toggle to edit profile
+ function toggleEditProfile() {
+    document.querySelector(".profile-display").style.display = "none";
+    document.querySelector(".profile-edit").style.display = "block";
+    //prefill inputs
+    document.getElementById("editName").value = document.getElementById("studentName").textContent;
+    document.getElementById("editRegNo").value = document.getElementById("regNo").textContent;
+    document.getElementById("editEmail").value = document.getElementById("email").textContent;
+    document.getElementById("editProgram").value = document.getElementById("program").textContent;
+ }
+
+ function cancelEditProfile () {
+    document.querySelector(".profile-display").style.display = "block";
+    document.querySelector(".profile-edit").style.display ="none";
+ }
+
+ function  saveProfile() {
+    document.getElementById("studentName").textContent = document.getElementById("editName").value;
+    document.getElementById("regNo").textContent = document.getElementById("editRegNo").value;
+    document.getElementById("email").textContent = document.getElementById("editEmail").value;
+    document.getElementById("program").textContent = document.getElementById("editProgram").value;
+ 
+ //profile pic update
+ const file = document.getElementById("editProfilePic").files[0];
+ if (file) {
+    const reader = new FileReader ();
+    reader.onlaod = e => document.getElementById("profileImage").src = e.target.result;
+    reader.readAsDataURL(file);
+    }
+    cancelEditProfile(); //switch back to display mode
+ }
 
 //project progress battery chart
 let progressData = {

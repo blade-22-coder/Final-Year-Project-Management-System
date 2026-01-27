@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial,  sans-serif;
-}
+} 
 body {
     background: url('../images/check.jpg') center/cover no-repeat fixed;
     min-height: 100vh;
@@ -49,6 +49,8 @@ body::before {
 .dashboard {
     position: relative;
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
 .card {
     display: none;
@@ -300,7 +302,9 @@ body::before {
 
 .app {
     display: flex;
+    flex-direction: row;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 .battery-widget {
     position: absolute;
@@ -392,4 +396,18 @@ body::before {
 .deadline-date {
     font-size: 0.9rem;
     opacity: 0.8;
+}
+@media (max-width: 768px) {
+    .sidebar-glass {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        z-index: 999;
+        background: rgba(0, 0, 0, 0.9);
+        width: 70%;
+    }
+    .sidebar-glass.open {
+        left: 0;
+    }
 }
