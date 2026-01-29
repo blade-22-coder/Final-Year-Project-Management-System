@@ -24,8 +24,6 @@
             <div class="profile-box">
                 <div class="avatar">
                     <img id="profileImage" src="../images/emoji-sorrindo-com-oculos-seeklogo.png" alt="Profile">
-                    <input type="file" id="imageUpload" hidden>
-                    <button onclick="uploadImage()">Change Photo</button>
                 </div>
                 <div class="supervisor-info">
                     <h3>Dr. Irene Nandutu</h3>
@@ -34,64 +32,62 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li data-target="documents" class="menu-item has-submenu">
+                    <li data-target="profile">
                         <div class="menu-title">
                             <span class="icon">👤</span>
                             <span class="label">Profile</span>
                         </div>
-                            <ul class="submenu">
-                                <li data-target="proposals">
-                                    <span class="icon">✏️</span>
-                                    <span class="label">Edit</span>
-                                </li>
-                            </ul>
                     </li>
-                    <li data-target="assigned">
-                        <span class="icon">🎓</span> 
-                        <span class="label">Assigned Students</span></li>
-                    <li data-target="documents" class="menu-item has-submenu">
+
+                    <li data-target="assigned" id="studentsBtn">
+                        <div class="menu-title">
+                            <span class="icon">🧑🏻‍🎓</span> 
+                            <span class="label">Allocated Students</span>
+                        </div>
+                    </li>
+
+                    <li data-target="documents" class="locked">
                         <div class="menu-title">
                             <span class="icon">📁</span>
                             <span class="label">Documentation</span>
                         </div>
-                            <ul class="submenu">
-                                <li data-target="proposals">
-                                    <span class="icon">📄</span>
-                                    <span class="label">Proposals</span>
-                                </li>
-                                <li data-target="reports">
-                                    <span class="icon">📃</span>
-                                    <span class="label">Reports</span>
-                                </li>
-                            </ul>
                     </li>
-                    <li data-target="repo" class="menu-item has-submenu">
+
+                    </li>
+                    <li data-target="repo" class="locked">
                         <div class="menu-title">
                             <span class="icon">📦</span>
                             <span class="label">Repository</span>
                         </div>
-                            <ul class="submenu">
-                                <li data-target="github">
-                                    <span class="icon-github"><img src="../images/github-seeklogo.png"></span>
-                                    <span class="label">GitHub</span>
-                                </li>
-                                <li data-target="reports">
-                                    <span class="icon">📷</span>
-                                    <span class="label">Snapshots</span>
-                                </li>
-                            </ul>
                     </li>
-                    <li data-target="repo" class="menu-item has-submenu">
+
+                    </li>
+                    <li data-target="analytics" class="locked">
                         <div class="menu-title">
                             <span class="icon">📊</span>
                             <span class="label">Analytics</span>
                         </div>
-                            <ul class="submenu">
-                                <li data-target="graphs">
-                                    <span class="icon-github">📈</span>
-                                    <span class="label">Graphs</span>
-                                </li>
-                            </ul>
+                    </li>
+
+                    <li data-target="grades" class="locked">
+                        <div class="menu-title">
+                            <span class="icon">🎓</span>
+                            <span class="label">Grades</span>
+                        </div>
+                    </li>
+
+                    <li data-target="deadlines">
+                        <div class="menu-title">
+                            <span class="icon">⏰</span>
+                            <span class="label">Deadlines</span>
+                        </div>
+                    </li>
+
+                    <li data-target="settings">
+                        <div class="menu-title">
+                            <span class="icon">⚙️</span>
+                            <span class="label">Settings</span>
+                        </div>
                     </li>
                     <li class="logout" onclick="openLogout()">
                         <span class="icon">🚪</span>
@@ -101,51 +97,219 @@
         </aside>
     
         <main class="dashboard">
-
             <!--profile-->
-            <section id="profile" class="glass card active">
-                <h3>Profile</h3>
-                <input id="name" placeholder="Name">
-                <input id="email" placeholder="Email">
-                <input id="department" placeholder="Department">
-                <button onclick="updateProfile()">Update</button>
+            <section id="profileView" class="hidden section">
+                <h2>Supervisor Profile</h2>
+
+                <idv class="profile-edit">
+                    <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
+
+                    <input type="file" id="profileUpload">
+
+                    <input type="text" value="Dr. Irene Nandutu">
+                    <input type="email" value="irene.nandutu@busitema.ac.ug">
+
+                    <button>Save Changes</button>
+                </idv>
             </section>
 
-            <!--assigned students-->
-            <section id="assigned" class="glass card">
-                <h3>Assigned Students</h3>
-                <table>
-                    <tr>
-                        <th>No.</th>
-                        <th>Full Name</th>
-                        <th>Reg No.</th>
-                        <th>Project Title</th>
-                    </tr>
-                    <tr>
-                        <td>01.</td>
-                        <td>Kitara Emmmanuel Okello</td>
-                        <td>BU/UP/2023/1495</td>
-                        <td>Final Year Project Management System</td>
-                    </tr>
-                </table>
+            <!-- TOP BAR -->
+            <div class="section">
+                <span id="studentContext">No student selected</span>
+            </div>
+
+            <!-- DASHBOARD CONTENT -->
+            <section id="dashboardView" class="section active">
+                <h1>Welcome 👋</h1>
+                <p>Select a student to begin reviewing work.</p>
+            </section>
+ 
+            <!-- STUDENTS LIST -->
+            <section id="studentsView" class="hidden">
+                <h2>Allocated Students</h2>
+
+                <div class="student-grid">
+                    <div class="student-card" data-name="Emmanuel Kitara Okello">
+                    <h3>Emmanuel Kitara Okello</h3>
+                        <p>BU/UP/2023/1495</p>
+                        <p>Progress: 65%</p>
+                    </div>
+
+                    <div class="student-card" data-name="Stacy Martha Alowo Toto">
+                        <h3>Stacy Martha Alowo Toto</h3>
+                        <p>BU/UP/2023/1212</p>
+                        <p>Progress: 82%</p>
+                    </div>
+                </div>
             </section>
 
             <!--documentation-->
-            <section id="documents" class="glass card">
-                <h3>Documentation</h3>
+            <section id="documentView" class="hidden section">
+                <div class="doc-card">
+                    <h2>Project Documentation</h2>
+
+                    <h3>Project Title</h3>
+                    <p></p>
+                </div>
+
+                <div class="doc-card">
+                    <h3>Proposal</h3>
+                    <button>View</button>
+                    <button>Download</button>
+                </div>
+
+                <div class="doc-card">
+                    <h3>Final Report</h3>
+                    <button>View</button>
+                    <button>Download</button>
+                </div>
+
+                <idv class="review-section">
+                    <textarea placeholder="Supervisor's comments..."></textarea>
+                    <button>Submit Comments</button>
+                </idv>
             </section>
 
             <!--repository-->
-            <section id="repo" class="glass card">
-                <h3>Repository</h3>
+            <section id="repoView" class="hidden section">
+                <h2>Project Repository</h2>
+
+                <div class="repo-box">
+                    <h3>GitHub Repository:</h3>
+                    <a href="https://github.com/student/project" target="_blank">
+                        https://github.com/student/project
+                    </a>
+                </div>
+
+                <h3>Snapshots</h3>
+                <div class="snapshot-grid">
+                    <img src="../images/bg 3.JPG">
+                    <img src="../images/bg 1.JPG">
+                    <img src="../images/bg 4.JPG">
+                    <img src="../images/bg 2.JPG">
+                </div>
+
+                <div class="review-section">
+                    <textarea placeholder="Supervisor's comments..."></textarea>
+                    <button>Submit comments</button>
+                </div>
             </section>
 
             <!--analytics-->
-            <section id="analytics" class="glass card">
-                <h3>Analytics</h3>
-                <canvas id="progressChart"></canvas>
+            <section id="analyticsView" class="hidden section">
+                <h2>Student Analytics</h2>
+
+                <div class="card">Progress: 65%</div>
+                <div class="card">Submissions: On Time</div>
+                <div class="card">Repo Activity: Active</div>
+                <div class="card">Risk: Medium</div>
             </section>
+            
+            <!--grades-->
+            <sections id="gradesView" class="hidden section">
+                <h2>Grades & Assessment</h2>
+
+                <p id="gradeStudentLabel" class="muted"></p>
+
+                <div class="grade-table">
+                    <div class="grade-row">
+                        <span>Proposal</span>
+                        <input type="number" max="20" data-part="proposal" placeholder="0 - 20">
+                        <span>20</span>
+                    </div>
+
+                    <div class="grade-row">
+                        <span>Progress Assessment</span>
+                        <input type="number" max="30" data-part="progress" placeholder="0 - 30">
+                        <span>30</span>
+                    </div>
+
+                    <div class="grade-row">
+                        <span>Final Report</span>
+                        <input type="number" max="40" data-part="final" placeholder="0 - 40">
+                        <span>40</span>
+                    </div>
+
+                    <div class="grade-row">
+                        <span>Presentation</span>
+                        <input type="number" max="10" data-part="presentation" placeholder="0 - 10">
+                        <span>10</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="grade-total">
+                        <strong>Total</strong>
+                        <Strong id="gradeTotal">0 / 100</Strong>
+                    </div>
+
+                    <textarea id="gradeComment" placeholder="Overall supervisor feedback..."></textarea>
+
+                    <div class="grade-total">
+                        <button id="saveGrade">Save Draft</button>
+                        <button id="submitGrade" class="primary">Submit Final Grades</button>
+                    </div>
+                    
+                </div>
+            </sections>
+            <!--deadlines-->
+            <section id="deadlinesView" class="hidden section">
+                <h2>Upcoming Deadlines</h2>
+            </section>
+
+            <!--settings-->
+            <section id="settingsView" class="hidden section">
+                <h2>System settings</h2>
+
+                <div class="setting-card">
+                    <h3>Theme</h3>
+                    <p>Switch between dark and light mode.</p>
+                    <button onclick="toggleTheme()">Toggle Theme</button>
+                </div>
+
+                <div class="setting-card">
+                    <h3> Email Notifications</h3>
+                    <p>Turn on/off Email notifications.</p>
+                    <label class="switch">
+                        <input type="checkbox" id="notificationsToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-card">
+                        <h3>GitHub Sync</h3>
+                        <p>Sync or async into your GitHub account.</p>
+                        <label class="switch">
+                            <input type="checkbox" id="githubToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+            </section>
+
+
+        
+            
+            
         </main>
+    </div>
+    <!--student confirmation modal-->
+    <div id="studentModal" class="modal hidden">
+        <div class="modal-box">
+            <h3>Confirm Student Selection</h3>
+            <p>You are about to view and manage info for:</p><br>
+
+            <div class="student-higlight">
+                <span id="modalStudentName">data-name</span>
+            </div><br>
+            <p class="warning">
+                All Documentation, Repository, Analytics & Grades will apply to this student.
+            </p>
+            <div class="modal-actions">
+                <button id="confirmStudent">OK</button>
+                <button id="cancelStudent" class="ghost">Cancel</button>
+            </div>
+            </div>
+        </div>
     </div>
     <!--logout confirmation-->
     <div class="logout-modal" id="logoutModal">

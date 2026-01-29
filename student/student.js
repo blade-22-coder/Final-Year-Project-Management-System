@@ -40,45 +40,45 @@
     cancelEditProfile(); //switch back to display mode
  }
 
-//project progress battery chart
-let progressData = {
-    title: 20,
-    proposal: 45,
-    proposalApproved: 60,
-    finalReport: 80,
-    finalApproved: 100
-};
-    //choose which progress to display
-let currentStage = 'proposalApproved'; //example stage
+// //project progress battery chart
+// let progressData = {
+//     title: 20,
+//     proposal: 45,
+//     proposalApproved: 60,
+//     finalReport: 80,
+//     finalApproved: 100
+// };
+//     //choose which progress to display
+// let currentStage = 'proposalApproved'; //example stage
 
-const batteryFill = document.getElementById("batteryFill");
-const batteryPercent = document.getElementById("batteryPercent");
-    //color based on progress
-function getBatteryColor(percentage) {
-    if (percentage < 40) return 'linear-gradient(90deg, red, orange)';
-    if (percentage < 70) return 'linear-gradient(90deg, orange, yellow)';
-    if (percentage <= 100) return 'linear-gradient(90deg, yellow, green)';
-    return 'linear-gradient(90deg, blue, purple)';
-}
-    //animate battery fill like charge
-function animateBattery(targetPercent) {
-    batteryFill.classList.add("stripes"); //add stripes animation
-    let currentPercent = 0;
+// const batteryFill = document.getElementById("batteryFill");
+// const batteryPercent = document.getElementById("batteryPercent");
+//     //color based on progress
+// function getBatteryColor(percentage) {
+//     if (percentage < 40) return 'linear-gradient(90deg, red, orange)';
+//     if (percentage < 70) return 'linear-gradient(90deg, orange, yellow)';
+//     if (percentage <= 100) return 'linear-gradient(90deg, yellow, green)';
+//     return 'linear-gradient(90deg, blue, purple)';
+// }
+//     //animate battery fill like charge
+// function animateBattery(targetPercent) {
+//     batteryFill.classList.add("stripes"); //add stripes animation
+//     let currentPercent = 0;
 
-    const interval = setInterval(() => {
-        if (currentPercent >= targetPercent) {
-            clearInterval(interval);
-            batteryFill.classList.remove("stripes"); //remove stripes animation
-            return;
-        }
-        currentPercent++;
-        batteryFill.style.height = currentPercent + "%";
-        batteryFill.style.background = getBatteryColor(currentPercent);
-        batteryPercent.textContent = currentPercent + "%"; 
-    }, 20); //speed of animation
-}
-    //run animation
-animateBattery(progressData[currentStage]);
+//     const interval = setInterval(() => {
+//         if (currentPercent >= targetPercent) {
+//             clearInterval(interval);
+//             batteryFill.classList.remove("stripes"); //remove stripes animation
+//             return;
+//         }
+//         currentPercent++;
+//         batteryFill.style.height = currentPercent + "%";
+//         batteryFill.style.background = getBatteryColor(currentPercent);
+//         batteryPercent.textContent = currentPercent + "%"; 
+//     }, 20); //speed of animation
+// }
+//     //run animation
+// animateBattery(progressData[currentStage]);
 
 
 //section toggling
@@ -121,29 +121,6 @@ document.querySelectorAll(".menu-title").forEach(title => {
 });
 
 //loading deadlines 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const container = document.getElementById("deadlineList");
-//     const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
-
-//     if (deadlines.length === 0) {
-//         container.innerHTML = "<p>No deadlines set yet.</p>";
-//         return;
-//     }
-
-//     deadlines.forEach(dl => {
-//         if (dl.audience !== "students" && dl.audience !== "all") return;
-
-//         const card = document.createdElement("div");
-//         card.className = "deadline-card";
-
-//         card.innerHTML = `
-//             <h3>${dl.title}<h3>
-//             <p>${dl.description || ""}</p>
-//             <div class="deadline-date">📆 ${dl.date}</div>`;
-        
-//         container.appendChild(card);
-//     });
-// });
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("deadlineList");
 
@@ -197,3 +174,145 @@ document.getElementById("logoutModal").addEventListener("click", e => {
     if (e.target.id === "logoutModal") closeLogout();
 
 });
+
+//comment section from supervisor
+const submissions = {
+    title: { state: "approved", comment: "Title is acceptable" },
+    proposal: { state: "pending", comment: "Under review" },
+    report: { state: "waiting", comment: "" },
+    github: { state: "approved", comment: "Repo Structure is good" },
+    snapshots: {state: "rejected", comment: "UI screenshots unclear" }
+};
+
+//comment section
+const reviewComments = {
+    title: {
+        supervisor: {
+            message: "Title is clear and researchable.",
+            date: "2026-01-25"
+        },
+        student: {
+            message: "Thank you, I’ll proceed with proposal.",
+            date: "2026-01-25"
+        }
+    },
+
+    proposal: {
+        supervisor: {
+            message: "Methodology section needs expansion.",
+            date: "2026-01-26"
+        },
+        student: null
+    },
+
+    report: {
+        supervisor: null,
+        student: null
+    },
+
+    github: {
+        supervisor: {
+            message: "Commit history looks good.",
+            date: "2026-01-27"
+        },
+        student: {
+            message: "Thanks! I'll keep pushing updates.",
+            date: "2026-01-27"
+        }
+    },
+
+    snapshots: {
+        supervisor: {
+            message: "Dashboard UI needs better alignment.",
+            date: "2026-01-27"
+        },
+        student: null
+    }
+};
+//render comment threads
+function renderComments() {
+    const container = document.getElementById("commentThreads");
+    container.innerHTML = "";
+
+    Object.entries(reviewComments).forEach(([key, thread]) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "comment-thread";
+
+        wrapper.innerHTML = `
+            <h4>${key.toUpperCase()}</h4>
+
+            ${thread.supervisor ? `
+                <div class="comment supervisor">
+                    <strong>Supervisor</strong>
+                    <p>${thread.supervisor.message}</p>
+                    <div class="comment-date">${thread.supervisor.date}</div>
+                </div>
+            ` : `<p>No supervisor feedback yet.</p>`}
+
+            ${thread.student ? `
+                <div class="comment student">
+                    <strong>You</strong>
+                    <p>${thread.student.message}</p>
+                    <div class="comment-date">${thread.student.date}</div>
+                </div>
+            ` : `
+                <div class="reply-box">
+                    <textarea id="reply-${key}" placeholder="Reply to supervisor..."></textarea>
+                    <button onclick="submitReply('${key}')">Send Reply</button>
+                </div>
+            `}
+        `;
+
+        container.appendChild(wrapper);
+    });
+}
+
+renderComments();
+//reply logic
+function submitReply(section) {
+    const textarea = document.getElementById(`reply-${section}`);
+    const message = textarea.value.trim();
+
+    if (!message) return alert("Reply cannot be empty");
+
+    reviewComments[section].student = {
+        message,
+        date: new Date().toLocaleDateString()
+    };
+
+    // Save locally (replace with API later)
+    localStorage.setItem("reviewComments", JSON.stringify(reviewComments));
+
+    renderComments();
+}
+//status render
+const statusIcons = {
+    waiting: "💤 Waiting",
+    pending: "⏳ Pending",
+    approved: "✅ Approved",
+    rejected: "❌ Rejected"
+};
+
+function renderStatus() {
+    const grid = document.getElementById("statusGrid");
+    grid.innerHTML = "";
+
+    Object.entries(submissions).forEach(([key, data]) => {
+        const card = document.createElement("div");
+        card.className = `status-card ${data.state}`;
+
+        card.innerHTML = `
+            <h4>${key.toUpperCase()}</h4>
+            <strong>${statusIcons[data.state]}</strong>
+            <p>${data.comment || "No feedback yet"}</p>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    updateBatteryFromStatus();
+}
+
+renderStatus();
+
+

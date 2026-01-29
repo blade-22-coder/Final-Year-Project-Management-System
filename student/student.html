@@ -34,17 +34,11 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li data-target="documents" class="menu-item has-submenu">
+                    <li data-target="profile">
                         <div class="menu-title">
                             <span class="icon">👤</span>
                             <span class="label">Profile</span>
                         </div>
-                            <ul class="submenu">
-                                <li data-target="proposals">
-                                    <span class="icon">✏️</span>
-                                    <span class="label">Edit</span>
-                                </li>
-                            </ul>
                     </li>
                     <li data-target="submissions">
                         <span class="icon">✉️</span>
@@ -65,7 +59,7 @@
                         <span class="icon">🚪</span>
                         <span class="label">Logout</span></li>
                 </ul>             
-            </nav>
+            </nav> 
         </aside>
     
 
@@ -75,7 +69,7 @@
         <main class="content">
 
             <!--floating battery container-->
-            <div class="battery-widget">
+            <!--<div class="battery-widget">
                 <div class="battery-container">
                     <div class="battery-body">
                         <div class="battery-fill" id="batteryFill"></div>
@@ -83,7 +77,7 @@
                     <div class="battery-tip"></div>
                     <p id="batteryPercent">0%</p>
                 </div>
-            </div>
+            </div>-->
 
             <div class="dashboard">
 
@@ -112,34 +106,42 @@
                 <section id="submissions" class="glass card">
                     <h3>Project Submissions</h3>
 
-                    <div class="submission-section">
-                        <label>Project Title</label>
-                        <input id="title">
-                        <button onclick="submitTitle()">Sumbit Title</button>
+                    <div class="submission-card">
+                        <h4>Project Title</h4>
+                        <p class="hint">Precise title</p>
+                        <input type="text" accept=".pdf, .docx">
+                        <button>Submit Title</button>
+
                     </div>
                     
-                    <div class="submission-section">
-                        <label>Proposal</label>
-                        <input type="file" id="Proposal" accept=".pdf, .docx">
-                        <button onclick="submitProposal()">Upload Proposal</button>
+                    <div class="submission-card">
+                        <h4>Proposal</h4>
+                        <p class="hint">Upload PDF or DOCX (max 5MB)</p>
+                        <input type="file" accept=".pdf, .docx">
+                        <button>Upload Proposal</button>
+    
                     </div>
                     
-                    <div class="submission-section">
-                        <label>Final Report</label>
-                        <input type="file" id="report">
-                        <button onclick="submitReport()">Upload Report</button>
+                    <div class="submission-card">
+                        <h4>Final Report</h4>
+                        <p class="hint">Upload PDF or DOCX (max 5MB)</p>
+                        <input type="file" accept=".pdf, .docx">
+                        <button>Upload Report</button>
+                        
                     </div>
 
-                    <div class="submission-section">
-                        <label>GitHub Repository</label>
+                    <div class="submission-card">
+                        <h4>GitHub Repository</h4>
                         <input id="githubLink" placeholder="http://github.com/username/project">
                         <button onclick="saveGithub()">Save Link</button>
                     </div>
 
-                    <div class="submission-section">
-                        <label>Snapshots</label>
-                        <input type="file" id="snapshots" accept="image/*" multiple>
-                        <button onclick="submitSnapshots()">Upload Snapshots</button>
+                    <div class="submission-card">
+                        <h4>Snapshots</h4>
+                        <p class="hint">Upload max. 5 snapshots</p>
+                        <input type="file" accept="image/*" multiple>
+                        <button>Upload Snapshots</button>
+                        
                     </div>
                     
                 </section>
@@ -147,19 +149,16 @@
                 <!--status-->
                 <section id="status" class="glass card">
                     <h3>Submission Status</h3>
-                    <ul id="statusList">
-                        <li>Project Title: ✅ Approved</li>
-                        <li>Proposal: ⌛ Waiting</li>
-                        <li>Final Report: ❌ Rejected</li>
-                        <li>Snapshots: 📝 pending</li>
-                    </ul>
-                    <p>Project Progress</p>
+                    <div class="status-grid" id="statusGrid"></div>
+                    
+                    
                     <div class="battery-widget">
                         <div class="battery-container">
                             <div class="battery-body">
                                 <div class="battery-fill" id="batteryFil"></div>
                             </div>
                             <div class="batteryFil"></div>
+                            <div class="battery-tip"></div>
                             <p id="batteryPercent">0%</p>
                         </div>
                     </div>
@@ -168,17 +167,10 @@
                 <!--comments-->
                 <section id="comments" class="glass card">
                     <h3>Supervisor Feedback</h3>
-                    <ul id="commentsList">
-                        <li>Proposal: Great work! ✅</li>
-                        <li>Final Report: Needs more analysis.</li>
-                    </ul>
-
-                    <h4>Your Response:</h4>
-                    <textarea id="commentReply" placeholder="Write a reply..."></textarea>
-                    <button onclick="submitCommitReply()">Send</button>
+                    <div id="commentThreads"></div>
                 </section>
 
-                <!--countdown-->
+                <!--deadlines-->
                 <section id="deadlines" class="glass card">
                     <h3> Upcoming Deadlines</h3>
                     <div id="deadlineList" class="deadline-list"></div>
