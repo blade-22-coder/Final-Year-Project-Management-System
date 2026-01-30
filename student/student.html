@@ -85,20 +85,16 @@
                 <section id="profile" class="glass card active">
                     <h3>My Profile</h3>
                     <div class="profile-display">
-                        <img id="profileImage" src="../images/emoji-sorrindo-com-oculos-seeklogo.png" alt="Profile">
+                        <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
+
+                        <input type="file" id="profileUpload">
+
                         <h4 id="studentName">Emmanuel Kitara Okello</h4>
                         <p id="regNo">BU/UP/2023/1495</p>
                         <P id="email">ekitara22@gmail.com</P>
-                        <button onclick="toggleEditProfile()">Edit Profile</button>
-                    </div>
-                    <div class="profile-edit" style="display: none;">
-                        <input type="text" id="editName" placeholder="Name">
-                        <input type="text" id="editRegNo" placeholder="Reg No.">
-                        <input type="email" id="editEmail" placeholder="Email">
-                        <input type="text" id="editProgram" placeholder="Program">
-                        <input type="file" id="editProfilePic" accept="image/*">
-                        <button onclick="saveProfile()">Save</button>
-                        <button onclick="cancelEditProfile()">Cancel</button>
+                    
+                        <button>Save</button>
+                        <button>Cancel</button>
                     </div>
                 </section>
 
@@ -145,7 +141,7 @@
                     </div>
                     
                 </section>
-
+ 
                 <!--status-->
                 <section id="status" class="glass card">
                     <h3>Submission Status</h3>

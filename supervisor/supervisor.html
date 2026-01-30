@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supervisor Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="supervisor.css">
     <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
 </head>
@@ -32,21 +33,21 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li data-target="profile">
+                    <li data-target="profileView">
                         <div class="menu-title">
                             <span class="icon">👤</span>
                             <span class="label">Profile</span>
                         </div>
                     </li>
 
-                    <li data-target="assigned" id="studentsBtn">
+                    <li data-target="studentsView" id="studentsBtn">
                         <div class="menu-title">
                             <span class="icon">🧑🏻‍🎓</span> 
                             <span class="label">Allocated Students</span>
                         </div>
                     </li>
 
-                    <li data-target="documents" class="locked">
+                    <li data-target="documentView" class="locked">
                         <div class="menu-title">
                             <span class="icon">📁</span>
                             <span class="label">Documentation</span>
@@ -54,7 +55,7 @@
                     </li>
 
                     </li>
-                    <li data-target="repo" class="locked">
+                    <li data-target="repoView" class="locked">
                         <div class="menu-title">
                             <span class="icon">📦</span>
                             <span class="label">Repository</span>
@@ -62,28 +63,28 @@
                     </li>
 
                     </li>
-                    <li data-target="analytics" class="locked">
+                    <li data-target="analyticsView" class="locked">
                         <div class="menu-title">
                             <span class="icon">📊</span>
                             <span class="label">Analytics</span>
                         </div>
                     </li>
 
-                    <li data-target="grades" class="locked">
+                    <li data-target="gradesView" class="locked">
                         <div class="menu-title">
                             <span class="icon">🎓</span>
                             <span class="label">Grades</span>
                         </div>
                     </li>
 
-                    <li data-target="deadlines">
+                    <li data-target="deadlinesView">
                         <div class="menu-title">
                             <span class="icon">⏰</span>
                             <span class="label">Deadlines</span>
                         </div>
                     </li>
 
-                    <li data-target="settings">
+                    <li data-target="settingsView">
                         <div class="menu-title">
                             <span class="icon">⚙️</span>
                             <span class="label">Settings</span>
@@ -99,22 +100,24 @@
         <main class="dashboard">
             <!--profile-->
             <section id="profileView" class="hidden section">
-                <h2>Supervisor Profile</h2>
+                <h2>My Profile</h2>
 
-                <idv class="profile-edit">
+                <div class="profile-edit">
                     <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
 
                     <input type="file" id="profileUpload">
 
-                    <input type="text" value="Dr. Irene Nandutu">
-                    <input type="email" value="irene.nandutu@busitema.ac.ug">
+                    <h4 id="supervisorName">Dr. Irene Nandutu</h4>
+                    <p id="department">Computer Studies</p>
+                    <P id="email">irene.nandutu@busitema.ac.ug</P>
 
-                    <button>Save Changes</button>
-                </idv>
+                    <button>Save</button>
+                    <button>Cancel</button>
+                </div>
             </section>
 
             <!-- TOP BAR -->
-            <div class="section">
+            <div class="top">
                 <span id="studentContext">No student selected</span>
             </div>
 
@@ -199,14 +202,12 @@
             <section id="analyticsView" class="hidden section">
                 <h2>Student Analytics</h2>
 
-                <div class="card">Progress: 65%</div>
-                <div class="card">Submissions: On Time</div>
-                <div class="card">Repo Activity: Active</div>
-                <div class="card">Risk: Medium</div>
+                <canvas id="progressChart" height="120"></canvas>
+                <canvas id="reportChart" height="120"></canvas>
             </section>
             
             <!--grades-->
-            <sections id="gradesView" class="hidden section">
+            <section id="gradesView" class="hidden section">
                 <h2>Grades & Assessment</h2>
 
                 <p id="gradeStudentLabel" class="muted"></p>
@@ -251,10 +252,12 @@
                     </div>
                     
                 </div>
-            </sections>
+
+            </section>
             <!--deadlines-->
             <section id="deadlinesView" class="hidden section">
                 <h2>Upcoming Deadlines</h2>
+                <div id="deadlineList" class="deadline-list"></div>
             </section>
 
             <!--settings-->

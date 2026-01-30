@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const submenu = usersMenu.querySelector(".submenu");
     const menuTitle = usersMenu.querySelector(".menu-title");
 
-    /* 🔽 TOGGLE USERS SUBMENU */
+    /* TOGGLE USERS SUBMENU */
     menuTitle.addEventListener("click", (e) => {
         e.stopPropagation(); // prevent sidebar section switching
 
@@ -115,28 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
-
- 
-// //sidebar toggle
-// const sidebar = document.querySelector(".sidebar");
-// const toggleBtn = document.getElementById("toggleSidebar");
-
-// toggleBtn.addEventListener("click", () => {
-//     sidebar.classList.toggle("collapsed");
-// });
-// const usersMenu = document.getElementById("usersMenu");
-// const menuTitle = usersMenu.querySelector(".menu-title");
-
-// menuTitle.addEventListener("click", (e) => {
-//     e.stopPropagation();
-
-//     // prevent opening submenu when sidebar is collapsed
-//     if (document.querySelector(".sidebar").classList.contains("collapsed")) {
-//         return;
-//     }
-
-//     usersMenu.classList.toggle("open");
-// });
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -305,7 +283,7 @@ function saveDeadline() {
         title,
         description,
         date: selectedDate,
-        audience: "students",
+        audience: ["students, supervisors"],
         createdBy: "blade",
         createdAt: new Date().toISOString()
     };

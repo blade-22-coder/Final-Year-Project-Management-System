@@ -8,37 +8,24 @@
     });
 
 
- //toggle to edit profile
- function toggleEditProfile() {
-    document.querySelector(".profile-display").style.display = "none";
-    document.querySelector(".profile-edit").style.display = "block";
-    //prefill inputs
-    document.getElementById("editName").value = document.getElementById("studentName").textContent;
-    document.getElementById("editRegNo").value = document.getElementById("regNo").textContent;
-    document.getElementById("editEmail").value = document.getElementById("email").textContent;
-    document.getElementById("editProgram").value = document.getElementById("program").textContent;
- }
+ //syncing sidebar image
+ const upload = document.getElementById("profileUpload");
+const profileImg = document.getElementById("profileImage");
+const profilePreview = document.getElementById("profilePreview");
 
- function cancelEditProfile () {
-    document.querySelector(".profile-display").style.display = "block";
-    document.querySelector(".profile-edit").style.display ="none";
- }
+upload?.addEventListener("change", e => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
 
- function  saveProfile() {
-    document.getElementById("studentName").textContent = document.getElementById("editName").value;
-    document.getElementById("regNo").textContent = document.getElementById("editRegNo").value;
-    document.getElementById("email").textContent = document.getElementById("editEmail").value;
-    document.getElementById("program").textContent = document.getElementById("editProgram").value;
- 
- //profile pic update
- const file = document.getElementById("editProfilePic").files[0];
- if (file) {
-    const reader = new FileReader ();
-    reader.onlaod = e => document.getElementById("profileImage").src = e.target.result;
-    reader.readAsDataURL(file);
-    }
-    cancelEditProfile(); //switch back to display mode
- }
+  reader.onload = () => {
+    profileImg.src = reader.result;
+    profilePreview.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+
+
 
 // //project progress battery chart
 // let progressData = {
@@ -81,7 +68,7 @@
 // animateBattery(progressData[currentStage]);
 
 
-//section toggling
+//section toggling 
 document.addEventListener("DOMContentLoaded", () => {
     
     const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
@@ -139,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     deadlines.forEach(dl => {
-        if (dl.audience !== "students" && dl.audience !== "all") return;
+        if (!dl.audience.includes("students")) return;
 
         const card = document.createElement("div");
         card.className = "deadline-card";
