@@ -30,6 +30,7 @@ const modalStudentName = document.getElementById("modalStudentName");
 const confirmBtn = document.getElementById("confirmStudent");
 const cancelBtn = document.getElementById("cancelStudent");
 
+let selectedStudent = null;
 let pendingStudent = null;
 
 document.querySelectorAll(".student-card").forEach(card => {
@@ -41,11 +42,15 @@ document.querySelectorAll(".student-card").forEach(card => {
 });
 
 confirmBtn.onclick = () => {
-  studentContext.textContent = `Viewing: ${pendingStudent}`;
+  selectedStudent = pendingStudent;
+  
+  studentContext.textContent = `Viewing: ${selectedStudent}`;
 
   lockedItems.forEach(item => {
     item.classList.remove("locked");
   });
+
+  loadAnalytics(selectedStudent);
 
   modal.classList.add("hidden");
 };
@@ -56,7 +61,7 @@ cancelBtn.onclick = () => {
 };
 
 //section navigation
-const navItems = document.querySelectorAll(".sidebar-nav li[data-target");
+const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
 const sections = document.querySelectorAll("main section");
 
 navItems.forEach(item => {
@@ -97,7 +102,7 @@ upload?.addEventListener("change", e => {
 //analytics chart per student
 const studentAnalytics = {
   "Emmanuel Kitara Okello": {
-    progress: [20, 35, 50, 65,],
+    progress: [20, 35, 50, 65],
     repoCommits: [2, 5, 9, 14],
     submissions: ["On Time", "On Time", "Late", "On Time"]
   },
@@ -109,17 +114,26 @@ const studentAnalytics = {
 };
 
 //chart logic
-let progressCtx = document.getElementById("progressChart").getContext("2d");
-let repoCtx = document.getElementById("repoChart").getContext("2d");
-
-let progresschart, repoChart;
+let progressChart = null;
+let reportChart = null;
 
 function loadAnalytics(studentName) {
   const data = studentAnalytics[studentName];
   if (!data) return;
 
+  const progressCanvas = document.getElementById("progressChart");
+  const reportCanvas = document.getElementById("reportChart");
+  
+  if (!progressCanvas || !reportCanvas) {
+    console.error("Analtyics canvas not found");
+    return;
+  }
+
+  const progressCtx = progressCanvas.getContext("2d");
+  const repoCtx = reportCanvas.getContext("2d");
+
   if (progressChart) progressChart.destroy();
-  if(repoChart) reportChart.destroy();
+  if(reportChart) reportChart.destroy();
  
   progressChart = new Chart(progressCtx, {
     type: "line",
@@ -133,17 +147,19 @@ function loadAnalytics(studentName) {
       }]
     }
   });
-  repoChart = new Chart(repoCtx, {
+  reportChart = new Chart(repoCtx, {
     type: "bar",
     data: {
       labels: ["week 1", "Week 2", "Week 3", "Week 4"],
-      data: [{
+      datasets: [{
         label: "Repository Activity (Commits)",
         data: data.repoCommits
       }]
     }
   });
 }
+
+
 
 //logout
 function openLogout() {

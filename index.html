@@ -14,7 +14,7 @@
 <div class="container" id="container">
 
   <!-- SIGN UP -->
-  <div class="form-container sign-up">
+  <div class="form-container sign-up" id="signup-form">
     <form action="/signup" method="post" class="form signup-form">
 
       <h2>Create Account</h2>
@@ -32,6 +32,19 @@
         <span class="eye-icon" onclick="togglePassword('signupPassword')">🫣</span>
       </div>
 
+      <div class="role-select">
+        <div class="role-title"></div>
+        <div class="roles">
+          <label>
+            <input type="radio" name="role" value="STUDENT" required>
+            <span>🎓 <br>Student</span>  
+          </label>
+          <label >
+            <input type="radio" name="role" value="SUPERVISOR">
+            <span>🧑🏻‍🏫 Supervisor</span>
+          </label>
+        </div>
+      </div>
       <button type="submit">Sign Up</button>
       <div class="divider">
         <span>or</span>
@@ -47,7 +60,7 @@
   </div>
 
   <!-- LOGIN -->
-  <div class="form-container sign-in">
+  <div class="form-container sign-in" id="login-form">
     <form action="/login" method="post" class="form login-form">
 
       <h2>Welcome Back!</h2>
@@ -101,6 +114,6 @@
 
 </div>
 
-<script src="auth.js"></script>
+<script src="auth/auth.js"></script>
 </body>
-</html>
+</html> 

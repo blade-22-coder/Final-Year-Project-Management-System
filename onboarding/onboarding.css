@@ -1,0 +1,77 @@
+body {
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    background: url('../images/check.jpg') center/cover no-repeat fixed;;
+    font-family: 'Courier New', Courier, monospace;
+}
+.onboarding {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    padding: 40px;
+    border-radius: 20px;
+    width: 400px;
+    color: white;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.role-form {
+    display:none;
+    flex-direction: column;
+    gap: 14px;
+}
+input {
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+}
+button {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 30px;
+    border-radius: 30px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+.error-state {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.35);
+    animation: fadeUp 0.6s ease;
+}
+.error-state h2 {
+    margin-bottom: 10px;
+}
+.error-state p {
+    opacity: 0.9;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.error-state button {
+    padding: 12px 28px;
+    border-radius: 30px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        trnasform: translateY(0);
+    }
+}

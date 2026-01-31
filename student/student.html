@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal</title>
     <link rel="stylesheet" href="student.css">
     <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
+    <!--<script type="module">
+        import { protectRoute } from "../auth/route-guard.js";
+        protectRoute("STUDENT");
+    </script>-->
+
 </head>
 <body> 
     <div class="top-bar">
@@ -83,18 +88,19 @@
 
                 <!--student portal-->
                 <section id="profile" class="glass card active">
-                    <h3>My Profile</h3>
+                    <h2>My Profile</h2>
                     <div class="profile-display">
                         <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
 
                         <input type="file" id="profileUpload">
+                        <button>Save</button>
+                        <button>Cancel</button>
 
                         <h4 id="studentName">Emmanuel Kitara Okello</h4>
                         <p id="regNo">BU/UP/2023/1495</p>
                         <P id="email">ekitara22@gmail.com</P>
                     
-                        <button>Save</button>
-                        <button>Cancel</button>
+                        
                     </div>
                 </section>
 
@@ -134,7 +140,7 @@
 
                     <div class="submission-card">
                         <h4>Snapshots</h4>
-                        <p class="hint">Upload max. 5 snapshots</p>
+                        <p class="hint">Upload max. 6 snapshots</p>
                         <input type="file" accept="image/*" multiple>
                         <button>Upload Snapshots</button>
                         
@@ -175,11 +181,11 @@
                 <!--notifications-->
                 <section id="notifications" class="glass card">
                     <h3>Notifications</h3>
-                    <ul id="notificationsList">
-                        <li>📆 Project title submission deadline: 6th Mar</li>
-                        <li>📫 Supervisor approved your proposal</li>
-                        <li>💻 GitHub Link approved</li>
-                        <li>🪧 University Robotics Expo next week</li>
+                    <ul id="notificationsList" class="notifications-list">
+                        <li class="notify deadline">📆 Project title submission deadline: 6th Mar</li>
+                        <li class="notify success">📫 Supervisor approved your proposal</li>
+                        <li class="notify success">💻 GitHub Link approved</li>
+                        <li class="notify info">🪧 University Robotics Expo next week</li>
                     </ul>
                 </section>
             </div>

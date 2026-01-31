@@ -283,7 +283,7 @@ function saveDeadline() {
         title,
         description,
         date: selectedDate,
-        audience: ["students, supervisors"],
+        audience: ["students", "supervisors"],
         createdBy: "blade",
         createdAt: new Date().toISOString()
     };

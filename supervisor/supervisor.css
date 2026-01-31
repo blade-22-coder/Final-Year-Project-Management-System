@@ -10,6 +10,7 @@ body {
     color: #fff;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 body::before {
     content: "";
@@ -65,6 +66,9 @@ body::before {
     padding: 30px;
     overflow-y: auto;
     width: 100%;
+    padding: 110px 30px 30px;
+    height: 100vh;
+
 }
 .card {
     display: none;
@@ -78,6 +82,12 @@ body::before {
     background: rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(15px);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+.sidebar-glass::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 .profile-box {
     display: flex;
@@ -346,10 +356,10 @@ body::before {
 .hidden {
     display: none;
 }
+
 .section {
     padding: 40px;
     animation: fadeSlideIn 0.5s ease;
-    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(14px);
     margin-bottom: 25px;
     border-radius: 20px;
@@ -405,4 +415,201 @@ body::before {
     font-size: 0.9rem;
     opacity: 0.8;
 }
-
+.setting-card {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 40px;
+    border-radius: 16px;
+    gap: 20px;
+}
+.setting-card h3 {
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+.setting-card p {
+    font-size: 0.85rem;
+    width: 100%;
+}
+.setting-card button {
+    margin-top: 12px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+.settings-grid {
+    gap: 20px;
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    flex-direction: column;
+}
+.doc-card {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 50px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    gap: 20px;
+}
+.review-section textarea {
+    width: 100%;
+    margin-top: 8px;
+    padding: 60px;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+}
+.review-section button {
+    border-radius: 8px;
+    margin-top: 6px;
+    outline: none;
+    padding: 10px;
+    background-color: #00ffd5;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.doc-card button {
+    padding: 10px;
+    border-radius: 8px;
+    outline: none;
+    border: 2px solid cyan;
+    margin-top: 16px;
+    cursor: pointer;
+}
+#submitComments {
+    background: linear-gradient(135deg, #2563eb, #1d4e);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+    position: relative;
+    left: 80%;
+}
+#submitComments:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(37,99,235,0,45);
+}
+.doc-card h3 {
+    margin-bottom: 6px;
+}
+.repo-box {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 50px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    gap: 20px;
+}
+.snapshot-grid {
+    display: grid;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 40px;
+    border-radius: 14px;
+}
+.image-grid img {
+    width: 250px;
+    height: 250px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    grid-template-columns: repeat(auto-fit, minmax(2, 1fr));
+    gap: 20px;
+}
+#gradesView h2 {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+#gradeStudentLabel {
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+.grade-table {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+}
+.grade-row {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr 0.6fr;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+.grade-row:last-of-type {
+    border-bottom: none;
+}
+.grade-row span:first-child {
+    font-weight: 500;
+    color: #374151;
+}
+.grade-row span:last-child {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+.grade-row input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 2px solid #d1d5bd;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+.grade-row input:focus {
+    outline: none;
+    border-color: cyan;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+}
+.grade-table hr {
+    margin: 18px 0;
+    border: none;
+    border-top: 1px dashed #e5e7eb;
+}
+.grade-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    gap: 14px;
+}
+#gradeTotal {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #16a34a;
+}
+#gradeComment {
+    width: 100%;
+    min-height: 90px;
+    margin-top: 18px;
+    padding: 60px;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+#gradeComment:focus {
+    outline: none;
+}
+.grade-table button {
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 2px solid cyan;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+#saveeGrade {
+    background: #f1f5f9;
+    color: #334155;
+}
+#saveGrade:hover {
+    background: cyan;
+}
+#submitGrade {
+    background: linear-gradient(135deg, #2563eb, #1d4e);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+}
+#submitGrade:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(37,99,235,0,45);
+}

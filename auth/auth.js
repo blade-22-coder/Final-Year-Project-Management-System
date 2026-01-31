@@ -30,20 +30,24 @@ loginBtn.addEventListener("click", () => {
 //signup
 document.getElementById("signup-form")?.addEventListener("submit",async e => {
     e.preventDefault();
+
+    const fullName = e.target.fullname.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const role = e.target.role.value; //student or supervisor
     const inputs = e.target.querySelectorAll("input");
     const payload = { 
-        fullName: inputs[0].value,
-        email: inputs[1].value,
-        password: inputs[2].value
+        fullName, email, password, role
     };
     const res = await fetch("http://localhost:8080/api/auth/signup", {
         method: "POST",
-        headers: {"content-type": "application/json"},
+        headers: {"content-Type": "application/json"},
         body: JSON.stringify(payload)
     });
     if (res.ok) {
+        localStorage.setItem("role", role)
         alert("Signup successful! Please log in.");
-        window.location.href = "login.html";
+        window.location.href = "../onboarding/onboarding.html";
     } else {
         alert("Signup failed. Please try again.");
     } 
@@ -52,9 +56,10 @@ document.getElementById("signup-form")?.addEventListener("submit",async e => {
 //login
 document.getElementById("login-form")?.addEventListener("submit",async e => {
     e.preventDefault();
-    const email = e.target.querySelector("input[type='email']").value;
 
-    const password = e.target.querySelector("input[type='password']").value;
+    const email = e.target.email.value;
+
+    const password = e.target.password.value;
 
     const res = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
@@ -63,11 +68,23 @@ document.getElementById("login-form")?.addEventListener("submit",async e => {
         },
         body: JSON.stringify({ email, password })
     });
-    if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem("token", data.token);
-        window.location.href = "dashboard.html";
-    } else {
-        alert("Login failed. Please check your credentials and try again.");
+    if (!res.ok) {
+        alert("Invalid credentials");
+        return;
+        
     }
+    const data = await res.json();
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+
+    //role-based redirect
+    if(data.role === "ADMIN") {
+        window.location.href = "../admin/admin.html";
+    } else if (data.role === "SUPERVISOR") {
+        window.localStorage.href = "../supervisor/supervisor.html";
+    }else {
+        window.localStorage.href = "..student/student.html"
+    }
+    
 });

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding</title>
+    <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+    <div class="onboarding">
+        <h1 id="welcomeTitle">Welcome 👋</h1>
+
+        <!--student form-->
+        <form id="studentForm" class="role-form">
+            <input type="text" placeholder="Registration Number" required>
+            <input type="text" placeholder="Course / Program" required>
+            <input type="text" placeholder="Project Title (Optional)">
+            <button type="submit">Continue -></button> 
+        </form>
+
+        <!--supervisor form-->
+        <form id="supervisorForm" class="role-form">
+            <input type="text" placeholder="Staff ID" required>
+            <input type="text" placeholder="Department" required>
+            <input type="number" placeholder="Max Students (Optional)">
+            <button type="submit">Continue -></button>
+        </form>
+    </div>
+    <div id="errorState" class="error-state hidden">
+        <h2>😮 Oops!...something went wrong</h2>
+        <p>
+            We couldn't figure out your role.
+            <br>
+            Don't stress - shall help you.
+        </p>
+        <button onclick="goBack()">Back to Sign Up</button>
+    </div>
+<script src="onboarding.js"></script>
+</body>
+</html>

@@ -7,6 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="supervisor.css">
     <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
+    <!--<script type="module">
+        import { protectRoute } from "../auth/route-guard.js";
+        protectRoute("SUPERVISOR");
+    </script>-->
+
 </head>
 <body>
     <div class="top-bar">
@@ -106,13 +111,14 @@
                     <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
 
                     <input type="file" id="profileUpload">
+                    <button>Save</button>
+                    <button>Cancel</button>
 
                     <h4 id="supervisorName">Dr. Irene Nandutu</h4>
                     <p id="department">Computer Studies</p>
                     <P id="email">irene.nandutu@busitema.ac.ug</P>
 
-                    <button>Save</button>
-                    <button>Cancel</button>
+                    
                 </div>
             </section>
 
@@ -148,29 +154,41 @@
 
             <!--documentation-->
             <section id="documentView" class="hidden section">
-                <div class="doc-card">
+                
                     <h2>Project Documentation</h2>
+                <div class="doc-card">
+                    <h3>Project Title:</h3><br>
+                    <p>Final Year Project Management System</p>
 
-                    <h3>Project Title</h3>
-                    <p></p>
+                    <div class="review-section">
+                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <button id="submitComments">Submit comments</button>
+                    </div>
                 </div>
 
                 <div class="doc-card">
                     <h3>Proposal</h3>
                     <button>View</button>
                     <button>Download</button>
+
+                    <div class="review-section">
+                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <button id="submitComments">Submit comments</button>
+                    </div>
                 </div>
+
+                
 
                 <div class="doc-card">
                     <h3>Final Report</h3>
                     <button>View</button>
                     <button>Download</button>
-                </div>
 
-                <idv class="review-section">
-                    <textarea placeholder="Supervisor's comments..."></textarea>
-                    <button>Submit Comments</button>
-                </idv>
+                    <div class="review-section">
+                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <button id="submitComments">Submit Comments</button>
+                    </div>
+                </div>               
             </section>
 
             <!--repository-->
@@ -178,24 +196,34 @@
                 <h2>Project Repository</h2>
 
                 <div class="repo-box">
-                    <h3>GitHub Repository:</h3>
+                    <h3>GitHub Repository:</h3><br>
                     <a href="https://github.com/student/project" target="_blank">
                         https://github.com/student/project
                     </a>
+
+                    <div class="review-section">
+                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <button id="submitComments">Submit comments</button>
+                    </div>
                 </div>
 
                 <h3>Snapshots</h3>
                 <div class="snapshot-grid">
-                    <img src="../images/bg 3.JPG">
-                    <img src="../images/bg 1.JPG">
-                    <img src="../images/bg 4.JPG">
-                    <img src="../images/bg 2.JPG">
+                    <div class="image-grid">
+                        <img src="../images/bg 3.JPG">
+                        <img src="../images/bg 1.JPG">
+                        <img src="../images/bg 4.JPG">
+                        <img src="../images/bg 2.JPG">
+                        <img src="../images/apple-seeklogo.png">
+                        <img src="../images/github-seeklogo.png">
+                    </div>    
+                    <div class="review-section">
+                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <button id="submitComments">Submit comments</button>
+                    </div>
                 </div>
 
-                <div class="review-section">
-                    <textarea placeholder="Supervisor's comments..."></textarea>
-                    <button>Submit comments</button>
-                </div>
+                
             </section>
 
             <!--analytics-->
@@ -264,22 +292,23 @@
             <section id="settingsView" class="hidden section">
                 <h2>System settings</h2>
 
-                <div class="setting-card">
-                    <h3>Theme</h3>
-                    <p>Switch between dark and light mode.</p>
-                    <button onclick="toggleTheme()">Toggle Theme</button>
-                </div>
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <h3>Theme</h3>
+                        <p>Switch between dark and light mode.</p>
+                        <button onclick="toggleTheme()">Toggle Theme</button>
+                    </div>
 
-                <div class="setting-card">
-                    <h3> Email Notifications</h3>
-                    <p>Turn on/off Email notifications.</p>
-                    <label class="switch">
-                        <input type="checkbox" id="notificationsToggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
+                    <div class="setting-card">
+                        <h3> Email Notifications</h3>
+                        <p>Turn on/off Email notifications.</p>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
 
-                <div class="setting-card">
+                    <div class="setting-card">
                         <h3>GitHub Sync</h3>
                         <p>Sync or async into your GitHub account.</p>
                         <label class="switch">
@@ -287,6 +316,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
+                </div>
             </section>
 
 
