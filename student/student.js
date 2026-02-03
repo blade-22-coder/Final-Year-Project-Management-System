@@ -10,7 +10,7 @@
 
  //syncing sidebar image
  const upload = document.getElementById("profileUpload");
-const profileImg = document.getElementById("profileImage");
+const profileImg = document.getElementById("profileImage");A
 const profilePreview = document.getElementById("profilePreview");
 
 upload?.addEventListener("change", e => {
@@ -301,5 +301,4 @@ function renderStatus() {
 }
 
 renderStatus();
-
 

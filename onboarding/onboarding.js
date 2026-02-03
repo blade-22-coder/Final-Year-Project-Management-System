@@ -2,7 +2,7 @@ const role = localStorage.getItem("role");
 
 const title = document.getElementById("welcomeTitle");
 const studentForm = document.getElementById("studentForm");
-const supervisorForm = document.getElementById("supervisor Form");
+const supervisorForm = document.getElementById("supervisorForm");
 const errorState = document.getElementById("errorState");
 const onboardingBox = document.querySelector(".onboarding");
 
