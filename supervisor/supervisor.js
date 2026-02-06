@@ -92,7 +92,7 @@ upload?.addEventListener("change", e => {
   const file = e.target.files[0];
   const reader = new FileReader();
 
-  reader.onload = () => {
+  reader.onload = () => { 
     profileImg.src = reader.result;
     profilePreview.src = reader.result;
   };

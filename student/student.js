@@ -1,278 +1,110 @@
-//theme toggling
+
+//   IMPORTS (REQUIRES type="module")
+
+import { getMySubmissions } from "../api/submission.api.js";
+import { getComments } from "../api/comment.api.js";
+import { getDeadlines } from "../api/deadline.api.js";
+import { session } from "../state/session.js";
+
+
+//   APP INIT
+
+window.addEventListener("load", async () => {
+    try {
+        session.submissions = await getMySubmissions();
+        session.comments = await getComments();
+        session.deadlines = await getDeadlines();
+    } catch (err) {
+        console.warn("API not ready, running in mock mode", err);
+    }
+
+    renderComments();
+    renderStatus();
+    renderDeadlines();
+    initSidebar();
+    initThemeToggle();
+    initProfileUpload();
+});
+
+
+//   THEME TOGGLE
+
+function initThemeToggle() {
     const toggle = document.getElementById("themeToggle");
+    if (!toggle) return;
+
     let dark = true;
     toggle.addEventListener("click", () => {
         document.body.classList.toggle("light");
         toggle.textContent = dark ? "🌞" : "🌙";
         dark = !dark;
     });
+}
 
 
- //syncing sidebar image
- const upload = document.getElementById("profileUpload");
-const profileImg = document.getElementById("profileImage");A
-const profilePreview = document.getElementById("profilePreview");
+//   SIDEBAR NAVIGATION
 
-upload?.addEventListener("change", e => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    profileImg.src = reader.result;
-    profilePreview.src = reader.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-
-
-
-// //project progress battery chart
-// let progressData = {
-//     title: 20,
-//     proposal: 45,
-//     proposalApproved: 60,
-//     finalReport: 80,
-//     finalApproved: 100
-// };
-//     //choose which progress to display
-// let currentStage = 'proposalApproved'; //example stage
-
-// const batteryFill = document.getElementById("batteryFill");
-// const batteryPercent = document.getElementById("batteryPercent");
-//     //color based on progress
-// function getBatteryColor(percentage) {
-//     if (percentage < 40) return 'linear-gradient(90deg, red, orange)';
-//     if (percentage < 70) return 'linear-gradient(90deg, orange, yellow)';
-//     if (percentage <= 100) return 'linear-gradient(90deg, yellow, green)';
-//     return 'linear-gradient(90deg, blue, purple)';
-// }
-//     //animate battery fill like charge
-// function animateBattery(targetPercent) {
-//     batteryFill.classList.add("stripes"); //add stripes animation
-//     let currentPercent = 0;
-
-//     const interval = setInterval(() => {
-//         if (currentPercent >= targetPercent) {
-//             clearInterval(interval);
-//             batteryFill.classList.remove("stripes"); //remove stripes animation
-//             return;
-//         }
-//         currentPercent++;
-//         batteryFill.style.height = currentPercent + "%";
-//         batteryFill.style.background = getBatteryColor(currentPercent);
-//         batteryPercent.textContent = currentPercent + "%"; 
-//     }, 20); //speed of animation
-// }
-//     //run animation
-// animateBattery(progressData[currentStage]);
-
-
-//section toggling 
-document.addEventListener("DOMContentLoaded", () => {
-    
+function initSidebar() {
     const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
     const sections = document.querySelectorAll(".dashboard section");
 
     navItems.forEach(item => {
         item.addEventListener("click", () => {
-            const targetId = item.dataset.target;
-            const targetSection = document.getElementById(targetId);
+            const target = document.getElementById(item.dataset.target);
+            if (!target) return;
 
-            if (!targetSection)  return;
+            sections.forEach(s => s.classList.remove("active"));
+            navItems.forEach(n => n.classList.remove("active"));
 
-            sections.forEach(sec => sec.classList.remove("active"));
-            navItems.forEach(i => i.classList.remove("active"));
-
-            targetSection.classList.add("active");
+            target.classList.add("active");
             item.classList.add("active");
         });
     });
-    //default page
-    document.querySelector(".sidebar-nav li [data-target]").click();
-});
+
+    // default page
+    const first = document.querySelector(".sidebar-nav li[data-target]");
+    if (first) first.click();
+}
 
 
-//toggling a dropdown menu of sections
-document.querySelectorAll(".menu-title").forEach(title => {
-    title.addEventListener("click", () => {
-        const parent = title.parentElement;
+//   PROFILE IMAGE UPLOAD
 
-        document.querySelectorAll(".has-submenu").forEach(item => {
-            if (item !== parent) {
-                item.classList.remove("open");
-            }
-        });
-        parent.classList.toggle("open");
+function initProfileUpload() {
+    const upload = document.getElementById("profileUpload");
+    const profileImg = document.getElementById("profileImage");
+    const preview = document.getElementById("profilePreview");
+
+    if (!upload) return;
+
+    upload.addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (profileImg) profileImg.src = reader.result;
+            if (preview) preview.src = reader.result;
+        };
+        reader.readAsDataURL(file);
     });
-});
-
-//loading deadlines 
-document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("deadlineList");
-
-    if (!container) {
-        console.error("deadlineList container not found");
-        return;
-    }
-
-    const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
-
-    console.log("Deadlines loaded:", deadlines);
-
-    if (deadlines.length === 0) {
-        container.innerHTML = "<p>No deadlines available.</p>";
-        return;
-    }
-
-    deadlines.forEach(dl => {
-        if (!dl.audience.includes("students")) return;
-
-        const card = document.createElement("div");
-        card.className = "deadline-card";
-
-        card.innerHTML = `
-            <h4>${dl.title}</h4>
-            <p>${dl.description || ""}</p>
-            <small>📅 ${dl.date}</small>
-        `;
-
-        container.appendChild(card);
-    });
-});
-
-//logout
-function openLogout() {
-    document.getElementById("logoutModal").classList.add("active");
 }
 
-function closeLogout() {
-    document.getElementById("logoutModal").classList.remove("active");
-}
+// button hook
+window.uploadImage = () => {
+    document.getElementById("profileUpload")?.click();
+};
 
-function confirmLogout() {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.replace("/index.html");
-}
 
-//closing module when clicking outside
-document.getElementById("logoutModal").addEventListener("click", e => {
-    if (e.target.id === "logoutModal") closeLogout();
+//   MOCK SUBMISSION STATUS
 
-});
-
-//comment section from supervisor
 const submissions = {
-    title: { state: "approved", comment: "Title is acceptable" },
+    title: { state: "approved", comment: "Title approved" },
     proposal: { state: "pending", comment: "Under review" },
     report: { state: "waiting", comment: "" },
-    github: { state: "approved", comment: "Repo Structure is good" },
-    snapshots: {state: "rejected", comment: "UI screenshots unclear" }
+    github: { state: "approved", comment: "Repo looks good" },
+    snapshots: { state: "rejected", comment: "UI screenshots unclear" }
 };
 
-//comment section
-const reviewComments = {
-    title: {
-        supervisor: {
-            message: "Title is clear and researchable.",
-            date: "2026-01-25"
-        },
-        student: {
-            message: "Thank you, I’ll proceed with proposal.",
-            date: "2026-01-25"
-        }
-    },
-
-    proposal: {
-        supervisor: {
-            message: "Methodology section needs expansion.",
-            date: "2026-01-26"
-        },
-        student: null
-    },
-
-    report: {
-        supervisor: null,
-        student: null
-    },
-
-    github: {
-        supervisor: {
-            message: "Commit history looks good.",
-            date: "2026-01-27"
-        },
-        student: {
-            message: "Thanks! I'll keep pushing updates.",
-            date: "2026-01-27"
-        }
-    },
-
-    snapshots: {
-        supervisor: {
-            message: "Dashboard UI needs better alignment.",
-            date: "2026-01-27"
-        },
-        student: null
-    }
-};
-//render comment threads
-function renderComments() {
-    const container = document.getElementById("commentThreads");
-    container.innerHTML = "";
-
-    Object.entries(reviewComments).forEach(([key, thread]) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "comment-thread";
-
-        wrapper.innerHTML = `
-            <h4>${key.toUpperCase()}</h4>
-
-            ${thread.supervisor ? `
-                <div class="comment supervisor">
-                    <strong>Supervisor</strong>
-                    <p>${thread.supervisor.message}</p>
-                    <div class="comment-date">${thread.supervisor.date}</div>
-                </div>
-            ` : `<p>No supervisor feedback yet.</p>`}
-
-            ${thread.student ? `
-                <div class="comment student">
-                    <strong>You</strong>
-                    <p>${thread.student.message}</p>
-                    <div class="comment-date">${thread.student.date}</div>
-                </div>
-            ` : `
-                <div class="reply-box">
-                    <textarea id="reply-${key}" placeholder="Reply to supervisor..."></textarea>
-                    <button onclick="submitReply('${key}')">Send Reply</button>
-                </div>
-            `}
-        `;
-
-        container.appendChild(wrapper);
-    });
-}
-
-renderComments();
-//reply logic
-function submitReply(section) {
-    const textarea = document.getElementById(`reply-${section}`);
-    const message = textarea.value.trim();
-
-    if (!message) return alert("Reply cannot be empty");
-
-    reviewComments[section].student = {
-        message,
-        date: new Date().toLocaleDateString()
-    };
-
-    // Save locally (replace with API later)
-    localStorage.setItem("reviewComments", JSON.stringify(reviewComments));
-
-    renderComments();
-}
-//status render
 const statusIcons = {
     waiting: "💤 Waiting",
     pending: "⏳ Pending",
@@ -280,8 +112,13 @@ const statusIcons = {
     rejected: "❌ Rejected"
 };
 
+
+//   STATUS + BATTERY LOGIC
+
 function renderStatus() {
     const grid = document.getElementById("statusGrid");
+    if (!grid) return;
+
     grid.innerHTML = "";
 
     Object.entries(submissions).forEach(([key, data]) => {
@@ -300,5 +137,134 @@ function renderStatus() {
     updateBatteryFromStatus();
 }
 
-renderStatus();
 
+//   BATTERY CALCULATION
+
+function updateBatteryFromStatus() {
+    const batteryFill = document.getElementById("batteryFill");
+    const batteryPercent = document.getElementById("batteryPercent");
+
+    if (!batteryFill || !batteryPercent) return;
+
+    const total = Object.keys(submissions).length;
+    const approved = Object.values(submissions)
+        .filter(s => s.state === "approved").length;
+
+    const percent = Math.round((approved / total) * 100);
+    animateBattery(percent);
+}
+
+function getBatteryColor(p) {
+    if (p < 40) return "linear-gradient(90deg, red, orange)";
+    if (p < 70) return "linear-gradient(90deg, orange, yellow)";
+    return "linear-gradient(90deg, yellow, green)";
+}
+
+function animateBattery(target) {
+    const batteryFill = document.getElementById("batteryFill");
+    const batteryPercent = document.getElementById("batteryPercent");
+
+    let current = 0;
+    batteryFill.classList.add("stripes");
+
+    const timer = setInterval(() => {
+        if (current >= target) {
+            clearInterval(timer);
+            batteryFill.classList.remove("stripes");
+            return;
+        }
+        current++;
+        batteryFill.style.height = current + "%";
+        batteryFill.style.background = getBatteryColor(current);
+        batteryPercent.textContent = current + "%";
+    }, 15);
+}
+
+//   COMMENTS (MOCK)
+
+const reviewComments = {
+    title: {
+        supervisor: { message: "Title is clear.", date: "2026-01-25" },
+        student: null
+    },
+    proposal: {
+        supervisor: { message: "Expand methodology.", date: "2026-01-26" },
+        student: null
+    }
+};
+
+function renderComments() {
+    const container = document.getElementById("commentThreads");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    Object.entries(reviewComments).forEach(([key, thread]) => {
+        const block = document.createElement("div");
+        block.className = "comment-thread";
+
+        block.innerHTML = `
+            <h4>${key.toUpperCase()}</h4>
+            ${thread.supervisor ? `
+                <div class="comment supervisor">
+                    <p>${thread.supervisor.message}</p>
+                    <small>${thread.supervisor.date}</small>
+                </div>
+            ` : "<p>No supervisor feedback.</p>"}
+
+            ${thread.student ? `
+                <div class="comment student">
+                    <p>${thread.student.message}</p>
+                </div>
+            ` : `
+                <textarea id="reply-${key}" placeholder="Reply..."></textarea>
+                <button onclick="submitReply('${key}')">Send</button>
+            `}
+        `;
+
+        container.appendChild(block);
+    });
+}
+
+window.submitReply = (key) => {
+    const input = document.getElementById(`reply-${key}`);
+    if (!input || !input.value.trim()) return;
+
+    reviewComments[key].student = {
+        message: input.value,
+        date: new Date().toLocaleDateString()
+    };
+    renderComments();
+};
+
+//   DEADLINES
+
+function renderDeadlines() {
+    const container = document.getElementById("deadlineList");
+    if (!container) return;
+
+    const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
+
+    container.innerHTML = deadlines.length
+        ? deadlines.map(d => `
+            <div class="deadline-card">
+                <h4>${d.title}</h4>
+                <p>${d.description || ""}</p>
+                <small>📅 ${d.date}</small>
+            </div>
+        `).join("")
+        : "<p>No deadlines available.</p>";
+}
+
+//   LOGOUT
+window.openLogout = () =>
+    document.getElementById("logoutModal")?.classList.add("active");
+
+window.closeLogout = () =>
+    document.getElementById("logoutModal")?.classList.remove("active");
+
+window.confirmLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("/index.html");
+};
