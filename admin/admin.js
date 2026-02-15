@@ -466,8 +466,8 @@ function toggleStudentDropdown(dropdown, supervisor) {
 }
 
 //admin dasbhoard
-const token = localStorage.getItem("token");
-if (!token)  location.href = "../index.html";
+// const token = localStorage.getItem("token");
+// if (!token)  location.href = "../index.html";
 
 fetch( `${API_URL}/admin/stats`, {
     headers: {

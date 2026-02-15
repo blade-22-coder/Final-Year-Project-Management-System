@@ -14,10 +14,10 @@ window.addEventListener("load", async () => {
         console.warn("API not ready, running in mock mode", err);
     }
 
-    initSidebar();
-    initThemeToggle();
-    initProfileUpload();
     initSubmissionForm();
+    initThemeToggle();
+    initSidebar();
+    initProfileUpload();
 
     renderComments();
     renderStatus();
@@ -39,29 +39,32 @@ function initThemeToggle() {
     });
 }
 
-
 //  SIDEBAR NAVIGATION 
 function initSidebar() {
-    const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
-    const sections = document.querySelectorAll(".dashboard section");
+    const nav = document.querySelector(".sidebar-nav");
+    const sections = document.querySelectorAll("main section");
 
-    if (!navItems.length || !sections.length) return;
+    if (!nav || !sections.length) return;
 
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const target = document.getElementById(item.dataset.target);
+    // Add click listener to each li individually
+    nav.querySelectorAll("li[data-target]").forEach(li => {
+        li.addEventListener("click", () => {
+            const targetId = li.dataset.target;
+            const target = document.getElementById(targetId);
             if (!target) return;
 
+            // deactivate all
             sections.forEach(s => s.classList.remove("active"));
-            navItems.forEach(n => n.classList.remove("active"));
+            nav.querySelectorAll("li").forEach(n => n.classList.remove("active"));
 
+            // activate selected
             target.classList.add("active");
-            item.classList.add("active");
+            li.classList.add("active");
         });
     });
 
     // Activate first tab by default
-    navItems[0].click();
+    nav.querySelector("li[data-target]")?.click();
 }
 
 

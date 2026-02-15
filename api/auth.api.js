@@ -1,4 +1,4 @@
-import { request } from ".http.js";
+import { request } from "./http.js";
 
 export function login(data) {
     return request("/auth/login", {

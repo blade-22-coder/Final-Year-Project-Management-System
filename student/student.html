@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
+<head>   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal</title>
     <link rel="stylesheet" href="student.css">
-    <link rel="icon" type="image/png" href="../images/busitema-university-seeklogo.png">
+    <link rel="icon" type="image/png" href="../images/FAVICON FYPMS.drawio.png">
     <!--<script type="module">
         import { protectRoute } from "../auth/route-guard.js";
         protectRoute("STUDENT");
@@ -40,10 +40,8 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li data-target="profile">
-                        <div class="menu-title">
                             <span class="icon">👤</span>
                             <span class="label">Profile</span>
-                        </div>
                     </li>
                     <li data-target="submissions">
                         <span class="icon">✉️</span>
@@ -100,7 +98,7 @@
                     <div class="submission-card">
                         <h4>Project Title</h4>
                         <p class="hint">Precise title</p>
-                        <input type="text" accept=".pdf, .docx">
+                        <input type="text">
                         <button>Submit Title</button>
 
                     </div>
@@ -123,6 +121,7 @@
 
                     <div class="submission-card">
                         <h4>GitHub Repository</h4>
+                        <p class="hint">Enter the URL of your GitHub repository</p>
                         <input id="githubLink" placeholder="http://github.com/username/project">
                         <button onclick="saveGithub()">Save Link</button>
                     </div>

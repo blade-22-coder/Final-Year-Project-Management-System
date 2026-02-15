@@ -4,14 +4,18 @@ export async function request(endpoint, options = {}) {
     const token = localStorage.getItem("token");
 
     const res = await fetch(`${BASE_URL}${endpoint}`, {
-        "Authorization": token ? `Bearer ${token}` : "",
-        ...options.headers
-    },
-    ...options.headers
-)};
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...(token && { "Authorization": `Bearer ${token}` }),
+            ...(options.headers || {})
+        }
+    });
 
-if (!res.ok) {
-    throw new Error(await res.text());
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText);
+    }
+
+    return res.json();
 }
-
-return res.json();
