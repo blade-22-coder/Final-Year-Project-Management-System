@@ -1,3 +1,4 @@
+ const API_URL = "http://localhost:8080/api";
 const role = localStorage.getItem("role");
 
 const title = document.getElementById("welcomeTitle");
@@ -23,16 +24,62 @@ if (role === "SUPERVISOR") {
     supervisorForm.style.display = "flex"
 }
 
-//submit handlers 
-studentForm?.addEventListener("submit", e => {
+        //submit handlers 
+        //student form submit handler
+studentForm?.addEventListener("submit", async e => {
     e.preventDefault();
-    localStorage.setItem("onboarded", "true");
-    window.location.href = "../student/student.html";
+
+    const input = studentForm.querySelector("input");
+
+    const body = {
+        registrationNumber: input[0].value,
+        course: input[1].value,
+        projectTitle: input[2].value
+    };
+
+    const res =  await fetch(`${API_URL}/student/onboard`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(body),
+    });
+    if (res.ok) {
+        localStorage.setItem("onboarded", "true");
+        location.href = "../student/student.html";
+    } else {
+        errorState.classList.remove("hidden");
+        onboardingBox.style.display = "none";
+    }
 });
-supervisorForm?.addEventListener("submit", e => {
+     //supervisor form submit handler
+supervisorForm?.addEventListener("submit", async e => {
     e.preventDefault();
-    localStorage.setItem("onboarded", "true");
-    window.location.href = "../supervisor/supervisor.html";
+
+    const input = supervisorForm.querySelector("input");
+
+    const body = {
+        staffId: input[0].value,
+        department: input[1].value,
+        maxStudents: input[2].value ||null
+    };
+
+    const res = await fetch(`${API_URL}/supervisor/onboard`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(body),
+    });
+    if (res.ok) {
+        localStorage.setItem("onboarded", "true");
+        location.href = "../supervisor/supervisor.html";
+    } else {
+        errorState.classList.remove("hidden");
+        onboardingBox.style.display = "none";
+    }
 });
 function goBack() {
     localStorage.clear();

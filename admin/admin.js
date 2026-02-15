@@ -465,7 +465,27 @@ function toggleStudentDropdown(dropdown, supervisor) {
     });
 }
 
+//admin dasbhoard
+const token = localStorage.getItem("token");
+if (!token)  location.href = "../index.html";
 
+fetch( `${API_URL}/admin/stats`, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("totalUsers").textContent = data.totalUsers;
+    document.getElementById("Supervisors").textContent = data.totalSupervisors;
+    document.getElementById("students").textContent = data.totalStudents;
+    document.getElementById("projects").textContent = data.project;
+    document.getElementById("submissions").textContent = data.submissions;
+    document.getElementById("pending").textContent = data.pendingSubmissions;
+})
+.catch(err => {
+    console.error("Error fetching admin stats:", err);
+});
 
 
 

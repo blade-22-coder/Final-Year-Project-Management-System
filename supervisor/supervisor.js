@@ -216,6 +216,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+//files
+function preview(id) {
+    window.open(`/api/files/submissions/${id}`, "_blank");
+}
+
+function download(id) {
+    const link = document.createElement("a");
+    link.href = `/api/files/submissions/${id}`;
+    link.download = "";
+    link.click();
+}
+
+//grading
+async function submitGrade(submissionId) {
+    const score = document.getElementById("score").value;
+    const comment = document.getElementById("comment").value;
+    const status = document.getElementById("status").value;
+
+    const res = await fetch(`/api/grades/${submissionId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ score, comment, status })
+    });
+
+    if (res.ok) {
+        alert("Graded successfully");
+    } else {
+        alert("Failed to grade");
+    }
+}
+
+
 
 
 

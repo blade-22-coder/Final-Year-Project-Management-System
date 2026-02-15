@@ -1,14 +1,10 @@
-
-//   IMPORTS (REQUIRES type="module")
-
+//  IMPORTS 
 import { getMySubmissions } from "../api/submission.api.js";
 import { getComments } from "../api/comment.api.js";
 import { getDeadlines } from "../api/deadline.api.js";
 import { session } from "../state/session.js";
 
-
-//   APP INIT
-
+//  APP INIT 
 window.addEventListener("load", async () => {
     try {
         session.submissions = await getMySubmissions();
@@ -18,22 +14,24 @@ window.addEventListener("load", async () => {
         console.warn("API not ready, running in mock mode", err);
     }
 
-    renderComments();
-    renderStatus();
-    renderDeadlines();
     initSidebar();
     initThemeToggle();
     initProfileUpload();
+    initSubmissionForm();
+
+    renderComments();
+    renderStatus();
+    renderDeadlines();
 });
 
 
-//   THEME TOGGLE
-
+//  THEME TOGGLE 
 function initThemeToggle() {
     const toggle = document.getElementById("themeToggle");
     if (!toggle) return;
 
     let dark = true;
+
     toggle.addEventListener("click", () => {
         document.body.classList.toggle("light");
         toggle.textContent = dark ? "🌞" : "🌙";
@@ -42,11 +40,12 @@ function initThemeToggle() {
 }
 
 
-//   SIDEBAR NAVIGATION
-
+//  SIDEBAR NAVIGATION 
 function initSidebar() {
     const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
     const sections = document.querySelectorAll(".dashboard section");
+
+    if (!navItems.length || !sections.length) return;
 
     navItems.forEach(item => {
         item.addEventListener("click", () => {
@@ -61,14 +60,12 @@ function initSidebar() {
         });
     });
 
-    // default page
-    const first = document.querySelector(".sidebar-nav li[data-target]");
-    if (first) first.click();
+    // Activate first tab by default
+    navItems[0].click();
 }
 
 
-//   PROFILE IMAGE UPLOAD
-
+//  PROFILE IMAGE UPLOAD 
 function initProfileUpload() {
     const upload = document.getElementById("profileUpload");
     const profileImg = document.getElementById("profileImage");
@@ -77,7 +74,7 @@ function initProfileUpload() {
     if (!upload) return;
 
     upload.addEventListener("change", e => {
-        const file = e.target.files[0];
+        const file = e.target.files?.[0];
         if (!file) return;
 
         const reader = new FileReader();
@@ -89,14 +86,12 @@ function initProfileUpload() {
     });
 }
 
-// button hook
 window.uploadImage = () => {
     document.getElementById("profileUpload")?.click();
 };
 
 
-//   MOCK SUBMISSION STATUS
-
+//  MOCK SUBMISSION STATUS 
 const submissions = {
     title: { state: "approved", comment: "Title approved" },
     proposal: { state: "pending", comment: "Under review" },
@@ -113,8 +108,7 @@ const statusIcons = {
 };
 
 
-//   STATUS + BATTERY LOGIC
-
+//STATUS RENDER 
 function renderStatus() {
     const grid = document.getElementById("statusGrid");
     if (!grid) return;
@@ -138,8 +132,7 @@ function renderStatus() {
 }
 
 
-//   BATTERY CALCULATION
-
+// BATTERY LOGIC 
 function updateBatteryFromStatus() {
     const batteryFill = document.getElementById("batteryFill");
     const batteryPercent = document.getElementById("batteryPercent");
@@ -164,6 +157,8 @@ function animateBattery(target) {
     const batteryFill = document.getElementById("batteryFill");
     const batteryPercent = document.getElementById("batteryPercent");
 
+    if (!batteryFill || !batteryPercent) return;
+
     let current = 0;
     batteryFill.classList.add("stripes");
 
@@ -173,15 +168,17 @@ function animateBattery(target) {
             batteryFill.classList.remove("stripes");
             return;
         }
+
         current++;
         batteryFill.style.height = current + "%";
         batteryFill.style.background = getBatteryColor(current);
         batteryPercent.textContent = current + "%";
+
     }, 15);
 }
 
-//   COMMENTS (MOCK)
 
+//  COMMENTS 
 const reviewComments = {
     title: {
         supervisor: { message: "Title is clear.", date: "2026-01-25" },
@@ -234,11 +231,12 @@ window.submitReply = (key) => {
         message: input.value,
         date: new Date().toLocaleDateString()
     };
+
     renderComments();
 };
 
-//   DEADLINES
 
+//  DEADLINES 
 function renderDeadlines() {
     const container = document.getElementById("deadlineList");
     if (!container) return;
@@ -256,7 +254,8 @@ function renderDeadlines() {
         : "<p>No deadlines available.</p>";
 }
 
-//   LOGOUT
+
+// LOGOUT 
 window.openLogout = () =>
     document.getElementById("logoutModal")?.classList.add("active");
 
@@ -268,3 +267,41 @@ window.confirmLogout = () => {
     sessionStorage.clear();
     window.location.replace("/index.html");
 };
+
+
+//  SUBMISSION FORM 
+function initSubmissionForm() {
+    const form = document.getElementById("submitForm");
+    if (!form) return;
+
+    const token = localStorage.getItem("token");
+
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const file = document.getElementById("file")?.files?.[0];
+        if (!file) return alert("Select a file first");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("/api/submissions", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
+            });
+
+            if (res.ok) {
+                alert("Submitted successfully");
+            } else {
+                alert("Submission failed");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
+    });
+}
