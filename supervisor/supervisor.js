@@ -159,8 +159,6 @@ function loadAnalytics(studentName) {
   });
 }
 
-
-
 //logout
 function openLogout() {
     document.getElementById("logoutModal").classList.add("active");
@@ -214,6 +212,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.appendChild(card);
     });
+
+    //load profile on page load
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/supervisor/me", {
+          headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error("Unauthorized");
+        }
+
+        const data = await res.json();
+
+        //sidebar
+        document.querySelector(".supervisor-info h3").textContent = data.fullName;
+
+        //profile section
+        document.getElementById("supervisorName").textContent = data.fullName;
+        document.getElementById("department").textContent = data.department;
+        document.getElementById("email").textContent = data.email;
+
+        if (data.profileImage) {
+          document.getElementById("profileImage").src = data.profileImage;
+          document.getElementById("profilePreview").src = data.profileImage;
+        }
+
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+      }
+    }
+
+    loadProfile();
 });
 
 //files
@@ -250,7 +283,24 @@ async function submitGrade(submissionId) {
     }
 }
 
+//Auto total calculation
+const gradeInputs = document.querySelectorAll(".grade-row input");
+const totalDisplay = document.getElementById("gradeTotal");
 
+function computeTotal() {
+    let total = 0;
+
+    gradeInputs.forEach(input => {
+      const value = parseInt(input.value) || 0;
+      total += value;
+    });
+
+    totalDisplay.textContent = total;
+}
+
+gradeInputs.forEach(input => {
+    input.addEventListener("input", computeTotal);
+});
 
 
 

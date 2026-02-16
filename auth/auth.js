@@ -64,14 +64,17 @@ document.addEventListener("DOMContentLoaded", () => {
         role: e.target.role.value,
       };
 
-      const data = await signup(payload);
+      try {
+        const data = await signup(payload);
 
-      if (data.role === "ADMIN") {
-        location.href = "../admin/admin.html";
-      } else if (data.role === "SUPERVISOR") {
-        location.href = "../supervisor/supervisor.html";
-      } else {
-        location.href = "../student/student.html";
+        //save these
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+
+        location.href = "../onboarding/onboarding.html";
+
+      } catch (err) {
+        alert("Signup failed. Please try again.");
       }
     });
 
@@ -87,8 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await login(payload);
 
+      //save these
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+
       if (data.role === "ADMIN") {
-        location.href = "../admin/admin.html";
+         location.href = "../admin/admin.html";
       } else  if (data.role === "SUPERVISOR") {
         location.href = "../supervisor/supervisor.html";
       } else {

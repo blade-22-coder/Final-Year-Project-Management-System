@@ -29,12 +29,12 @@ if (role === "SUPERVISOR") {
 studentForm?.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const input = studentForm.querySelector("input");
+    const inputs = studentForm.querySelectorAll("input");
 
     const body = {
-        registrationNumber: input[0].value,
-        course: input[1].value,
-        projectTitle: input[2].value
+        registrationNumber: inputs[0].value,
+        course: inputs[1].value,
+        projectTitle: inputs[2].value
     };
 
     const res =  await fetch(`${API_URL}/student/onboard`, {
@@ -57,12 +57,12 @@ studentForm?.addEventListener("submit", async e => {
 supervisorForm?.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const input = supervisorForm.querySelector("input");
+    const inputs = supervisorForm.querySelectorAll("input");
 
     const body = {
-        staffId: input[0].value,
-        department: input[1].value,
-        maxStudents: input[2].value ||null
+        staffId: inputs[0].value,
+        department: inputs[1].value,
+        maxStudents: inputs[2].value ||null
     };
 
     const res = await fetch(`${API_URL}/supervisor/onboard`, {

@@ -5,7 +5,7 @@
     font-family: Arial,  sans-serif;
 } 
 body {
-    background: url('../images/check.jpg') center/cover no-repeat fixed;
+    background: url('../images/IMG_2762.JPG') center/cover no-repeat fixed;
     min-height: 100vh;
     color: #fff;
     width: 100%;
@@ -476,12 +476,14 @@ body::before {
 .comment.supervisor {
     background: rgba(34,197,94,0.15);
     border-left: 4px solid #22c55e;
+    padding: 20px;
 }
 
 .comment.student {
     background: rgba(59,130,246,0.15);
     border-left: 4px solid #3b82f6;
-    margin-left: 20px;
+    margin-left: 10px;
+    padding: 20px;
 }
 
 .comment-date {
@@ -493,7 +495,7 @@ body::before {
 .reply-box textarea {
     width: 100%;
     margin-top: 8px;
-    padding: 10px;
+    padding: 50px;
     border-radius: 10px;
     border: none;
     resize: none;
