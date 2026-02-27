@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //save these
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
+        localStorage.setItem("userId", data.userId);
 
         location.href = "../onboarding/onboarding.html";
 
@@ -93,13 +94,14 @@ document.addEventListener("DOMContentLoaded", () => {
       //save these
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
+      localStorage.setItem("userId", data.userId);
 
       if (data.role === "ADMIN") {
          location.href = "../admin/admin.html";
       } else  if (data.role === "SUPERVISOR") {
-        location.href = "../supervisor/supervisor.html";
+        location.href = `../supervisor/supervisor.html?id=${data.userId}`;
       } else {
-        location.href = "../student/student.html"
+        location.href = `../student/student.html?id=${data.userId}`;
       }
     });
 })

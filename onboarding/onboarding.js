@@ -1,93 +1,124 @@
- const API_URL = "http://localhost:8080/api";
-const role = localStorage.getItem("role");
+document.addEventListener("DOMContentLoaded", () => {
 
-const title = document.getElementById("welcomeTitle");
-const studentForm = document.getElementById("studentForm");
-const supervisorForm = document.getElementById("supervisorForm");
-const errorState = document.getElementById("errorState");
-const onboardingBox = document.querySelector(".onboarding");
+    const API_URL = "http://localhost:8080/api";
+    const role = localStorage.getItem("role");
 
-//safety check
-if (!role) {
-    onboardingBox.style.display = "none";
-    errorState.classList.remove("hidden");
-}
+    const title = document.getElementById("welcomeTitle");
+    const studentForm = document.getElementById("studentForm");
+    const supervisorForm = document.getElementById("supervisorForm");
+    const errorState = document.getElementById("errorState");
+    const onboardingBox = document.querySelector(".onboarding");
 
-//show correct form
-if (role === "STUDENT") {
-    title.textContent = "🎓 Student Onboarding";
-    studentForm.style.display = "flex";
-}
+    //safety check
+    if (!role) {
+        onboardingBox.style.display = "none";
+        errorState.classList.remove("hidden");
+    }
 
-if (role === "SUPERVISOR") {
-    title.textContent = "🧑🏻‍🏫 Supervisor Onboarding";
-    supervisorForm.style.display = "flex"
-}
+    if(!token) {
+        window.location.replace("../index.html");
+        return;
+    }
+
+    if (localStorage.getItem("onboarded") !== "true") {
+        window.location.replace("..'/onboarding/onboarding.html");
+        return;
+    }
+
+    //show correct form
+    if (role === "STUDENT") {
+        title.textContent = "🎓 Student Onboarding";
+        studentForm.style.display = "flex";
+    }
+
+    if (role === "SUPERVISOR") {
+        title.textContent = "🧑🏻‍🏫 Supervisor Onboarding";
+        supervisorForm.style.display = "flex"
+    }
 
         //submit handlers 
         //student form submit handler
-studentForm?.addEventListener("submit", async e => {
-    e.preventDefault();
+    studentForm?.addEventListener("submit", async e => {
+        e.preventDefault();
 
-    const inputs = studentForm.querySelectorAll("input");
+    
+        const body = {
+            registrationNumber: document.getElementById("registrationNumber").value,
+            course: document.getElementById("course").value,
+            projectTitle: document.getElementById("projectTitle").value
+        };
 
-    const body = {
-        registrationNumber: inputs[0].value,
-        course: inputs[1].value,
-        projectTitle: inputs[2].value
-    };
+        const res = await fetch(`${API_URL}/onboarding/student`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify(body),
+        });
 
-    const res =  await fetch(`${API_URL}/student/onboard`, {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify(body),
-    });
-    if (res.ok) {
-        localStorage.setItem("onboarded", "true");
-        location.href = "../student/student.html";
-    } else {
-        errorState.classList.remove("hidden");
-        onboardingBox.style.display = "none";
-    }
-});
+        if(!res.ok) {
+            errorState.classList.remove("hidden");
+            onboardingBox.style.display = "none";
+            return;
+        }
+
+        const user = await res.json();
+
+        localStorage.setItem("role", user.role);
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("onboarded", user.onboarded);
+
+        window.location.href = "../student/student.html";
+})
+
      //supervisor form submit handler
-supervisorForm?.addEventListener("submit", async e => {
-    e.preventDefault();
+    supervisorForm?.addEventListener("submit", async e => {
+        e.preventDefault();
 
-    const inputs = supervisorForm.querySelectorAll("input");
+        const inputs = supervisorForm.querySelectorAll("input");
 
-    const body = {
-        staffId: inputs[0].value,
-        department: inputs[1].value,
-        maxStudents: inputs[2].value ||null
+        const body = {
+            staffId: document.getElementById("staffId").value,
+            department: document.getElementById("department").value,
+            maxStudents: document.getElementById("maxStudents").value || null
+        };
+
+        const res = await fetch(`${API_URL}/onboarding/supervisor`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            errorState.classList.remove("hidden");
+            onboardingBox.style.display = "none";
+            return;
+        }
+
+        const user = await res.json();
+
+        localStorage.setItem("role", user.role);
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("onboarded", user.onboarded);
+
+        window.location.href = "../supervisor/supervisor.html";
+    });
+
+
+    function goBack() {
+        localStorage.clear();
+        window.location.href = "../index.html";
     };
 
-    const res = await fetch(`${API_URL}/supervisor/onboard`, {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify(body),
-    });
-    if (res.ok) {
-        localStorage.setItem("onboarded", "true");
-        location.href = "../supervisor/supervisor.html";
-    } else {
-        errorState.classList.remove("hidden");
-        onboardingBox.style.display = "none";
-    }
 });
-function goBack() {
-    localStorage.clear();
-    window.location.href = "../index.html";
-};
 
-//====DB DRIVEN LOGIC====
-// //CONSTRAINTS:
+
+
+// //====DB DRIVEN LOGIC====
 // const API_URL = "http://localhost:8080/api";
 // const token = localStorage.getItem("token");
 // const role = localStorage.getItem("role");
@@ -98,126 +129,109 @@ function goBack() {
 // const errorState = document.getElementById("errorState");
 // const onboardingBox = document.querySelector(".onboarding");
 
-// //INIT
-// document.addEventListener("DOMContentLoaded", async () => {
-//     if (!token || !role) {
-//         showError();
-//         return;
-//     }
+// // Safety check
+// if (!token || !role) {
+//     onboardingBox.style.display = "none";
+//     errorState.classList.remove("hidden");
+// }
 
-//     await checkIfAlreadyOnboarded();
-//     setupRole();
-// });
+// // Show correct form
+// if (role === "STUDENT") {
+//     title.textContent = "🎓 Student Onboarding";
+//     studentForm.style.display = "flex";
+// } else if (role === "SUPERVISOR") {
+//     title.textContent = "🧑🏻‍🏫 Supervisor Onboarding";
+//     supervisorForm.style.display = "flex";
+// }
 
-// //CHECK IF USER HAS ALREADY ONBOARDED
-// async function checkIfAlreadyOnboarded() {
-//     try {
-//         const res = await fetch(`${API_URL}/users/me`, {
-//             headers: { "Authorization": `Bearer ${token}` }
-//         });
+// // Redirect helper
+// function redirectToDashboard(user) {
+//     localStorage.setItem("onboarded", user.onboarded);
+//     localStorage.setItem("role", user.role);
+//     localStorage.setItem("userId", user.id);
 
-//         if (res.ok) return;
-
-//         const user = await res.json();
-
-//         if (user.onboarded) {
-//             redirectToDashboard();
-//         }
-//     } catch (err) {
-//         console.error("Onboarding check failed:", err);
+//     if (user.role === "STUDENT") {
+//         location.href = `../student/student.html?id=${user.id}`;
+//     } else if (user.role === "SUPERVISOR") {
+//         location.href = `../supervisor/supervisor.html?id=${user.id}`;
+//     } else {
+//         window.location.href = "../index.html";
 //     }
 // }
 
-// //ROLE UI
-// function setupRole() {
-//     if (role === "STUDENT") {
-//         title.textContent = "🎓 Student Onboarding";
-//         studentForm.style.display = "flex";
-//     }
-
-//     if (role === "SUPERVISOR") {
-//         title.textContent = "🧑🏻‍🏫 Supervisor Onboarding";
-//         supervisorForm.style.display = "flex"
-//     }
-//     else {
-//         showError();
-//     }
+// // Show error helper
+// function showError() {
+//     onboardingBox.style.display = "none";
+//     errorState.classList.remove("hidden");
 // }
 
-// //STUDENT ONBOARDING
+// // Student form submit
 // studentForm?.addEventListener("submit", async e => {
 //     e.preventDefault();
 
-//     const formData = new FormData(studentForm);
-
+//     const inputs = studentForm.querySelectorAll("input");
 //     const body = {
-//         registrationNumber: formData.get("registrationNumber"),
-//         course: formData.get("course"),
-//         projectTitle: formData.get("projectTitle") || null
+//         registrationNumber: inputs[0].value,
+//         course: inputs[1].value,
+//         projectTitle: inputs[2].value || null
 //     };
 
-//     await submitOnboarding("/student/onboard", body);
-// });
-
-// //SUPERVISOR ONBOARDING
-// supervisorForm?.addEventListener("submit", async e => {
-//     e.preventDefault();
-
-//     const formData = new FormData(supervisorForm);
-
-//     const body = {
-//         staffId: formData.get("staffId"),
-//         department: formData.get("department"),
-//         maxStudents: formData.get("maxStudents") 
-//         ? parseInt(formData.get("maxStudents"))
-//         : null
-//     };
-
-//     await submitOnboarding("/supervisor/onboard", body);
-// });
-
-// //COMMON ONBOARDING SUBMISSION LOGIC
-// async function submitOnboarding(endpoint, body) {
 //     try {
-//         const res = await fetch(`${API_URL}${endpoint}`, {  
+//         const res = await fetch(`${API_URL}/onboarding/student`, {
 //             method: "POST",
-//             headers: {
+//             headers: { 
 //                 "Content-Type": "application/json",
 //                 "Authorization": `Bearer ${token}`
 //             },
 //             body: JSON.stringify(body),
 //         });
 
-//         const data = await res.json();
+//         if (!res.ok) throw new Error("Student onboarding failed");
 
-//         if (res.ok) {
-//             throw new Error(data.message || "Onboarding failed");
-//         }
-
-//         redirectToDashboard();
+//         const user = await res.json(); // Backend returns full user object
+//         redirectToDashboard(user);
 
 //     } catch (err) {
 //         console.error(err);
 //         showError();
 //     }
-// }
+// });
 
-// //REDIRECT TO DASHBOARD
-// function redirectToDashboard() {
-//     if (role === "STUDENT") {
-//         window.location.href = "../student/student.html";
-//     } else if (role === "SUPERVISOR") {
-//         window.location.href = "../supervisor/supervisor.html";
+// // Supervisor form submit
+// supervisorForm?.addEventListener("submit", async e => {
+//     e.preventDefault();
+
+//     const inputs = supervisorForm.querySelectorAll("input");
+//     const body = {
+//         staffId: inputs[0].value,
+//         department: inputs[1].value,
+//         maxStudents: inputs[2].value ? parseInt(inputs[2].value) : null
+//     };
+
+//     try {
+//         const res = await fetch(`${API_URL}/onboarding/supervisor`, {
+//             method: "POST",
+//             headers: { 
+//                 "Content-Type": "application/json",
+//                 "Authorization": `Bearer ${token}`
+//             },
+//             body: JSON.stringify(body),
+//         });
+
+//         if (!res.ok) throw new Error("Supervisor onboarding failed");
+
+//         const user = await res.json();
+//         redirectToDashboard(user);
+
+//     } catch (err) {
+//         console.error(err);
+//         showError();
 //     }
-// }
+// });
 
-// //ERROR HANDLING
-// function showError() {
-//     onboardingBox.style.display = "none";
-//     errorState.classList.remove("hidden");
-// }
-
+// // Go back button
 // function goBack() {
 //     localStorage.clear();
 //     window.location.href = "../index.html";
-// };
+// }
+

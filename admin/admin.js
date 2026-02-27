@@ -328,7 +328,7 @@ document.getElementById("logoutModal").addEventListener("click", e => {
 });
 
 
-            //data models
+    //data models
 //supervisors
 const supervisors = [
     {id: "sup1", name: "Dr. Irene", image: "../images/1.JPG", capacity: 5},
