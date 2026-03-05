@@ -64,12 +64,12 @@
                     <li data-target="settings">
                         <span class="icon">⚙️</span> 
                         <span class="label">Settings</span></li>
-                    <li class="logout" onclick="openLogout()">
+                    <li  data-target="logoutModal" class="logout">
                         <span class="icon">🚪</span>
                         <span class="label">Logout</span></li>
                 </ul>
             </nav>
-        </aside>
+        </aside>-
 
         <!--MAIN CONTENT-->
         <main class="content">
@@ -108,14 +108,15 @@
                         <th>Project Title</th>
                         <th>Status</th>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td>01.</td>
                         <td>Kitara Okello Emmanuel</td>
                         <td>BU/UP/2023/1495</td>
                         <td>ekitara22@gmail.com</td>
                         <td>Final Year Project Management System</td>
                         <td>Active</td>
-                    </tr>
+                    </tr> -->
+                    <tbody id="studentTableBody"></tbody>
                 </table>
             </section>
 
@@ -131,11 +132,11 @@
             <section id="projects" class="section">
                 <h2>Summary</h2>
                 <div class="cards">
-                    <div class="kpi">TOTAL<span id="kpistudents">120</span></div>
-                    <div class="kpi">PROPOSALS<span id="kpisupervisors">83/91</span></div>
-                    <div class="kpi">REPORTS<span id="kpiproposals">67/89</span></div>
-                    <div class="kpi">APPROVED<span id="kpireports">45</span></div>
-                    <div class="kpi">REJECTED<span id="kpireports">6</span></div>
+                    <div class="kpi">TOTAL<span id="kpiTotal"></span></div>
+                    <div class="kpi">PROPOSALS<span id="kpiSupervisors"></span></div>
+                    <div class="kpi">REPORTS<span id="kpiProposals"></span></div>
+                    <div class="kpi">APPROVED<span id="kpiReports"></span></div>
+                    <div class="kpi">REJECTED<span id="kpiRejected"></span></div>
                     </div>
                 <h2>Submissions</h2>
                 <table>
@@ -231,8 +232,8 @@
             <input type="date" id="deadlineDate">
 
             <div class="logout-actions">
-                <button class="btn-no" onclick="closeDeadline()">Cancel</button>
-                <button class="btn-yes" onclick="saveDeadline()">Save</button>
+                <button class="btn-no" id="deadlineCancel">Cancel</button>
+                <button class="btn-yes" id="deadlineSave">Save</button>
             </div>
         </div>
     </div>
@@ -248,7 +249,7 @@
             </div>
         </div>
     </div>
-    <script src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
 
 </body>
 </html>

@@ -11,7 +11,7 @@ export function protectRoute(expectedRole) {
     }
 
     //Not Onboarded yet
-    if (!onboarded) {
+    if ((role === "STUDENT" || role === "SUPERVISOR") && !onboarded) {
     window.location.replace("../onboarding/onboarding.html");
     return;
     }
