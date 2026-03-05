@@ -24,11 +24,11 @@
             <div class="profile-box">
                 <div class="avatar">
                     <img id="profileImage" src="../images/emoji-sorrindo-com-oculos-seeklogo.png" alt="Profile">
-                    <input type="file" id="imageUpload" hidden>
+                    <input type="file" id="profileUpload" hidden>
                     <button onclick="uploadImage()">Change Photo</button>
                 </div>
                 <div class="student-info">
-                    <h3>Emmanuel Kitara Okello</h3>
+                    <h3 id="sidebarName"> Emmanuel Kitara Okello</h3>
                 </div>
             </div>
             
@@ -74,7 +74,7 @@
                     <div class="profile-display">
                         <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
 
-                        <input type="file" id="profileUpload">
+                        <input type="file" id="profileUploadProfile">
                         <button>Save</button>
                         <button>Cancel</button>
 
@@ -117,7 +117,7 @@
                     <div class="submission-card">
                         <h4>GitHub Repository</h4>
                         <p class="hint">Enter the URL of your GitHub repository</p>
-                        <input id="githubLink" placeholder="http://github.com/username/project">
+                        <input id="githubLink" placeholder="Paste your GitHub repository link">
                         <button onclick="saveGithub()">Save Link</button>
                     </div>
 

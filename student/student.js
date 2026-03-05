@@ -381,6 +381,10 @@ if (localStorage.getItem("onboarded") !== "true") {
     window.location.replace("../onboarding/onboarding.html");
 }
 
+window.uploadImage = () => {
+    document.getElementById("profileUpload").click();
+};
+
 // DOM ELEMENTS
 const profileImage = document.getElementById("profileImage");
 const profilePreview = document.getElementById("profilePreview");
@@ -399,12 +403,13 @@ window.addEventListener("load", async () => {
     initSidebar();
     initThemeToggle();
     initProfileUpload();
-    initSubmissionForm();
 
     renderComments();
     renderStatus();
     renderDeadlines();
+
     await loadProfile();
+    await renderNotifications();
 });
 
 // THEME TOGGLE
@@ -483,8 +488,9 @@ async function loadProfile() {
         if (!res.ok) throw new Error("Unauthorized");
 
         const data = await res.json();
-        document.querySelector(".student-info h3").textContent = data.user.fullName;
-        document.getElementById("course").textContent = data.course;
+        document.getElementById("sidebarName").textContent = data.user.fullName;
+        document.getElementById("studentName").textContent = data.user.fullName;
+        document.getElementById("regNo").textContent = data.registrationNumber;
         document.getElementById("email").textContent = data.user.email;
 
         if (data.profileImagePath) {
@@ -498,47 +504,134 @@ async function loadProfile() {
 }
 
 // SUBMISSION FORM
-function initSubmissionForm() {
-    const form = document.getElementById("submitForm");
-    if (!form) return;
+//submit title
+window.submitTitle = async () => {
+    const title = document.querySelector("#submissions input[type=text]").value;
+    const formData = new FormData();
+    formData.append("title", title);
 
-    form.addEventListener("submit", async e => {
-        e.preventDefault();
-
-        const file = document.getElementById("file")?.files?.[0];
-        if (!file) return alert("Select a file first");
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-            const res = await fetch(`${API_URL}/student/submit`, {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${token}` },
-                body: formData
-            });
-
-            if (res.ok) {
-                alert("Submitted successfully");
-                session.submissions = await getMySubmissions(); // refresh submissions
-            } else {
-                alert("Submission failed");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Network error");
-        }
+    const res = await fetch(`${API_URL}/student/submit/title`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`},
+        body: formData
     });
-}
+
+    if (res.ok) alert("Title submitted");
+};
+
+//upload proposal
+window.uploadProposal = async () => {
+    const file = document.querySelector("#submissions input[type=file]").files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API_URL}/student/submit/proposal`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`},
+        body: formData
+    });
+
+    if (res.ok) alert("Proposal uploaded");
+};
+
+//upload final report
+window.uploadFinalReport = async () => {
+    const file = document.querySelector("#submissions input[type=file]").files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API_URL}/student/submit/finalReport`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`},
+        body: formData
+    });
+
+    if (res.ok) alert("Final Report uploaded");
+};
+
+//submit github link
+window.submitGitHubLink = async () => {
+
+    const link = document.getElementById("githubLink"). value;
+    
+    const formData = new FormData();
+    formData.append("githubLink", link);
+
+    const res = await fetch(`${API_URL}/student/submit/github`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`},
+        body: formData
+    });
+
+    if (res.ok) alert("GitHub Link submitted");
+};
+
+//upload snapshots
+window.uploadSnapshots = async () => {
+    
+    const fileInput = DocumentFragment.getElementById("snapshotsInput");
+    const files = filesInput.files;
+
+    if (!files.length) {
+        alert("Please select snapshots first");
+        return;
+    }
+
+    const formDate = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append("snapshots", files[i]);
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/student/submit/snapshots`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}`},
+            body: formData
+        });
+
+        if (!res.ok) throw new Error ("Upload failed");
+
+        alert("Snapshots uploaded");
+    } catch (err) {
+        console.error(err);
+        alert("Failed to upload snapshots");
+    }
+  
+};
 
 // SUBMISSION STATUS
-const submissionsMock = {
-    title: { state: "approved", comment: "Title approved" },
-    proposal: { state: "pending", comment: "Under review" },
-    report: { state: "waiting", comment: "" },
-    github: { state: "approved", comment: "Repo looks good" },
-    snapshots: { state: "rejected", comment: "UI screenshots unclear" }
-};
+async function renderStatus() {
+    const grid =  document.getElementById("statusGrid");
+    const res = await fetch(`${API_URL}/student/status`, {
+        headers: { "Authorization": `Bearer ${token}`}
+    });
+
+    const data = await res.json();
+    const items = [
+        ["Title", data.titleApproved],
+        ["Proposal", data.proposalApproved],
+        ["GitHub", data.githubLinkApproved],
+        ["Final Report", data.finalReportApproved],
+        ["Snapshots", data.snapshotsApproved]
+    ];
+
+    grid.innerHTML = "";
+    items.forEach(([name, approved]) => {
+        const state = approved ? "approved" : "pending";
+        const card = document.createElement("div");
+
+        card.className = `status-card ${state}`;
+        card.innerHTML = `
+            <h4>${name}</h4>
+            <strong>${approved ? "✅ Approved" : "⌛ Pending"}</strong>
+            `;
+
+            grid.appendChild(card);
+    });
+
+    animateBattery(data.battery);
+}
 
 const statusIcons = {
     waiting: "💤 Waiting",
@@ -547,46 +640,17 @@ const statusIcons = {
     rejected: "❌ Rejected"
 };
 
-function renderStatus() {
-    const grid = document.getElementById("statusGrid");
-    if (!grid) return;
+function updateBatteryFromStatus(submissions) {
 
-    grid.innerHTML = "";
-
-    Object.entries(submissionsMock).forEach(([key, data]) => {
-        const card = document.createElement("div");
-        card.className = `status-card ${data.state}`;
-        card.innerHTML = `
-            <h4>${key.toUpperCase()}</h4>
-            <strong>${statusIcons[data.state]}</strong>
-            <p>${data.comment || "No feedback yet"}</p>
-        `;
-        grid.appendChild(card);
-    });
-
-    updateBatteryFromStatus();
-}
-
-// async function renderStatus() {
-//     const res = await fetch(`${API_URL}/student/status`, {
-//         headers: { "Authorization": `Bearer ${token}` }
-//     });
-
-//     if (!res.ok) return;
-
-//     const data = await res.json();
-
-//     console.log("Real status:", data);
-// }
-
-function updateBatteryFromStatus() {
     const batteryFill = document.getElementById("batteryFill");
     const batteryPercent = document.getElementById("batteryPercent");
+
     if (!batteryFill || !batteryPercent) return;
 
-    const total = Object.keys(submissionsMock).length;
-    const approved = Object.values(submissionsMock).filter(s => s.state === "approved").length;
+    const total = submissions.length;
+    const approved = submissions.filter(s => s.state === "APPROVED").length;
     const percent = Math.round((approved / total) * 100);
+    
     animateBattery(percent);
 }
 
@@ -618,34 +682,22 @@ function animateBattery(target) {
 }
 
 // COMMENTS
-const reviewComments = {
-    title: {
-        supervisor: { message: "Title is clear.", date: "2026-01-25" },
-        student: null
-    },
-    proposal: {
-        supervisor: { message: "Expand methodology.", date: "2026-01-26" },
-        student: null
-    }
-};
-
 function renderComments() {
     const container = document.getElementById("commentThreads");
-    if (!container) return;
-
     container.innerHTML = "";
+    session.comments.forEach (c => {
 
-    Object.entries(reviewComments).forEach(([key, thread]) => {
         const block = document.createElement("div");
         block.className = "comment-thread";
+
         block.innerHTML = `
-            <h4>${key.toUpperCase()}</h4>
-            ${thread.supervisor ? `<div class="comment supervisor"><p>${thread.supervisor.message}</p><small>${thread.supervisor.date}</small></div>` : "<p>No supervisor feedback.</p>"}
-            ${thread.student ? `<div class="comment student"><p>${thread.student.message}</p></div>` : `
-                <textarea id="reply-${key}" placeholder="Reply..."></textarea>
-                <button onclick="submitReply('${key}')">Send</button>
-            `}
+            <h4>${c.submissionType}</h4>
+            <div class = "comment supervisor">
+                <p>${c.comment}</p>
+                <small>${c.createdAt}</small>
+            </div>
         `;
+
         container.appendChild(block);
     });
 }
@@ -673,6 +725,25 @@ function renderDeadlines() {
             </div>
         `).join("")
         : "<p>No deadlines available.</p>";
+}
+
+//NOTIFICATIONS
+async function renderNotifications() {
+
+    const res = await fetch(`${API_URL}/student/notifications`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    const data = await res.json();
+    const list  = document.getElementById("notificationsList");
+
+    list.innerHTML = "";
+    data.forEach(n => {
+        const li = document.createElement("li");
+        li.className = `notify ${n.type}`;
+        li.textContent = n.message;
+        list.appendChild(li);
+    });
 }
 
 

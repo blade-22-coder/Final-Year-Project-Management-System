@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         location.href = `../student/student.html?id=${data.userId}`;
       }
     });
-})
+});
 
 //=====DB DRIVEN LOGIC====
 // //constants

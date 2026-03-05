@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const API_URL = "http://localhost:8080/api";
     const role = localStorage.getItem("role");
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
 
     const title = document.getElementById("welcomeTitle");
     const studentForm = document.getElementById("studentForm");
@@ -17,11 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(!token) {
         window.location.replace("../index.html");
-        return;
-    }
-
-    if (localStorage.getItem("onboarded") !== "true") {
-        window.location.replace("..'/onboarding/onboarding.html");
         return;
     }
 
@@ -52,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body),
         });
@@ -81,14 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = {
             staffId: document.getElementById("staffId").value,
             department: document.getElementById("department").value,
-            maxStudents: document.getElementById("maxStudents").value || null
+            maxStudents: Number(document.getElementById("maxStudents").value) || null
         };
 
         const res = await fetch(`${API_URL}/onboarding/supervisor`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body),
         });

@@ -572,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById(targetId)?.classList.add("active");
 
             if (targetId === "supervisors") {
-                renderSupervisors();
+                loadSupervisors();
             }
         });
     });
@@ -678,7 +678,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <tbody></tbody>
             `;
 
-            const tbody = table.querySelector("tbody");
+            const tbody = table.getElementById("studentTableBody");
+            tbody.innerHTML = "";
 
             students.forEach((s, idx) => {
                 const row = document.createElement("tr");
@@ -912,8 +913,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.getElementById("deadlineSave")?.addEventListener("click", () => {
-            if (!selectedDate) return alert("Select a date")
-        })
+            saveDeadline();
+        });
     }
 
     //projects 
@@ -924,6 +925,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const projects = await res.json();
+
+            document.getElementById("kpiTotal").textContent = projects.length;
+
+            document.getElementById("kpiProposals").textContent = 
+            projects.filter(p => p.type === "PROPOSAL").length;
+
+            document.getElementById("kpiReports").textContent = 
+            projects.filter(p => p.type === "REPORT").length;
+
+            document.getElementById("kpiApproved").textContent =
+            projects.filter(p => p.status === "APPROVED").length;
+
+            document.getElementById("kpiRejected").textContent =
+            projects.filter(p => p.status === "REJECTED").length;
 
             const table = document.querySelector("#projects table");
             const tbody = document.createElement("tbody");
@@ -955,19 +970,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             console.error("Projects load failed:", err);
         }
-        document.getElementById("kpiTotal").textContent = projects.length;
-
-        document.getElementById("kipProposals").textContent = 
-        projects.filter(p => p.type === "PROPOSAL").length;
-
-        document.getElementById("kpiReports").textContent = 
-        projects.filter(p => p.type === "REPORT").length;
-
-        document.getElementById("kpiApproved").textContent =
-        projects.filter(p => p.status === "APPROVED").lenght;
-
-        document.getElementById("kpiRejected").textContent =
-        projects.filter(p => p.status === "REJECTED").length;
+       
     }
     
     // INITIAL LOAD
