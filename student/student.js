@@ -490,14 +490,18 @@ async function loadProfile() {
         const data = await res.json();
         document.getElementById("sidebarName").textContent = data.user.fullName;
         document.getElementById("studentName").textContent = data.user.fullName;
-        document.getElementById("regNo").textContent = data.registrationNumber;
+        document.getElementById("regNo").textContent = data.user.registrationNumber;
         document.getElementById("email").textContent = data.user.email;
 
-        if (data.profileImagePath) {
-            const imgUrl = `${API_URL}/student/profile-image/${data.profileImagePath}`;
+        const defaultAvatar = "../images/1.jpg";
+        
+        const imgUrl = data.profileImagePath
+            ? `${API_URL}/student/profile-image/${data.profileImagePath}?t=${Date.now()}`
+            : defaultAvatar;
+
             profileImage.src = imgUrl;
             profilePreview.src = imgUrl;
-        }
+        
     } catch (err) {
         console.error("Failed to load profile:", err);
     }
@@ -569,8 +573,8 @@ window.submitGitHubLink = async () => {
 //upload snapshots
 window.uploadSnapshots = async () => {
     
-    const fileInput = DocumentFragment.getElementById("snapshotsInput");
-    const files = filesInput.files;
+    const fileInput = document.getElementById("snapshotsInput");
+    const files = fileInput.files;
 
     if (!files.length) {
         alert("Please select snapshots first");

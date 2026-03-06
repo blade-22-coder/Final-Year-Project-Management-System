@@ -1,4 +1,3 @@
-
 // // //section navigation
 // const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
 // const sections = document.querySelectorAll(".section");
@@ -491,7 +490,9 @@
 // =========DB DRIVEN LOGIC========
 import { protectRoute } from "../auth/route-guard.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", initAdminDashboard);
+
+async function initAdminDashboard() {
 
     protectRoute("ADMIN");
 
@@ -510,7 +511,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let adminCalendar;
     let selectedDate = null;
+
     let projectChart, roleChart, submissionChart;
+
     let students = [];
 
     // SIDEBAR NAVIGATION
@@ -661,24 +664,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             students = await res.json();  //store globally
 
-            const table = document.querySelector("#users .users-table");
-
-            if (!table) return;
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Student FullName</th>
-                        <th>Reg No.</th>
-                        <th>Email</th>
-                        <th>Project Title</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            `;
-
-            const tbody = table.getElementById("studentTableBody");
+            const tbody = document.getElementById("studentTableBody");
             tbody.innerHTML = "";
 
             students.forEach((s, idx) => {
@@ -686,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 row.innerHTML = `
                     <td>${idx + 1}</td>
                     <td>${s.user?.fullName}</td>
-                    <td>${s.regNo}</td>
+                    <td>${s.user.regNo}</td>
                     <td>${s.user?.email}</td>
                     <td>${s.projectTitle || "-"}</td>
                     <td>${s.user?.status || "-"}</td>
@@ -707,7 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const supervisors = await res.json();
-            console.log("Supervisors:", supervisors);
+        
             renderSupervisors(supervisors);
 
         } catch (err) {
@@ -729,7 +715,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "supervisors-card";
 
             card.innerHTML = `
-                <img src="${sup.user.image}">
+                <img src="${sup.user.image || '../images/1.JPG'}">
                 <h4>${sup.user.fullName}</h4>
                 <small>${assigned.length} / ${sup.capacity || 0} students</small>
 
@@ -757,19 +743,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     //ASSIGN / UNASSIGN ====NO DUPLICATES
-    
-    async function unassignStudent(studentId) {
-        try {
-            await persistAndRefresh(
-                `${API_URL}/admin/unassign`,
-                "POST"
-            );
-        } catch (err) {
-            console.error("Unassigned failed:", err);
-            alert("Failed to unassign student.");
-        }
+
+    // Assigned students
+    async function assignStudent(studentId, supervisorId) {
+        await fetch (`${API_URL}/admin/assign`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                studentProfileId: studentId,
+                supervisorProfileId: supervisorId
+            })
+        });
+        await refreshData();
     }
     
+    //Unassign students
+    async function unassignStudent(studentId) {
+        await fetch (`${API_URL}/admin/unassign/${studentId}`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}`}
+        });
+        
+        await refreshData();
+    }
+
+    async function refreshData() {
+        await loadStudents();
+        await loadSupervisors();
+
+    }
+
     //assigned student with unassign/ unassigned student if capacity allows
     function toggleStudentDropdown(dropdown, sup) {
         dropdown.innerHTML = "";
@@ -777,27 +783,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const assigned = students.filter(s => s.supervisor?.id === sup.id);
         const unassigned = students.filter(s => !s.supervisor);
 
-        // Assigned students
-        async function assignStudent(studentId, supervisorId) {
-            await fetch (`${API_URL}/admin/assign`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    studentProfileId: studentId,
-                    supervisorProfileId: supervisorId
-                })
-            });
-
-            await loadStudents();
-            await loadSupervisors();
-        }
-
-        
         // Capacity rule
         assigned.forEach(student => {
+            const item = document.createElement("div");
+            item.className = "student-item assigned";
+
+            item.innerHTML = `
+                ${student.user?.fullName}
+                <button class = "unassign">Remove</button>
+            `;
+
+            item.querySelector(".unassign").addEventListener("click", (e) => {
+                e.stopPropagation();
+                unassignStudent(student.id);
+            });
+
+            dropdown.appendChild(item);
 
         });
 
@@ -805,15 +806,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const full = document.createElement("p");
             full.textContent = "Supervisor capacity reached";
             full.style.opacity = "0.6";
+
             dropdown.appendChild(full);
             return;
         }
 
         // Divider
-        if (unassigned.length > 0) {
-            const divider = document.createElement("hr");
-            dropdown.appendChild(divider);
-        }
+        if (unassigned.length > 0) dropdown.appendChild(document.createElement("hr"));
 
         // Unassigned students
         unassigned.forEach(student => {
@@ -832,9 +831,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // INIT CALENDAR
     function initCalendar() {
 
-        const deadlineModal = document.getElementById("deadlineModal");
         const calendarEl = document.getElementById("adminCalendar");
-        if (!calendarEl) return;
 
         adminCalendar = new FullCalendar.Calendar(calendarEl, {
             initialView: "dayGridMonth",
@@ -861,60 +858,57 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        function closeDeadline() {
-            document.getElementById("deadlineModal").classList.remove("active");
-        }
-
-        //saving deadlines from click
-        function saveDeadline() {
-            if (!selectedDate) {
-                alert("Click a date first");
-                return;
-            }
-
-            const title = document.getElementById("deadlineTitle").value.trim();
-            const description = document.getElementById("deadlineDescription")?.value || "";
-
-            if (!title) {
-                alert("Deadline title required");
-                return;
-            }
-
-            const deadline = {
-                id: "dl_" + Date.now(),
-                title,
-                description,
-                date: selectedDate,
-                audience: ["students", "supervisors"],
-                createdBy: "Blade",
-                createdAt: new Date().toISOString()
-            };
-
-            //get exisitng deadlines
-            const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
-            deadlines.push(deadline);
-            localStorage.setItem("deadlines", JSON.stringify(deadlines));
-
-            //adding calendar visually
-            adminCalendar.addEvent({
-                title: deadline.title,
-                start: deadline.date,
-                allDay: true
-            });
-
-            closeDeadline();
-            document.getElementById("deadlineTitle").value = "";
-        }
-
         adminCalendar.render();
 
-        document.getElementById("deadlineCancel")?.addEventListener("click", () => {
-            deadlineModal.classList.remove("active");
+        document.getElementById("deadlineSave")
+            ?.addEventListener("click", saveDeadline);
+
+        document.getElementById("deadlineCancel")
+            ?.addEventListener("click", closeDeadlineModal);
+    }
+
+    function closeDeadlineModal() {
+        document.getElementById("deadlineModal").classList.remove("active");
+    }
+
+    //saving deadlines from click
+    async function saveDeadline() {
+        if (!selectedDate) {
+            alert("Click a date first");
+            return;
+        }
+
+        const title = document.getElementById("deadlineTitle").value.trim();
+        const description = document.getElementById("deadlineDescription")?.value || "";
+
+        if (!title) {
+            alert("Deadline title required");
+            return;
+        }
+
+        //get exisitng deadlines
+        await fetch(`${API_URL}/admin/deadlines`, {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body:JSON.stringify({
+                title,
+                description,
+                date: selectedDate
+            })
         });
 
-        document.getElementById("deadlineSave")?.addEventListener("click", () => {
-            saveDeadline();
+        //adding calendar visually
+        adminCalendar.addEvent({
+            title: title,
+            start: selectedDate,
+            allDay: true
         });
+
+        closeDeadlineModal();
+        document.getElementById("deadlineTitle").value = "";
     }
 
     //projects 
@@ -942,8 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const table = document.querySelector("#projects table");
             const tbody = document.createElement("tbody");
-            tbody.innerHTML = "";
-
+        
             projects.forEach((p, idx) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -972,11 +965,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
        
     }
-    
-    // INITIAL LOAD
-        loadAdminStats();
-        loadStudents();
-        initCalendar();
 
     //logout
     logoutBtn?.addEventListener("click",() => {
@@ -1000,7 +988,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-});
+    // INITIAL LOAD
+    await loadAdminStats();
+    await loadStudents();
+    initCalendar();
+    
+};
 
 
 

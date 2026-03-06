@@ -396,11 +396,15 @@ async function loadProfile() {
         document.getElementById("department").textContent = data.user.department;
         document.getElementById("email").textContent = data.user.email;
 
-        if (data.profileImagePath) {
-            const imgUrl = `${API_URL}/supervisor/profile-image/${data.profileImagePath}`;
+        const defaultAvatar = "../images/1.JPG";
+
+        const imgUrl = data.profileImagePath
+            ? `${API_URL}/supervisor/profile-image/${data.profileImagePath}?t=${Date.now()}`
+            : defaultAvatar;
+
             profileImage.src = imgUrl;
             profilePreview.src = imgUrl;
-        }
+        
 
         // Load assigned students
         loadStudents();
@@ -439,7 +443,7 @@ uploadInput.addEventListener("change", async (e) => {
 // ====== Load Assigned Students ======
 async function loadStudents() {
     try {
-        const res = await fetch(`${API_URL}/supervisor/students`, {
+        const res = await fetch(`${API_URL}/supervisor/my-students`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) throw new Error("Failed to load students");
@@ -447,13 +451,20 @@ async function loadStudents() {
         const students = await res.json();
         studentsView.innerHTML = ""; // clear old cards
 
+        const grid = document.getElementById("studentGrid");
+        grid.innerHTML = "";
+
         students.forEach(student => {
             const card = document.createElement("div");
             card.className = "student-card";
             card.dataset.id = student.id;
             card.dataset.name = student.fullName;
-            card.textContent = student.fullName;
-            studentsView.appendChild(card);
+            card.innerHTML = `
+                <h3>${student.fullName}</h3>
+                <p>${student.registrationNumber}</p>
+                <p>Progress: ${student.progress}%</p>
+            `;
+            grid.appendChild(card);
 
             // open modal on click
             card.onclick = () => {
@@ -471,16 +482,66 @@ async function loadStudents() {
 let pendingStudent = null;
 confirmBtn.onclick = () => {
     selectedStudent = pendingStudent;
+
     studentContext.textContent = `Viewing: ${selectedStudent.fullName}`;
+
     lockedItems.forEach(item => item.classList.remove("locked"));
+
+    loadSubmissions(selectedStudent.id);
     loadAnalytics(selectedStudent.id);
+    loadGrades(selectedStudent.id);
+
     modal.classList.add("hidden");
+    dashboardView.classList.remove("hidden");
+    studentsView.classList.add("hidden");
 };
 
 cancelBtn.onclick = () => {
     pendingStudent = null;
     modal.classList.add("hidden");
 };
+
+// ======Load Student Submissions ======
+async function loadSubmissions() {
+
+    if (!selectedStudent) return;
+
+    const res = await fetch(
+        `${API_URL}/supervisor/submissions/${selectedStudent.id}`, 
+        {
+            headers: { "Authorization": `Bearer ${token}` }
+        }
+    );
+
+    if (!res.ok) {
+        alert("Failed to load submissions");
+        return;
+    }
+
+    const submissions = await res.json();
+    const table = document.querySelector("#submissionsTable tbody");
+
+    table.innerHTML = "";
+
+    submissions.forEach(sub => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${sub.title}</td>
+            <td>${sub.date}</td>
+            <td>
+                <button onclick="preview(${sub.id})">View</button>
+                <button onclick="download(${sub.id})">Download</button>
+            </td>
+            
+            <td>
+                <textarea id="comment-${sub.id}" placeholder="Write feedback..."></textarea>
+            </td>
+        `;
+
+        table.appendChild(row);
+
+    });
+}
 
 // ====== Load Student Analytics ======
 async function loadAnalytics(studentId) {
@@ -532,23 +593,59 @@ async function loadAnalytics(studentId) {
 }
 
 // ====== Grades Submission ======
-async function submitGrade(submissionId) {
-    const score = document.getElementById("score").value;
-    const comment = document.getElementById("comment").value;
-    const status = document.getElementById("status").value;
+async function loadGrades(studentId) {
+    
+    const res = await fetch(`${API_URL}/grades/${studentId}`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
 
-    const res = await fetch(`${API_URL}/grades/${submissionId}`, {
+    if (!res.ok) return;
+
+    const grades = await res.json();
+
+    document.querySelector('[data-part="proposal"]').value = grades.proposal || 0;
+    document.querySelector('[data-part="progress"]').value = grades.progress || 0;
+    document.querySelector('[data-part="final"]').value = grades.finalReport || 0;
+    document.querySelector('[data-part="presentation"]').value = grades.presentation || 0;
+
+    computeTotal();
+    
+}
+
+// ====== Saving ======
+document.getElementById("submitGrade").onclick = async () => {
+
+    const payload = {
+        studentId: selectedStudent.id,
+        proposal: document.querySelector('[data-part="proposal"]').value,
+        progress: document.querySelector('[data-part="progress"]').value,
+        finalReport: document.querySelector('[data-part="final"]').value,
+        presentation: document.querySelector('[data-part="presentation"]').value,
+        comment: document.querySelector("gradeComment").value
+    };
+
+    const res = await fetch(`${API_URL}/supervisor/grades`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ score, comment, status })
+        body: JSON.stringify(payload)
     });
 
-    if (res.ok) alert("Graded successfully");
-    else alert("Failed to grade");
+    if (res.ok) alert("Grades saved");
+};
+
+// =====Auto compilation =====
+function computeTotal() {
+    let total = 0;
+    gradeInputs.forEach(input => total += parseInt(input.value) || 0);
+    totalDisplay.textContent = `${total} / 100`;
 }
+gradeInputs.forEach(input => input.addEventListener("input", computeTotal));
 
 // ====== Files ======
 function preview(id) {
@@ -562,22 +659,79 @@ function download(id) {
     link.click();
 }
 
-// ====== Deadlines ======
-document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("deadlineList");
-    if (!container) return;
+//========Comments========
+async function submitComment(submissionId) {
 
-    const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
-    container.innerHTML = "";
+    const textarea = document.getElementById(`comment-${submissionId}`)
 
-    deadlines.forEach(dl => {
-      if (!dl.audience.includes("supervisors")) return;
-      const card = document.createElement("div");
-      card.innerHTML = `<h4>${dl.title}</h4><p>${dl.description || ""}</p><small>📆 ${dl.date}</small>`;
-      container.appendChild(card);
+    const message = textarea.value;
+
+    if (!message) {
+        alert("Write a comment first");
+        return;
+    }
+
+    const res = await fetch(`${API_URL}/supervisor/comments/${submissionId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            message: message,
+            studentId: selectedStudent.id
+        })
     });
 
+    if (res.ok) {
+        alert("Comment submitted");
+        textarea.value = "";
+    } else {
+        alert("Failed to submit comment");
+    }
+}
+
+// ====== Deadlines ======
+async function loadDeadlines() {
+    try {
+        const res = await fetch (`${API_URL}/supervisor/deadlines`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) throw new Error("Failed to load deadlines");
+        const deadlines = await res.json();
+
+        const container = document.getElementById("deadlineList");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        if (deadlines.length === 0) {
+            container.innerHTML = "<p>No deadlines available</p>";
+            return;
+        }
+
+        deadlines.forEach(dl => {
+            const card = document.createElement("div");
+            card.className = "deadline-card";
+
+            card.innerHTML = `
+                <h4>${dl.title}</h4>
+                <p>$${dl.description || ""}</p>
+                <small>📆 ${dl.date}</small>
+            `;
+            container.appendChild(card);
+        });
+    } catch (err) {
+        console.error("Deadlinev load failed:", err);
+    }
+}
+document.addEventListener("DOMContentLoaded", () => {
+    
     loadProfile();
+    loadDeadlines();
 });
 
 // ====== Logout ====
@@ -592,12 +746,6 @@ document.getElementById("logoutModal").addEventListener("click", e => {
     if (e.target.id === "logoutModal") closeLogout();
 });
 
-// ====== Auto Grade Total ======
-function computeTotal() {
-    let total = 0;
-    gradeInputs.forEach(input => total += parseInt(input.value) || 0);
-    totalDisplay.textContent = total;
-}
-gradeInputs.forEach(input => input.addEventListener("input", computeTotal));
+
 
  
