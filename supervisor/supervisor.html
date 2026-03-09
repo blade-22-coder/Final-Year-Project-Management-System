@@ -24,10 +24,10 @@
             </div>
             <div class="profile-box">
                 <div class="avatar">
-                    <img id="profileImage" src="../images/emoji-sorrindo-com-oculos-seeklogo.png" alt="Profile">
+                    <img id="profileImage"  alt="Profile">
                 </div>
                 <div class="supervisor-info">
-                    <h3>Dr. Irene Nandutu</h3>
+                    <h3></h3>
                 </div>
             </div>
              
@@ -103,15 +103,15 @@
                 <h2>My Profile</h2>
 
                 <div class="profile-edit">
-                    <img id="profilePreview" src="../images/emoji-sorrindo-com-oculos-seeklogo.png">
+                    <img id="profilePreview">
 
                     <input type="file" id="profileUpload">
                     <button>Save</button>
                     <button>Cancel</button>
 
-                    <h4 id="supervisorName">Dr. Irene Nandutu</h4>
-                    <p id="department">Computer Studies</p>
-                    <P id="email">irene.nandutu@busitema.ac.ug</P>
+                    <h4 id="supervisorName"></h4>
+                    <p id="department"></p>
+                    <P id="email"></P>
 
                     
                 </div>
@@ -151,20 +151,28 @@
             <section id="documentView" class="hidden section">
                 
                     <h2>Project Documentation</h2>
-                <div class="doc-card">
+                <div class="doc-card" id="titleCard">
                     <h3>Project Title:</h3><br>
-                    <p>Final Year Project Management System</p>
+                    <p id="projectTitleText"></p>
+                    <div class="approval-actions">
+                        <button onclick="approveTitle(selectedStudent.id)" class="approve">
+                            ✅ Approve
+                        </button>
+                        <button onclick="rejectTitle(selectedStudent.id)" class="reject">
+                            ❌ Reject
+                        </button>
+                    </div>
 
                     <div class="review-section">
-                        <textarea placeholder="Supervisor's comments..."></textarea>
+                        <textarea id="titleComment" placeholder="Supervisor's comments..."></textarea>
                         <button id="submitComments">Submit comments</button>
                     </div>
                 </div>
 
                 <div class="doc-card">
                     <h3>Proposal</h3>
-                    <button onclick="preview(12)">View</button>
-                    <button onclick="download(12)">Download</button>
+                    <button onclick="preview(id)">View</button>
+                    <button onclick="download(id)">Download</button>
 
                     <div class="review-section">
                         <textarea placeholder="Supervisor's comments..."></textarea>
@@ -176,8 +184,8 @@
 
                 <div class="doc-card">
                     <h3>Final Report</h3>
-                    <button onclick="preview(12)">View</button>
-                    <button onclick="download(12)">Download</button>
+                    <button onclick="preview(id)">View</button>
+                    <button onclick="download(id)">Download</button>
 
                     <div class="review-section">
                         <textarea placeholder="Supervisor's comments..."></textarea>
@@ -195,6 +203,14 @@
                     <a href="https://github.com/student/project" target="_blank">
                         https://github.com/student/project
                     </a>
+                    <div class="approval-actions">
+                        <button onclick="approveGithubLink(selectedStudent.id)" class="approve">
+                            ✅ Approve
+                        </button>
+                        <button onclick="rejectGithubLink(selectedStudent.id)" class="reject">
+                            ❌ Reject
+                        </button>
+                    </div>
 
                     <div class="review-section">
                         <textarea placeholder="Supervisor's comments..."></textarea>
@@ -204,7 +220,7 @@
 
                 <h3>Snapshots</h3>
                 <div class="snapshot-grid">
-                    <div class="image-grid">
+                    <div class="image-grid" id="snapshotGrid">
                         <img src="../images/bg 3.JPG">
                         <img src="../images/bg 1.JPG">
                         <img src="../images/bg 4.JPG">
@@ -250,7 +266,7 @@
 
                     <div class="grade-row">
                         <span>Final Report</span>
-                        <input type="number" max="40" data-part="final" placeholder="0 - 40">
+                        <input type="number" max="40" data-part="finalReport" placeholder="0 - 40">
                         <span>40</span>
                     </div>
 

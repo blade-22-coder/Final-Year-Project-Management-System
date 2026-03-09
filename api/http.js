@@ -6,16 +6,17 @@ export async function request(endpoint, options = {}) {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
         ...options,
         headers: {
-            "Content-Type": "application/json",
+            ...(options.body instanceof FormData ? {} : {  "Content-Type": "application/json"}),
             ...(token && { "Authorization": `Bearer ${token}` }),
-            ...(options.headers || {})
+            ...(options.headers || {})            
         }
     });
 
     if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText);
+        const text = await res.text();
+        throw new Error(text || `Request failed (${res.status})`);
     }
 
-    return res.json();
+    const text = await res.text();
+    return text ? JSON.parse(text): null;
 }

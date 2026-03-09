@@ -12,5 +12,5 @@ export function uploadSubmission(type, file) {
 }
 
 export function getMySubmissions() {
-    return request("/submissions/student/me");
+    return request("/student/submission");
 }

@@ -1,337 +1,3 @@
-// const params = new URLSearchParams(window.location.search);
-// const userId = params.get("id");
-// const token = localStorage.getItem("token");
-
-// if(!userId || !token) {
-//   window.location.href = "../index/html";
-// }
-
-// //accessing students and activation of other sections
-// const studentsBtn = document.getElementById("studentsBtn");
-// const studentsView = document.getElementById("studentsView");
-// const dashboardView = document.getElementById("dashboardView");
-// const studentContext = document.getElementById("studentContext");
-// const lockedItems = document.querySelectorAll(".locked");
-
-// studentsBtn.onclick = () => {
-//   dashboardView.classList.add("hidden");
-//   studentsView.classList.remove("hidden");
-// };
-
-// document.querySelectorAll(".student-card").forEach(card => {
-//   card.onclick = () => {
-//     const name = card.dataset.name;
-//     studentContext.textContent = `Viewing: ${name}`;
-
-//     lockedItems.forEach(item => {
-//       item.classList.remove("locked");
-//     });
-
-//     alert(`Student ${name} selected`);
-//   };
-// });
-
-// //student confirmation pop up
-// const modal = document.getElementById("studentModal");
-// const modalStudentName = document.getElementById("modalStudentName");
-// const confirmBtn = document.getElementById("confirmStudent");
-// const cancelBtn = document.getElementById("cancelStudent");
-
-// let selectedStudent = null;
-// let pendingStudent = null;
-
-// document.querySelectorAll(".student-card").forEach(card => {
-//   card.onclick = () => {
-//     pendingStudent = card.dataset.name;
-//     modalStudentName.textContent = pendingStudent;
-//     modal.classList.remove("hidden");
-//   };
-// });
-
-// confirmBtn.onclick = () => {
-//   selectedStudent = pendingStudent;
-  
-//   studentContext.textContent = `Viewing: ${selectedStudent}`;
-
-//   lockedItems.forEach(item => {
-//     item.classList.remove("locked");
-//   });
-
-//   loadAnalytics(selectedStudent);
-
-//   modal.classList.add("hidden");
-// };
-
-// cancelBtn.onclick = () => {
-//   pendingStudent = null;
-//   modal.classList.add("hidden");
-// };
-
-// //section navigation
-// const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
-// const sections = document.querySelectorAll("main section");
-
-// navItems.forEach(item => {
-//   item.addEventListener("click", () => {
-
-//     //prevent locked student-based section
-//     if (item.classList.contains("locked")) return;
-
-//     const targetId = item.dataset.target;
-
-//     //hide all sections
-//     sections.forEach(sec => sec.classList.add("hidden"));
-
-//     //show target section
-//     const targetSection = document.getElementById(targetId);
-//     if (targetSection) {
-//       targetSection.classList.remove("hidden");
-//     }
-//   });
-// })
-
-// //syncing sidebar image
-// const uploadInput = document.getElementById("profileUpload");
-// const profileImage = document.getElementById("profileImage");
-// const profilePreview = document.getElementById("profilePreview");
-
-// uploadInput.addEventListener("change", async (e) => {
-//   const file = e.target.files[0];
-//   if (!file) return;
-
-//   const formData = new FormData();
-//   formData.append("file", file);
-  
-//   try {
-//     const res = await fetch("/api/supervisor/upload-profile-image", {
-//       method: "PUT",
-//       headers: {
-//         "Authorization": "Bearer " + localStorage.getItem("token")
-//       },
-//       body: formData
-//     });
-
-//     if (!res.ok) {
-//       throw new Error("Failed to upload image");
-//     }
-
-//     //reload profile after upload
-//     await loadProfile();
-
-//     alert("Profile image updated successfully");
-
-//   } catch (err) {
-//     console.error("Error uploading profile image:", err);
-//     alert("Failed to update profile image");
-//   }
-
-// });
-
-// //analytics chart per student
-// const studentAnalytics = {
-//   "Emmanuel Kitara Okello": {
-//     progress: [20, 35, 50, 65],
-//     repoCommits: [2, 5, 9, 14],
-//     submissions: ["On Time", "On Time", "Late", "On Time"]
-//   },
-//   "Stacy Martha Alowo Toto": {
-//     progress: [40, 60, 75, 82],
-//     repoCommits: [4, 8, 13, 21],
-//     submissions: ["On Time", "On Time", "On Time", "On Time"]
-//   }
-// };
-
-// //chart logic
-// let progressChart = null;
-// let reportChart = null;
-
-// function loadAnalytics(studentName) {
-//   const data = studentAnalytics[studentName];
-//   if (!data) return;
-
-//   const progressCanvas = document.getElementById("progressChart");
-//   const reportCanvas = document.getElementById("reportChart");
-  
-//   if (!progressCanvas || !reportCanvas) {
-//     console.error("Analtyics canvas not found");
-//     return;
-//   }
-
-//   const progressCtx = progressCanvas.getContext("2d");
-//   const repoCtx = reportCanvas.getContext("2d");
-
-//   if (progressChart) progressChart.destroy();
-//   if(reportChart) reportChart.destroy();
- 
-//   progressChart = new Chart(progressCtx, {
-//     type: "line",
-//     data: {
-//       labels: ["Proposal", "GitHub", "Snapshots", "Report"],
-//       datasets: [{
-//         label: "Project Progress (%)",
-//         data: data.progress,
-//         fill: true,
-//         tension: 0.4
-//       }]
-//     }
-//   });
-//   reportChart = new Chart(repoCtx, {
-//     type: "bar",
-//     data: {
-//       labels: ["week 1", "Week 2", "Week 3", "Week 4"],
-//       datasets: [{
-//         label: "Repository Activity (Commits)",
-//         data: data.repoCommits
-//       }]
-//     }
-//   });
-// }
-
-// //logout
-// function openLogout() {
-//     document.getElementById("logoutModal").classList.add("active");
-// }
-
-// function closeLogout() {
-//     document.getElementById("logoutModal").classList.remove("active");
-// }
-
-// function confirmLogout() {
-//     localStorage.clear();
-//     sessionStorage.clear();
-//     window.location.replace("/index.html");
-// }
-
-// //closing module when clicking outside
-// document.getElementById("logoutModal").addEventListener("click", e => {
-//     if (e.target.id === "logoutModal") closeLogout();
-
-// });
-
-// //loading deadlines 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const container = document.getElementById("deadlineList");
-
-//     if (!container) {
-//         console.error("deadlineList container not found");
-//         return;
-//     }
-
-//     const deadlines = JSON.parse(localStorage.getItem("deadlines")) || [];
-
-//     console.log("Deadlines loaded:", deadlines);
-
-//     if (deadlines.length === 0) {
-//         container.innerHTML = "<p>No deadlines available.</p>";
-//         return;
-//     }
-
-//     deadlines.forEach(dl => {
-//         if (!dl.audience.includes("supervisors")) return;
-
-//         const card = document.createElement("div");
-//         card.className = "deadline-card";
-
-//         card.innerHTML = `
-//             <h4>${dl.title}</h4>
-//             <p>${dl.description || ""}</p>
-//             <small>📅 ${dl.date}</small>
-//         `;
-
-//         container.appendChild(card);
-//     });
-
-//     //load profile on page load
-//     async function loadProfile() {
-//       try {
-//         const res = await fetch("/api/supervisor/me", {
-//           headers: {
-//             "Authorization": "Bearer " + localStorage.getItem("token")
-//           }
-//         });
-
-//         if (!res.ok) {
-//           throw new Error("Unauthorized");
-//         }
-
-//         const data = await res.json();
-
-//         //sidebar
-//         document.querySelector(".supervisor-info h3").textContent = data.fullName;
-
-//         //profile section
-//         document.getElementById("supervisorName").textContent = data.fullName;
-//         document.getElementById("department").textContent = data.department;
-//         document.getElementById("email").textContent = data.email;
-
-//         if (data.profileImagePath) {
-//           const ImageUrl = `/api/supervisor/profile-image/${data.profileImagePath}`;
-//           profileImage.src = ImageUrl;
-//           profilePreview.src = ImageUrl;
-//         }
-
-//       } catch (err) {
-//         console.error("Failed to load profile:", err);
-//       }
-//     }
-
-//     loadProfile();
-// });
-
-// //files
-// function preview(id) {
-//     window.open(`/api/files/submissions/${id}`, "_blank");
-// }
-
-// function download(id) {
-//     const link = document.createElement("a");
-//     link.href = `/api/files/submissions/${id}`;
-//     link.download = "";
-//     link.click();
-// }
-
-// //grading
-// async function submitGrade(submissionId) {
-//     const score = document.getElementById("score").value;
-//     const comment = document.getElementById("comment").value;
-//     const status = document.getElementById("status").value;
-
-//     const res = await fetch(`/api/grades/${submissionId}`, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": "Bearer " + localStorage.getItem("token")
-//         },
-//         body: JSON.stringify({ score, comment, status })
-//     });
-
-//     if (res.ok) {
-//         alert("Graded successfully");
-//     } else {
-//         alert("Failed to grade");
-//     }
-// }
-
-// //Auto total calculation
-// const gradeInputs = document.querySelectorAll(".grade-row input");
-// const totalDisplay = document.getElementById("gradeTotal");
-
-// function computeTotal() {
-//     let total = 0;
-
-//     gradeInputs.forEach(input => {
-//       const value = parseInt(input.value) || 0;
-//       total += value;
-//     });
-
-//     totalDisplay.textContent = total;
-// }
-
-// gradeInputs.forEach(input => {
-//     input.addEventListener("input", computeTotal);
-// });
-
-
 //======DB DRIVEN LOGIC=====
 //====== Globals & Params ======
 const API_URL = "http://localhost:8080/api";
@@ -393,7 +59,7 @@ async function loadProfile() {
         // Sidebar & profile
         document.querySelector(".supervisor-info h3").textContent = data.user.fullName;
         document.getElementById("supervisorName").textContent = data.user.fullName;
-        document.getElementById("department").textContent = data.user.department;
+        document.getElementById("department").textContent = data.department;
         document.getElementById("email").textContent = data.user.email;
 
         const defaultAvatar = "../images/1.JPG";
@@ -449,27 +115,34 @@ async function loadStudents() {
         if (!res.ok) throw new Error("Failed to load students");
 
         const students = await res.json();
-        studentsView.innerHTML = ""; // clear old cards
-
+        
         const grid = document.getElementById("studentGrid");
         grid.innerHTML = "";
 
         students.forEach(student => {
+
             const card = document.createElement("div");
             card.className = "student-card";
-            card.dataset.id = student.id;
-            card.dataset.name = student.fullName;
+
+            const imgUrl = student.profileImage
+                ? `${API_URL}/student/profile-image/${student.profileImage}?t=${Date.now()}`
+                : "../images/1.JPG";
+
             card.innerHTML = `
+                <img src="${imgUrl}" class="avatar">
                 <h3>${student.fullName}</h3>
                 <p>${student.registrationNumber}</p>
-                <p>Progress: ${student.progress}%</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${student.progress}%"></div>
+                </div>
+                <p>${student.progress}% Complete</p>
             `;
             grid.appendChild(card);
 
             // open modal on click
             card.onclick = () => {
                 pendingStudent = student;
-                modalStudentName.textContent = student.fullName;
+                modalStudentName.textContent = student.fullName || "Unknown Student";
                 modal.classList.remove("hidden");
             }
         });
@@ -487,9 +160,12 @@ confirmBtn.onclick = () => {
 
     lockedItems.forEach(item => item.classList.remove("locked"));
 
-    loadSubmissions(selectedStudent.id);
+    loadProjectTitle(selectedStudent.id);
+    loadDocumentation(selectedStudent.id);
+    loadGitHub(selectedStudent.id);
     loadAnalytics(selectedStudent.id);
     loadGrades(selectedStudent.id);
+    loadSnapshots(selectedStudent.id);
 
     modal.classList.add("hidden");
     dashboardView.classList.remove("hidden");
@@ -501,48 +177,289 @@ cancelBtn.onclick = () => {
     modal.classList.add("hidden");
 };
 
-// ======Load Student Submissions ======
-async function loadSubmissions() {
+// ======Load Student Title ======
+async function loadProjectTitle(studentId) {
+      const res = await fetch(`${API_URL}/supervisor/project-title/${studentId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
 
-    if (!selectedStudent) return;
+      if (!res.ok) return;
 
+      const data = await res.json();
+      const titleText = document.getElementById("projectTitleText");
+      const textarea = document.getElementById("titleComment");
+
+      titleText.textContent = data.title || "No project title submitted";
+      textarea.value = data.supervisorComment || "";
+      textarea.dataset.id = data.id;
+
+}
+
+// === Title approval =====
+async function approveTitle(studentId) {
     const res = await fetch(
-        `${API_URL}/supervisor/submissions/${selectedStudent.id}`, 
-        {
-            headers: { "Authorization": `Bearer ${token}` }
+        `${API_URL}/supervisor/${studentId}/title/approve`, {
+            method: "PUT",
+            headers : { "Authorization": `Bearer ${token}` }
         }
     );
 
-    if (!res.ok) {
-        alert("Failed to load submissions");
+    if (res.ok) {
+        alert("Title Approved ✅");
+        loadProjectTitle(selectedStudent.Id);
+    }
+}
+
+// ==== Title rejection =====
+async function rejectTitle(studentId) {
+    const res = await fetch(
+        `${API_URL}/supervisor/${studentId}/title/reject`, {
+            method: "PUT",
+            headers : { "Authorization": `Bearer ${token}` }
+        }
+    );
+
+    if (res.ok) {
+        alert("Title Rejected ❌");
+        loadProjectTitle(selectedStudent.id);
+    }
+}
+
+// ===== Title comment =====
+async function submitTitleComment() {
+    const textarea = document.getElementById("titleComment");
+    const titleId = textarea.dataset.id;
+    const message = textarea.value;
+
+    if (!message.trim()) {
+        alert("Write a comment first");
         return;
     }
 
-    const submissions = await res.json();
-    const table = document.querySelector("#submissionsTable tbody");
+    const res = await fetch(`${API_URL}/supervisor/project-title/${titleId}/comment`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ message })
+    });
 
-    table.innerHTML = "";
+    if (res.ok) {
+        alert("Comment sent");
+    } else {
+        alert("Failed to submit comment");
+    }
+}
 
-    submissions.forEach(sub => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${sub.title}</td>
-            <td>${sub.date}</td>
-            <td>
-                <button onclick="preview(${sub.id})">View</button>
-                <button onclick="download(${sub.id})">Download</button>
-            </td>
-            
-            <td>
-                <textarea id="comment-${sub.id}" placeholder="Write feedback..."></textarea>
-            </td>
-        `;
+// ====== Load student Documentation ======
+async function loadDocumentation(studentId) {
 
-        table.appendChild(row);
+    const res = await fetch(`${API_URL}/supervisor/docs/${studentId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    });
 
+    if (!res.ok) return;
+
+    const docs = await res.json();
+    const cards = document.querySelectorAll("#documentView .doc-card");
+    
+    docs.forEach((doc, index) => {
+        
+        const card = cards[index];
+        if (!card) return;
+
+        const title = card.querySelector("h3");
+        const textarea = card.querySelector("textarea");
+
+        title.textContent = doc.title;
+
+        if (textarea) {
+            textarea.value = doc.supervisorComment || "";
+            textarea.dataset.id = doc.id;
+        }
     });
 }
 
+// ====Doc comment ====
+async function submitDocComment(button) {
+
+    const textarea = button.previousElementSibling;
+    const docId = textarea.dataset.id;
+    const message = textarea.value;
+
+    if (!message.trim()) {
+        alert("Write a comment first");
+        return;
+    }
+
+    const res = await fetch(`${API_URL}/supervisor/docs/${docId}/comment`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body : JSON.stringify({
+            message: message })
+    });
+
+    if (res.ok) {
+        alert("Comment sent");
+    } else {
+        alert("Failed to submit comment");
+    }
+}
+
+// ======Load Student Github Link =====
+async function loadGitHub(studentId) {
+    const res = await fetch(`${API_URL}/supervisor/github/${studentId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+        console.warn("Github data not found");
+        return;
+    }
+
+    const github = await res.json();
+
+    const link = document.querySelector(".repo-box a");
+    const textarea = document.querySelector(".repo-box textarea");
+
+    if(github.repoUrl) {
+        link.href = github.githubLink;
+        link.textContent = github.githubLink;
+    } else {
+        link.textContent = "No repository submitted"
+        link.removeAttribute("href")
+    }
+}
+
+// === Github approval =====
+async function approveGithubLink(studentId) {
+    const res = await fetch(
+        `${API_URL}/supervisor/snapshots/${Id}/approve`, {
+            method: "PUT",
+            headers : { "Authorization": `Bearer ${token}` }
+        }
+    );
+
+    if (res.ok) {
+        alert("Title Approved ✅");
+        loadGitHub(selectedStudent.Id);
+    }
+}
+
+// ==== Github rejection =====
+async function rejectGithubLink(studentId) {
+    const res = await fetch(
+        `${API_URL}/supervisor/${studentId}/githubLink/reject`, {
+            method: "PUT",
+            headers : { "Authorization": `Bearer ${token}` }
+        }
+    );
+
+    if (res.ok) {
+        alert("Title Rejected ❌");
+        loadGitHub(selectedStudent.id);
+    }
+}
+
+// ====Github comment ====
+async function submitGithubComment(Id) {
+
+    const message = document.getElementById("githubComment").value;
+    if (!message) {
+        alert("Write a comment first");
+        return;
+    }
+
+    const res = await fetch(`${API_URL}/supervisor/github/${Id}/comment`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body : JSON.stringify({ 
+            message: message })
+    });
+
+    if (res.ok) {
+        alert("Comment sent");
+    } else {
+        alert("Failed to submit comment");
+    }
+}
+
+// ===== Load Student Snapshot ======
+async function loadSnapshots(studentId) {
+    const res = await fetch(`${API_URL}/supervisor/snapshots/${studentId}`, {
+        headers: { "Authorization": `Bearer ${token}`}
+    });
+
+    if(!res.ok) return;
+
+    const snapshots = await res.json();
+    const grid = document.querySelector("#snapshotGrid");
+
+    grid.innerHTML = "";
+
+    snapshots.forEach(snap => {
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "snapshot-card";
+
+        wrapper.innerHTML = `
+
+            <img src = "${API_URL}/supervisor/snapshots/file/${snap.filePath}" class="snapshot">
+
+            <div class="approval-actions">
+                <button onclick="approveSnapshot('${snap.id}')">
+                    ✅ Approve
+                </button>
+                <button onclick="rejectSnapshot('${snap.id}')">
+                    ❌ Reject
+                </button>
+            </div>
+        `;
+        
+        const img = wrapper.querySelector("img");
+        img.onclick = () => window.open(img.src, "_blank");
+        
+        grid.appendChild(wrapper);
+
+    });   
+}
+
+// ======= snapshot approval =====
+async function approveSnapshot(id) {
+    const res = await fetch(
+        `${API_URL}/supervisor/${id}/snapshots/approve`, {
+            method: "PUT",
+            headers:{ "Authorization": `Bearer ${token}` }
+        }
+    );
+
+    if(res.ok) {
+         alert("Snapshot Approved ✅");
+         loadSnapshots(selectedStudent.id);
+    }
+}
+
+// ====== snapshot rejection =======
+async function rejectSnapshot(id) {
+    const res = await fetch(
+        `${API_URL}/supervisor/snapshots/${id}/reject`, {
+            method: "PUT",
+            headers: { "Authorization": `Bearer ${token}`}
+        }
+    );
+
+    if(res.ok) {
+        alert("Snapshot Rejected ❌");
+        loadSnapshots(selectedStudent.id);
+    }
+}
 // ====== Load Student Analytics ======
 async function loadAnalytics(studentId) {
     try {
@@ -551,7 +468,10 @@ async function loadAnalytics(studentId) {
         });
         if (!res.ok) throw new Error("Failed to load analytics");
 
-        const data = await res.json(); // { progress: [], repoCommits: [], submissions: [] }
+        const text = await res.text();
+        if (!text) return;
+
+        const data = JSON.parse(text); // { progress: [], repoCommits: [], submissions: [] }
 
         const progressCanvas = document.getElementById("progressChart");
         const reportCanvas = document.getElementById("reportChart");
@@ -595,8 +515,8 @@ async function loadAnalytics(studentId) {
 // ====== Grades Submission ======
 async function loadGrades(studentId) {
     
-    const res = await fetch(`${API_URL}/grades/${studentId}`, {
-        method: "POST",
+    const res = await fetch(`${API_URL}/supervisor/grades/${studentId}`, {
+        method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
         }
@@ -608,26 +528,26 @@ async function loadGrades(studentId) {
 
     document.querySelector('[data-part="proposal"]').value = grades.proposal || 0;
     document.querySelector('[data-part="progress"]').value = grades.progress || 0;
-    document.querySelector('[data-part="final"]').value = grades.finalReport || 0;
+    document.querySelector('[data-part="finalReport"]').value = grades.finalReport || 0;
     document.querySelector('[data-part="presentation"]').value = grades.presentation || 0;
 
     computeTotal();
     
 }
 
-// ====== Saving ======
+// ====== Submitting to admin ======
 document.getElementById("submitGrade").onclick = async () => {
 
     const payload = {
         studentId: selectedStudent.id,
         proposal: document.querySelector('[data-part="proposal"]').value,
         progress: document.querySelector('[data-part="progress"]').value,
-        finalReport: document.querySelector('[data-part="final"]').value,
+        finalReport: document.querySelector('[data-part="finalReport"]').value,
         presentation: document.querySelector('[data-part="presentation"]').value,
-        comment: document.querySelector("gradeComment").value
+        comment: document.querySelector("#gradeComment").value
     };
 
-    const res = await fetch(`${API_URL}/supervisor/grades`, {
+    const res = await fetch(`${API_URL}/supervisor/grades/${selectedStudent.id}/submit`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -637,6 +557,27 @@ document.getElementById("submitGrade").onclick = async () => {
     });
 
     if (res.ok) alert("Grades saved");
+};
+
+// === saving grade draft =====
+document.getElementById("saveGrade").onclick = async () => {
+
+    const payload = {
+        proposal: document.querySelector('[data-part="proposal"]').value,
+        progress: document.querySelector('[data-part="progress"]').value,
+        finalReport: document.querySelector('[data-part="finalReport"]').value,
+        presentation: document.querySelector('[data-part="presentation"]').value,
+    };
+    await fetch(`${API_URL}/supervisor/grades/${selectedStudent.id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+    });
+
+    alert("Draft saved");
 };
 
 // =====Auto compilation =====
@@ -719,13 +660,18 @@ async function loadDeadlines() {
 
             card.innerHTML = `
                 <h4>${dl.title}</h4>
-                <p>$${dl.description || ""}</p>
-                <small>📆 ${dl.date}</small>
+                <p>${dl.description || ""}</p>
+                <small>📆 ${dl.deadlineDate ? new Date(dl.deadlineDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }): "TBA"}</small>
             `;
             container.appendChild(card);
         });
     } catch (err) {
-        console.error("Deadlinev load failed:", err);
+        console.error("Deadline load failed:", err);
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
