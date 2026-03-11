@@ -157,7 +157,6 @@ async function loadProfile() {
 async function renderSubmissions() {
     const container =  document.getElementById("submissionList");
     if(!container) return;
-    container.innerHTML = "Loading....";
 
     try {
         const res = await fetch(`${API_URL}/student/submission`, {
@@ -166,20 +165,50 @@ async function renderSubmissions() {
 
         if (!res.ok) throw new Error("Failed to fetch submissions");
 
-        const submissions = await res.json();
+        const s = await res.json();
 
-        container.innerHTML = "";
-        const div = document.createElement("div");
-        div.className = "submission-card";
-        div.innerHTML = `
-            <h4>${s.type}</h4>
-            <small>Submitted: ${new Date(s.submittedAt).toLocaleDateString()}</small>
-        `;
+        //title
+        if (s.projectTitle) {
+            document.querySelector("#submissions input[type=text]").value = s.projectTitle;
+        }
 
-            container.appendChild(div);
+        //proposal
+        if (s.proposalUrl) {
+            document.getElementById("proposalFile").parentElement;
+
+            proposalDiv.insertAdjacentHTML("beforeend", `
+                <p class="file-link">
+                    📄 <a href="${API_URL}student/file/proposals/${s.proposalUrl}" target="_blank">
+                        ${s.proposalUrl.split("_").slice(1).join("_")}
+                    </a>
+                </p>
+            `);
+        }
+
+        //final report
+        if (s.finalReportUrl) {
+            document.getElementById("finalReportFile").parentElement;
+
+            proposalDiv.insertAdjacentHTML("beforeend", `
+                <p class="file-link">
+                    📄 <a href="${API_URL}student/file/finalReport/${s.finalReportUrl}" target="_blank">
+                        ${s.proposalUrl.split("_").slice(1).join("_")}
+                    </a>
+                </p>
+            `);
+        }
+
+        //github link
+        if (s.githubLink) {
+            document.getElementById("githubLink").value = s.githubLink;
+        }
+
+        //snapshots
+        if (s.snapshotsUrl) {
+            renderSnapshots(s.snapshotsUrl);
+        }
     } catch (err) {
         console.error(err);
-        container.innerHTML = "<p>FAiled to load submissions</p>";
     }
 }
 //submit title
@@ -282,55 +311,58 @@ window.uploadSnapshots = async () => {
     
     const files = document.getElementById("snapshotFiles").files;
 
-    if (!files.length) {
+    if (!files.length === 0) {
         alert("Please select snapshots first");
+        return;
+    }
+
+    if (files.length > 6) {
+        alert("Maximum 6 snapshots allowed");
         return;
     }
 
     const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
+    for (let file of files) {
         formData.append("files", files[i]);
     }
 
-    try {
-        const res = await fetch(`${API_URL}/student/submit/snapshots`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}`},
-            body: formData
-        });
+    const res = await fetch(`${API_URL}/student/submit/snapshots`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`},
+        body: formData
+    });
 
-        if (!res.ok) throw new Error ("Upload failed");
+    if (!res.ok) throw new Error ("Upload failed");
 
-        alert("Snapshots uploaded");
-        await renderSubmissions();
-        await renderStatus();
-        previewSnapshots(files);
-
-    } catch (err) {
-        console.error(err);
-        alert("Failed to upload snapshots");
-    }
+    alert("Snapshots uploaded ✅");
+    await renderSubmissions();
+    await renderStatus();
     
-  
 };
 
 //=====Snapshot review =====
-function previewSnapshots(files) {
+function renderSnapshots(paths) {
 
     const grid = document.getElementById("snapshotPreview");
     if(!grid) return;
 
     grid.innerHTML = "";
 
-    for (let file of files) {
-        const img = document.createElement("img");
+    const files = paths.split(";").filter(Boolean);
+    files.forEach(file => {
 
-        img.src = URL.createObjectURL(file);
+        const img = document.createElement("img");
+        img.src = `${API_URL}student/files/snapshots/${file}`;
         img.className = "snapshot-preview";
 
-        grid.appendChild(img);
-    }
+        img.onclick = () => {
+            window.open(`${API_URL}/files/snapshots/${file}`, "_blank");
+        }
+
+        grid.appendChild("img")
+    });
+
 }
 
 // SUBMISSION STATUS
@@ -430,7 +462,7 @@ async function renderComments() {
     try {
 
         const res = await fetch(
-            `${API_URL}/student/comments`, {
+            `${API_URL}/student/comments/me`, {
                 headers:{ "Authorization": `Bearer ${token}` }
             }
         );
@@ -445,10 +477,10 @@ async function renderComments() {
         comments.forEach (c => {
 
             const div = document.createElement("div");
-            div.className="Comment supervisor";
+            div.className="comment supervisor";
 
             div.innerHTML = `
-                <h4>${c.submissionType || "Submission"}</h4>
+                <h4>${c.submission || "Submission"}</h4>
                 <div class = "comment supervisor">
                     <p>${c.comment}</p>
                     <small>${new Date(c.createdAt).toLocaleString()}</small>
@@ -462,11 +494,23 @@ async function renderComments() {
     }
 }
 
-window.submitReply = (key) => {
-    const input = document.getElementById(`reply-${key}`);
+window.submitReply = async (submissionId) => {
+
+    const input = document.getElementById(`reply-${submissionId}`);
     if (!input || !input.value.trim()) return;
 
-    reviewComments[key].student = { message: input.value, date: new Date().toLocaleDateString() };
+    await fetch(`${API_URL}/supervisor/comments/${submissionId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            message: input.value
+        })
+    });
+
+    input.value="";
     renderComments();
 };
 

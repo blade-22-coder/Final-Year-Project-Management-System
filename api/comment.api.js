@@ -1,11 +1,11 @@
 import { request } from  "./http.js";
 
 export function getComments() {
-    return request("/comments/me");
+    return request("/student/comments/me");
 }
 
 export function sendReply(section, message) {
-    return request("/comments", {
+    return request("/student/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ section, message})

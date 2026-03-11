@@ -179,7 +179,7 @@ cancelBtn.onclick = () => {
 
 // ======Load Student Title ======
 async function loadProjectTitle(studentId) {
-      const res = await fetch(`${API_URL}/supervisor/project-title/${studentId}`, {
+      const res = await fetch(`${API_URL}/supervisor/title/${studentId}`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
@@ -262,23 +262,9 @@ async function loadDocumentation(studentId) {
     if (!res.ok) return;
 
     const docs = await res.json();
-    const cards = document.querySelectorAll("#documentView .doc-card");
-    
-    docs.forEach((doc, index) => {
-        
-        const card = cards[index];
-        if (!card) return;
 
-        const title = card.querySelector("h3");
-        const textarea = card.querySelector("textarea");
-
-        title.textContent = doc.title;
-
-        if (textarea) {
-            textarea.value = doc.supervisorComment || "";
-            textarea.dataset.id = doc.id;
-        }
-    });
+    window.proposalFile = docs.proposal;
+    window.reportFile = docs.finalReport;
 }
 
 // ====Doc comment ====
@@ -326,7 +312,7 @@ async function loadGitHub(studentId) {
     const link = document.querySelector(".repo-box a");
     const textarea = document.querySelector(".repo-box textarea");
 
-    if(github.repoUrl) {
+    if(github.githubLink) {
         link.href = github.githubLink;
         link.textContent = github.githubLink;
     } else {
@@ -338,14 +324,14 @@ async function loadGitHub(studentId) {
 // === Github approval =====
 async function approveGithubLink(studentId) {
     const res = await fetch(
-        `${API_URL}/supervisor/snapshots/${Id}/approve`, {
+        `${API_URL}/supervisor/${studentId}/githubLink/approve`, {
             method: "PUT",
             headers : { "Authorization": `Bearer ${token}` }
         }
     );
 
     if (res.ok) {
-        alert("Title Approved ✅");
+        alert("Github Link Approved ✅");
         loadGitHub(selectedStudent.Id);
     }
 }
@@ -360,7 +346,7 @@ async function rejectGithubLink(studentId) {
     );
 
     if (res.ok) {
-        alert("Title Rejected ❌");
+        alert("Github Link Rejected ❌");
         loadGitHub(selectedStudent.id);
     }
 }
@@ -432,31 +418,31 @@ async function loadSnapshots(studentId) {
 }
 
 // ======= snapshot approval =====
-async function approveSnapshot(id) {
+async function approveSnapshot() {
     const res = await fetch(
-        `${API_URL}/supervisor/${id}/snapshots/approve`, {
+        `${API_URL}/supervisor/${selectedStudent.id}/snapshots/approve`, {
             method: "PUT",
             headers:{ "Authorization": `Bearer ${token}` }
         }
     );
 
     if(res.ok) {
-         alert("Snapshot Approved ✅");
+         alert("Snapshots Approved ✅");
          loadSnapshots(selectedStudent.id);
     }
 }
 
 // ====== snapshot rejection =======
-async function rejectSnapshot(id) {
+async function rejectSnapshot() {
     const res = await fetch(
-        `${API_URL}/supervisor/snapshots/${id}/reject`, {
+        `${API_URL}/supervisor/${selectedStudent.id}/snapshots/reject`, {
             method: "PUT",
             headers: { "Authorization": `Bearer ${token}`}
         }
     );
 
     if(res.ok) {
-        alert("Snapshot Rejected ❌");
+        alert("Snapshots Rejected ❌");
         loadSnapshots(selectedStudent.id);
     }
 }
@@ -552,8 +538,8 @@ document.getElementById("submitGrade").onclick = async () => {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        }
+        // body: JSON.stringify(payload)
     });
 
     if (res.ok) alert("Grades saved");
@@ -589,14 +575,28 @@ function computeTotal() {
 gradeInputs.forEach(input => input.addEventListener("input", computeTotal));
 
 // ====== Files ======
-function preview(id) {
-    window.open(`${API_URL}/files/submissions/${id}`, "_blank");
+function preview(type) {
+    let fileName = type === "proposal" ? proposalFile : reportFile;
+
+    if (!fileName) {
+        alert("File not submitted yet");
+        return;
+    }
+
+    window.open(`${API_URL}/supervisor/file/${fileName}`, "_blank");
 }
 
-function download(id) {
+function download(type) {
+    let fileName = type === "proposal" ? proposalFile : reportFile;
+
+    if (!fileName) {
+        alert("File not submitted yet");
+        return;
+    }
+
     const link = document.createElement("a");
-    link.href = `${API_URL}/files/submissions/${id}`;
-    link.download = "";
+    link.href = `${API_URL}/supervisor/file/${fileName}`;
+    link.download = fileName;
     link.click();
 }
 

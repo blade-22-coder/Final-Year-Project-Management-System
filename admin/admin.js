@@ -481,7 +481,7 @@ async function initAdminDashboard() {
                     <td>${p.student?.fullName}</td>
                     <td>${p.student?.regNo}</td>
                     <td>${p.student?.projectTitle}</td>
-                    <td>${p.score ?? "-"}</td>
+                    <td>${p.total ?? "-"}</td>
                 `;
                 tbody.appendChild(row);
             });
