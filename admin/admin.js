@@ -479,7 +479,7 @@ async function initAdminDashboard() {
                 row.innerHTML = `
                     <td>${idx + 1}</td>
                     <td>${p.student?.fullName}</td>
-                    <td>${p.student?.regNo}</td>
+                    <td>${p.student?.registrationNumber}</td>
                     <td>${p.student?.projectTitle}</td>
                     <td>${p.total ?? "-"}</td>
                 `;

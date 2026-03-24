@@ -11,6 +11,8 @@ if (!userId || !token) {
 let selectedStudent = null; // current selected student
 let progressChart = null;
 let reportChart = null;
+let proposalFile = null;
+let reportFile = null;
 
 // DOM Elements
 const studentsBtn = document.getElementById("studentsBtn");
@@ -206,7 +208,7 @@ async function approveTitle(studentId) {
 
     if (res.ok) {
         alert("Title Approved ✅");
-        loadProjectTitle(selectedStudent.Id);
+        loadProjectTitle(selectedStudent.id);
     }
 }
 
@@ -263,8 +265,8 @@ async function loadDocumentation(studentId) {
 
     const docs = await res.json();
 
-    window.proposalFile = docs.proposal;
-    window.reportFile = docs.finalReport;
+    proposalFile = docs.proposal;
+    reportFile = docs.finalReport;
 }
 
 // ====Doc comment ====
@@ -332,7 +334,7 @@ async function approveGithubLink(studentId) {
 
     if (res.ok) {
         alert("Github Link Approved ✅");
-        loadGitHub(selectedStudent.Id);
+        loadGitHub(selectedStudent.id);
     }
 }
 
@@ -392,18 +394,20 @@ async function loadSnapshots(studentId) {
 
     snapshots.forEach(snap => {
 
+        const file = snap.fileName || snap;
+
         const wrapper = document.createElement("div");
         wrapper.className = "snapshot-card";
 
         wrapper.innerHTML = `
 
-            <img src = "${API_URL}/supervisor/snapshots/file/${snap.filePath}" class="snapshot">
+            <img src = "${API_URL}/supervisor/snapshots/file/${file}" class="snapshot">
 
             <div class="approval-actions">
-                <button onclick="approveSnapshot('${snap.id}')">
+                <button onclick="approveSnapshot('${snap.id || file}')">
                     ✅ Approve
                 </button>
-                <button onclick="rejectSnapshot('${snap.id}')">
+                <button onclick="rejectSnapshot('${snap.id || file}')">
                     ❌ Reject
                 </button>
             </div>
@@ -500,11 +504,12 @@ async function loadAnalytics(studentId) {
 
 // ====== Grades Submission ======
 async function loadGrades(studentId) {
-    
+        
     const res = await fetch(`${API_URL}/supervisor/grades/${studentId}`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
         }
     });
 
@@ -525,7 +530,6 @@ async function loadGrades(studentId) {
 document.getElementById("submitGrade").onclick = async () => {
 
     const payload = {
-        studentId: selectedStudent.id,
         proposal: document.querySelector('[data-part="proposal"]').value,
         progress: document.querySelector('[data-part="progress"]').value,
         finalReport: document.querySelector('[data-part="finalReport"]').value,
@@ -538,8 +542,8 @@ document.getElementById("submitGrade").onclick = async () => {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
-        }
-        // body: JSON.stringify(payload)
+        },
+        body: JSON.stringify(payload)
     });
 
     if (res.ok) alert("Grades saved");
@@ -575,7 +579,7 @@ function computeTotal() {
 gradeInputs.forEach(input => input.addEventListener("input", computeTotal));
 
 // ====== Files ======
-function preview(type) {
+async function preview(type) {
     let fileName = type === "proposal" ? proposalFile : reportFile;
 
     if (!fileName) {
@@ -583,10 +587,28 @@ function preview(type) {
         return;
     }
 
-    window.open(`${API_URL}/supervisor/file/${fileName}`, "_blank");
+    try {
+
+        const encodedFile = encodeURIComponent(fileName);
+        const res = await fetch(`${API_URL}/supervisor/file/${encodedFile}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) throw new Error("Failed to load file");
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        window.open(url,"_blank");
+    } catch (err) {
+        console.error(err);
+        alert("Unable to preview file");
+    }
 }
 
-function download(type) {
+ async function download(type) {
     let fileName = type === "proposal" ? proposalFile : reportFile;
 
     if (!fileName) {
@@ -594,10 +616,28 @@ function download(type) {
         return;
     }
 
-    const link = document.createElement("a");
-    link.href = `${API_URL}/supervisor/file/${fileName}`;
-    link.download = fileName;
-    link.click();
+    try {
+
+        const encodedFile = encodeURIComponent(fileName);
+        const res = await fetch(`${API_URL}/supervisor/file/${encodedFile}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) throw new Error("Download failed");
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.click();
+    } catch (err) {
+        console.error(err);
+        alert("Download failed");
+    }
 }
 
 //========Comments========

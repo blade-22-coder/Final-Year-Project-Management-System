@@ -1,9 +1,7 @@
 // ====DB DRIVEN LOGIC====
 // IMPORTS
-import { protectRoute } from "../auth/route-guard.js";
 import { getMySubmissions } from "../api/submission.api.js";
 import { getComments } from "../api/comment.api.js";
-import { getDeadlines } from "../api/deadline.api.js";
 import { session } from "../state/session.js";
 
 // GLOBALS
@@ -38,7 +36,6 @@ window.addEventListener("load", async () => {
     try {
         session.submissions = await getMySubmissions();
         session.comments = await getComments();
-        session.deadlines = await getDeadlines();
     } catch (err) {
         console.warn("API not ready, running in mock mode", err);
     }
@@ -54,6 +51,12 @@ window.addEventListener("load", async () => {
     await loadProfile();
     await renderNotifications();
     await renderSubmissions();
+
+    const cached = localStorage.getItem("submissionCache");
+    if (cached) {
+        renderCachedSubmission(JSON.parse(cached));
+    } 
+    
 });
 
 // THEME TOGGLE
@@ -167,6 +170,9 @@ async function renderSubmissions() {
 
         const s = await res.json();
 
+        //persist to local storage
+        localStorage.setItem("submissionCache", JSON.stringify(s));
+
         //title
         if (s.projectTitle) {
             document.querySelector("#submissions input[type=text]").value = s.projectTitle;
@@ -178,7 +184,7 @@ async function renderSubmissions() {
 
             proposalDiv.insertAdjacentHTML("beforeend", `
                 <p class="file-link">
-                    📄 <a href="${API_URL}student/file/proposals/${s.proposalUrl}" target="_blank">
+                    📄 <a href="${API_URL}/student/file/proposals/${s.proposalUrl}" target="_blank">
                         ${s.proposalUrl.split("_").slice(1).join("_")}
                     </a>
                 </p>
@@ -191,7 +197,7 @@ async function renderSubmissions() {
 
             proposalDiv.insertAdjacentHTML("beforeend", `
                 <p class="file-link">
-                    📄 <a href="${API_URL}student/file/finalReport/${s.finalReportUrl}" target="_blank">
+                    📄 <a href="${API_URL}/student/file/finalReport/${s.finalReportUrl}" target="_blank">
                         ${s.proposalUrl.split("_").slice(1).join("_")}
                     </a>
                 </p>
@@ -311,7 +317,7 @@ window.uploadSnapshots = async () => {
     
     const files = document.getElementById("snapshotFiles").files;
 
-    if (!files.length === 0) {
+    if (files.length === 0) {
         alert("Please select snapshots first");
         return;
     }
@@ -324,7 +330,7 @@ window.uploadSnapshots = async () => {
     const formData = new FormData();
 
     for (let file of files) {
-        formData.append("files", files[i]);
+        formData.append("files", file);
     }
 
     const res = await fetch(`${API_URL}/student/submit/snapshots`, {
@@ -353,14 +359,14 @@ function renderSnapshots(paths) {
     files.forEach(file => {
 
         const img = document.createElement("img");
-        img.src = `${API_URL}student/files/snapshots/${file}`;
+        img.src = `${API_URL}/student/files/snapshots/${file}`;
         img.className = "snapshot-preview";
 
         img.onclick = () => {
             window.open(`${API_URL}/files/snapshots/${file}`, "_blank");
         }
 
-        grid.appendChild("img")
+        grid.appendChild(img)
     });
 
 }
@@ -480,9 +486,9 @@ async function renderComments() {
             div.className="comment supervisor";
 
             div.innerHTML = `
-                <h4>${c.submission || "Submission"}</h4>
+                <h4>Submission #${c.submission?.id || ""}</h4>
                 <div class = "comment supervisor">
-                    <p>${c.comment}</p>
+                    <p>${c.message}</p>
                     <small>${new Date(c.createdAt).toLocaleString()}</small>
                 </div>
             `;
