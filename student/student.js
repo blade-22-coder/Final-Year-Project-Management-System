@@ -49,7 +49,7 @@ window.addEventListener("load", async () => {
     renderDeadlines();
 
     await loadProfile();
-    await renderNotifications();
+    // await renderNotifications();
     await renderSubmissions();
 
     const cached = localStorage.getItem("submissionCache");
@@ -552,24 +552,24 @@ async function renderDeadlines() {
     });
 }
 
-//NOTIFICATIONS
-async function renderNotifications() {
+// //NOTIFICATIONS
+// async function renderNotifications() {
 
-    const res = await fetch(`${API_URL}/student/notifications`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
+//     const res = await fetch(`${API_URL}/student/notifications`, {
+//         headers: { "Authorization": `Bearer ${token}` }
+//     });
 
-    const data = await res.json();
-    const list  = document.getElementById("notificationsList");
+//     const data = await res.json();
+//     const list  = document.getElementById("notificationsList");
 
-    list.innerHTML = "";
-    data.forEach(n => {
-        const li = document.createElement("li");
-        li.className = `notify ${n.type}`;
-        li.textContent = n.message;
-        list.appendChild(li);
-    });
-}
+//     list.innerHTML = "";
+//     data.forEach(n => {
+//         const li = document.createElement("li");
+//         li.className = `notify ${n.type}`;
+//         li.textContent = n.message;
+//         list.appendChild(li);
+//     });
+// }
 
 
 // LOGOUT

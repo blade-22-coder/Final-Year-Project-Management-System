@@ -16,14 +16,14 @@ async function initAdminDashboard() {
     }
 
     const sections = document.querySelectorAll(".section");
-    const navItems = document.querySelectorAll(".sidebar-nav li[data-target]");
+    const navItems = document.querySelectorAll(".sidebar-nav > ul > li[data-target]");
     const logoutBtn = document.getElementById("logoutBtn");
     const logoutModal = document.getElementById("logoutModal");
 
     let adminCalendar;
     let selectedDate = null;
 
-    let projectChart, roleChart, submissionChart;
+    let projectChart, roleChart;
 
     let students = [];
 
@@ -123,32 +123,32 @@ async function initAdminDashboard() {
             data: {
                 labels: ["Proposals", "Reports"],
                 datasets: [
-                {
+                    {
                     label: "Total",
                     data: [
                         data.totalProposals,
                         data.totalReports
                     ],
                     backgroundColor: "#00ffff"
-                },
-                {
+                    },
+                    {
                     label: "Approved",
                     data: [
                         data.approvedProposals,
                         data.approvedReports
                     ],
                     backgroundColor: "#00ff88"
-                },
-                {
+                    },
+                    {
                     label: "Rejected",
                     data: [
                         data.rejectedProposals,
                         data.rejectedReports
                     ],
                     backgroundColor: "#ff4444"
-                }
-            ]
-        }
+                    }
+                ]
+            }
         });
 
         roleChart = new Chart(document.getElementById("roleChart"), {
@@ -166,9 +166,7 @@ async function initAdminDashboard() {
             }
         });
 
-        }
-
-
+    }
 
     // LOAD STUDENTS
     async function loadStudents() {

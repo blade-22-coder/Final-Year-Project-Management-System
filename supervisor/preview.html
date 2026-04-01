@@ -82,7 +82,7 @@
         }
 
         async function reject() {
-            const endpoint = type === "proposal" 
+            const endpoint = getEndpoint("reject")
                 ? "proposal/reject" 
                 : "finalReport/reject";
 

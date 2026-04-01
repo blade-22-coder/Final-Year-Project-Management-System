@@ -402,19 +402,22 @@ async function loadSnapshots(studentId) {
         wrapper.innerHTML = `
 
             <img src = "${API_URL}/supervisor/snapshots/file/${file}" class="snapshot">
-
-            <div class="approval-actions">
-                <button onclick="approveSnapshot('${snap.id || file}')">
-                    ✅ Approve
-                </button>
-                <button onclick="rejectSnapshot('${snap.id || file}')">
-                    ❌ Reject
-                </button>
-            </div>
         `;
         
         const img = wrapper.querySelector("img");
-        img.onclick = () => window.open(img.src, "_blank");
+        img.onclick = async () => {
+            const res = await fetch(img.src, {
+                headers: { 
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            window.open(
+                `preview.html?file=${encodeURIComponent(url)}&studentId=${selectedStudent.id}&type=snapshot`,
+                "_blank"
+            );
+        };
         
         grid.appendChild(wrapper);
 
