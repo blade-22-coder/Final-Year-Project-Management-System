@@ -540,10 +540,8 @@ document.getElementById("submitGrade").onclick = async () => {
     const res = await fetch(`${API_URL}/supervisor/grades/${selectedStudent.id}/submit`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        }
     });
 
     if (res.ok) alert("Grades saved");
@@ -601,7 +599,7 @@ async function preview(type) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
 
-        window.open(url,"_blank");
+        window.open(`preview.html?file=${encodeURIComponent(url)}&studentId=${selectedStudent.id}&type=${type}`,"_blank");
     } catch (err) {
         console.error(err);
         alert("Unable to preview file");

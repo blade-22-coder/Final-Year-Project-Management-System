@@ -392,11 +392,11 @@ button {
     margin: 30px;
 }
 .chart-box {
-    height: 500px;
+    height: 800px;
     background: rgba(255, 255, 255, 0.12);
     background-color: blur(12px);
     border-radius: 16px;
-    padding: 15px;
+    padding: 25px;
 }
 canvas {
     width: 100% !important;

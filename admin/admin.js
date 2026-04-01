@@ -115,27 +115,40 @@ async function initAdminDashboard() {
     }
 
     // INIT CHARTS
+    if(projectChart) projectChart.destroy();
+    if(roleChart) roleChart.destroy();
     function initCharts(data) {
-
         projectChart = new Chart(document.getElementById("projectChart"), {
             type: "bar",
             data: {
-                labels: ["Proposals", "Approved", "Rejected", "Reports"],
-                datasets: [{
+                labels: ["Proposals", "Reports"],
+                datasets: [
+                {
+                    label: "Total",
                     data: [
                         data.totalProposals,
-                        data.approvedCount,
-                        data.rejectedCount,
                         data.totalReports
                     ],
-                    backgroundColor: [
-                        "#00ffff",
-                        "#00ff88",
-                        "#ff4444",
-                        "#ffaa00"
-                    ]
-                }]
-            }
+                    backgroundColor: "#00ffff"
+                },
+                {
+                    label: "Approved",
+                    data: [
+                        data.approvedProposals,
+                        data.approvedReports
+                    ],
+                    backgroundColor: "#00ff88"
+                },
+                {
+                    label: "Rejected",
+                    data: [
+                        data.rejectedProposals,
+                        data.rejectedReports
+                    ],
+                    backgroundColor: "#ff4444"
+                }
+            ]
+        }
         });
 
         roleChart = new Chart(document.getElementById("roleChart"), {
@@ -153,18 +166,9 @@ async function initAdminDashboard() {
             }
         });
 
-        submissionChart = new Chart(document.getElementById("submissionChart"), {
-            type: "line",
-            data: {
-                labels: data.monthlyActivity.map(m => m.month),
-                datasets: [{
-                    data: data.monthlyActivity.map(m => m.count),
-                    borderColor: "#00ffff",
-                    tension: 0.4
-                }]
-            }
-        });
-    }
+        }
+
+
 
     // LOAD STUDENTS
     async function loadStudents() {
@@ -186,8 +190,26 @@ async function initAdminDashboard() {
                     <td>${s.registrationNumber}</td>
                     <td>${s.user?.email}</td>
                     <td>${s.projectTitle || "-"}</td>
-                    <td>${s.user?.status || "-"}</td>
+                    <td>
+                        <button class="delete-btn">❌</button>
+                    </td>
                 `;
+                //delete student
+                row.querySelector(".delete-btn").addEventListener("click", async () => {
+                    if (!confirm("Delete this student?")) return;
+
+                    const res = await fetch(`${API_URL}/admin/students/${s.id}`, {
+                        method: "DELETE",
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (!res.ok) {
+                        alert("Failed to delete student");
+                        return;
+                    }
+                    await loadStudents();
+                });
+
                 tbody.appendChild(row);
             });
 
@@ -317,7 +339,7 @@ async function initAdminDashboard() {
 
         });
 
-        if (assigned.length >= sup.capacity) {
+        if (assigned.length >= sup.maxStudent) {
             const full = document.createElement("p");
             full.textContent = "Supervisor capacity reached";
             full.style.opacity = "0.6";
@@ -478,9 +500,9 @@ async function initAdminDashboard() {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${idx + 1}</td>
-                    <td>${p.student?.fullName}</td>
-                    <td>${p.student?.registrationNumber}</td>
-                    <td>${p.student?.projectTitle}</td>
+                    <td>${p.fullName}</td>
+                    <td>${p.registrationNumber}</td>
+                    <td>${p.projectTitle || "-"}</td>
                     <td>${p.total ?? "-"}</td>
                 `;
                 tbody.appendChild(row);
