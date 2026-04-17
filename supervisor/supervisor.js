@@ -155,6 +155,7 @@ async function loadStudents() {
 
 // ====== Student Selection Modal ======
 let pendingStudent = null;
+let currentSubmissionId = null; 
 confirmBtn.onclick = () => {
     selectedStudent = pendingStudent;
 
@@ -642,10 +643,22 @@ async function preview(type) {
 }
 
 //========Comments========
-async function submitComment(submissionId) {
+async function submitComment(type) {
 
-    const textarea = document.getElementById(`comment-${submissionId}`)
+    if (!selectedStudent) {
+        alert("Select a student first");
+        return;
+    }
 
+    const textareaMap = {
+        TITLE: document.getElementById("titleComment"),
+        PROPOSAL: document.querySelector("#documentView .doc-card:nth-child(2) textarea"),
+        REPORT: document.querySelector("#documentView .doc-card:nth-child(3) textarea"),
+        GITHUB: document.querySelector("#repoView .repo-box textarea"),
+        SNAPSHOT: document.querySelector("#repoView .snapshot-grid textarea")
+    }
+
+    const textarea = textareaMap[type];
     const message = textarea.value;
 
     if (!message) {
@@ -653,7 +666,7 @@ async function submitComment(submissionId) {
         return;
     }
 
-    const res = await fetch(`${API_URL}/supervisor/comments/${submissionId}`, {
+    const res = await fetch(`${API_URL}/supervisor/comments/${currentSubmissionId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -666,8 +679,9 @@ async function submitComment(submissionId) {
     });
 
     if (res.ok) {
-        alert("Comment submitted");
+        alert("Comment submitted 💬");
         textarea.value = "";
+        loadComments(type);
     } else {
         alert("Failed to submit comment");
     }
