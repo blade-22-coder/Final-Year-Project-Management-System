@@ -15,7 +15,12 @@
         <!--student form-->
         <form id="studentForm" class="role-form">
             <input id="registrationNumber" type="text" placeholder="Registration Number" required>
-            <input id="course" type="text" placeholder="Course / Program" required>
+            <select id="course" required>
+                <option value="" disabled selected>Select Course / Program</option>
+                <option value="Computer Science">Bachelor of Computer Science</option>
+                <option value="Information Technology">Bachelor of Information Technology</option>
+                <option value="Education in IT">Bachelor of Science in Education</option>
+            </select>
             <input id="projectTitle" type="text" placeholder="Project Title (Optional)">
             <button type="submit">Continue➡️</button> 
         </form>
@@ -23,7 +28,10 @@
         <!--supervisor form-->
         <form id="supervisorForm" class="role-form">
             <input id="staffId" type="text" placeholder="Staff ID" required>
-            <input id="department" type="text" placeholder="Department" required>
+            <select id="department" required>
+                <option value="" disabled selected>Select Department</option>
+                <option value="computer studies">Computer Studies</option>
+            </select> 
             <input id="maxStudents" type="number" placeholder="Max Students" required>
             <button type="submit">Continue➡️</button>
         </form>

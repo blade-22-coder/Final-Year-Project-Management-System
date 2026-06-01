@@ -173,11 +173,6 @@
 
                 </div>
             </section>
-
-
-
-
-
             <!--SUBSECTIONS-->
             <!--supervisors-->
             <section id="supervisors" class="section">
@@ -188,6 +183,39 @@
         </main>
     </div>
 
+    </div>
+
+    <!--Viewing modal-->
+    <div class="view-modal" id="viewModal">
+        <div class="view-content">
+            <span class="close-view">&times;</span>
+                <h2>Student Details</h2>
+            <p><strong>Name:</strong> <span id="viewFullName"></span></p>
+            <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+            <p><strong>Registration Number:</strong> <span id="viewRegistrationNumber"></span></p>
+            <p><strong>Project Title:</strong> <span id="viewProjectTitle"></span></p>
+        </div>
+    </div>
+
+    <!--Editing Modal-->
+    <div class="edit-modal" id="editModal">
+        <div class="edit-content">
+            <span class="close-edit">&times;</span>
+                <h2>Edit Student Details</h2>
+            <label for="editFullName"><strong>Name:</strong></label>
+            <input type="text" id="editFullName">
+
+            <label for="editEmail"><strong>Email:</strong></label>
+            <input type="email" id="editEmail">
+
+            <label for="editRegistrationNumber"><strong>Registration Number:</strong></label>
+            <input type="text" id="editRegistrationNumber">
+
+            <label for="editProjectTitle"><strong>Project Title:</strong></label>
+            <input type="text" id="editProjectTitle">
+            
+            <button id="saveEdit">Save Changes</button>
+        </div>
     </div>
 
     <!--deadline saving-->

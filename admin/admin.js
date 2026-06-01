@@ -188,10 +188,23 @@ async function initAdminDashboard() {
                     <td>${s.registrationNumber}</td>
                     <td>${s.user?.email}</td>
                     <td>${s.projectTitle || "-"}</td>
-                    <td>
+                    <td class= "actions-buttons">
+                        <button class="view-btn">👁️</button>
+                        <button class="edit-btn">✏️</button>
                         <button class="delete-btn">❌</button>
                     </td>
                 `;
+                //view student details
+                row.querySelector(".view-btn").addEventListener("click", () => {
+                    document.getElementById("viewName").textContent = s.user?.fullName || "-";
+                    document.getElementById("viewReg").textContent = s.registrationNumber || "-";
+                    document.getElementById("viewEmail").textContent = s.user?.email || "-";
+                    document.getElementById("viewProject").textContent = s.projectTitle || "-";
+                    document.getElementById("viewSupervisor").textContent = s.supervisor?.user?.fullName || "-";
+
+                    document.getElementById("viewModal").style.display = "block";
+                });
+
                 //delete student
                 row.querySelector(".delete-btn").addEventListener("click", async () => {
                     if (!confirm("Delete this student?")) return;

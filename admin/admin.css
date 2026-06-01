@@ -542,6 +542,18 @@ canvas {
 .setting-card.danger {
     border: 1px solid rgba(255, 0, 0, 0.4);
 }
+.actions-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.actions-buttons button {
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 @media (max-width: 900px) {
     .sidebar {
         width: 200px;
