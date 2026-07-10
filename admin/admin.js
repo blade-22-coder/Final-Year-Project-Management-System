@@ -26,7 +26,10 @@ async function initAdminDashboard() {
     let projectChart, roleChart;
 
     let students = [];
+<<<<<<< HEAD
     let selectedStudentId = null;
+=======
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 
     // SIDEBAR NAVIGATION
     navItems.forEach(item => {
@@ -189,15 +192,23 @@ async function initAdminDashboard() {
                     <td>${s.registrationNumber}</td>
                     <td>${s.user?.email}</td>
                     <td>${s.projectTitle || "-"}</td>
+<<<<<<< HEAD
                     <td>
                         <div class= "actions-buttons">
                             <button class="view-btn">👁️</button>
                             <button class="edit-btn">✏️</button>
                             <button class="delete-btn">❌</button></div>
+=======
+                    <td class= "actions-buttons">
+                        <button class="view-btn">👁️</button>
+                        <button class="edit-btn">✏️</button>
+                        <button class="delete-btn">❌</button>
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
                     </td>
                 `;
                 //view student details
                 row.querySelector(".view-btn").addEventListener("click", () => {
+<<<<<<< HEAD
                     document.getElementById("viewFullName").textContent = s.user?.fullName || "-";
                     document.getElementById("viewRegistrationNumber").textContent = s.registrationNumber || "-";
                     document.getElementById("viewEmail").textContent = s.user?.email || "-";
@@ -237,6 +248,31 @@ async function initAdminDashboard() {
                     //     return;
                     // }
                     // await loadStudents();
+=======
+                    document.getElementById("viewName").textContent = s.user?.fullName || "-";
+                    document.getElementById("viewReg").textContent = s.registrationNumber || "-";
+                    document.getElementById("viewEmail").textContent = s.user?.email || "-";
+                    document.getElementById("viewProject").textContent = s.projectTitle || "-";
+                    document.getElementById("viewSupervisor").textContent = s.supervisor?.user?.fullName || "-";
+
+                    document.getElementById("viewModal").style.display = "block";
+                });
+
+                //delete student
+                row.querySelector(".delete-btn").addEventListener("click", async () => {
+                    if (!confirm("Delete this student?")) return;
+
+                    const res = await fetch(`${API_URL}/admin/students/${s.id}`, {
+                        method: "DELETE",
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (!res.ok) {
+                        alert("Failed to delete student");
+                        return;
+                    }
+                    await loadStudents();
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
                 });
 
                 tbody.appendChild(row);
@@ -246,6 +282,7 @@ async function initAdminDashboard() {
             console.error("Student load failed:", err);
         }
     }
+<<<<<<< HEAD
     //save changes
     document.getElementById("saveEdit").addEventListener("click", async () => {
         const body = {
@@ -311,6 +348,8 @@ async function initAdminDashboard() {
             }
         });
     });
+=======
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 
     // LOAD SUPERVISORS
     async function loadSupervisors() {

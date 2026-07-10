@@ -67,6 +67,7 @@
         document.getElementById("viewer").src = fileUrl;
 
         async function approve() {
+<<<<<<< HEAD
             let endpoint = "";
 
             switch(type) {
@@ -88,11 +89,19 @@
             }
 
             const res = await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
+=======
+            const endpoint = type === "proposal" 
+                ? "proposal/approve" 
+                : "finalReport/approve";
+
+            await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             });
+<<<<<<< HEAD
             if(res.ok) {
                 alert(`${type} Approved ✅`);
             } else {
@@ -135,6 +144,26 @@
             }  
         }         
     
+=======
+
+            alert(`${type === "proposal" ? "Proposal" : "Final Report"} Approved ✅`);
+        }
+
+        async function reject() {
+            const endpoint = type === "proposal" 
+                ? "proposal/reject" 
+                : "finalReport/reject";
+
+            await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            alert(`${type === "proposal" ? "Proposal" : "Final Report"} Rejected ❌`);
+        }
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
     </script>
     
 </body>

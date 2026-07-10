@@ -26,12 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //show correct form
     if (role === "STUDENT") {
+<<<<<<< HEAD
         title.textContent = "👨‍🎓 Student Onboarding";
+=======
+        title.textContent = "🎓 Student Onboarding";
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         studentForm.style.display = "flex";
     }
 
     if (role === "SUPERVISOR") {
+<<<<<<< HEAD
         title.textContent = "👨‍🏫 Supervisor Onboarding";
+=======
+        title.textContent = "🧑🏻‍🏫 Supervisor Onboarding";
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         supervisorForm.style.display = "flex"
     }
 
@@ -44,8 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = {
             registrationNumber: document.getElementById("registrationNumber").value.toUpperCase(),
             course: document.getElementById("course").value.toUpperCase(),
+<<<<<<< HEAD
             projectTitle: document.getElementById("projectTitle").value.toUpperCase(),
             telephoneNumber: Number(document.getElementById("telephone").value)
+=======
+            projectTitle: document.getElementById("projectTitle").value.toUpperCase()
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         };
 
         const res = await fetch(`${API_URL}/onboarding/student`, {
@@ -81,8 +93,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = {
             staffId: document.getElementById("staffId").value.toUpperCase(),
             department: document.getElementById("department").value.toUpperCase(),
+<<<<<<< HEAD
             maxStudents: Number(document.getElementById("maxStudents").value) || null,
             telephoneNumber: Number(document.getElementById("telephoneNumber").value) 
+=======
+            maxStudents: Number(document.getElementById("maxStudents").value) || null
+>>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         };
 
         const res = await fetch(`${API_URL}/onboarding/supervisor`, {
