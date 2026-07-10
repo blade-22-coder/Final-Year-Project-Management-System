@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding</title>
+    <link rel="stylesheet" href="onboarding.css">
+     <link rel="icon" type="image/png" href="../images/FAVICON FYPMS.drawio.png">
+</head>
+</head>
+<body>
+    <div class="onboarding">
+        <h1 id="welcomeTitle">Welcome 👋</h1>
+
+        <!--student form-->
+        <form id="studentForm" class="role-form">
+            <input id="registrationNumber" type="text" placeholder="Registration Number" required>
+            <select id="course" required>
+                <option value="" disabled selected>Select Course / Program</option>
+                <option value="Computer Science">Bachelor of Computer Science</option>
+                <option value="Information Technology">Bachelor of Information Technology</option>
+
+                <optgroup label="Education in IT">
+                    <option value="physics">Bachelor of Science in Education (Physics & ICT)</option>
+                    <option value="mathematics">Bachelor of Science in Education (Mathematics & ICT)</option>
+                    <option value="geography">Bachelor of Science in Education (Geography & ICT)</option>
+                    <option value="economics">Bachelor of Science in Education (Economics & ICT)</option>
+                    <option value="entrepreneurship">Bachelor of Science in Education (Entrepreneurship & ICT)</option>
+                </optgroup>
+            </select>
+
+            <input id="tel" type="tel" placeholder="Telephone Number" required>
+            <input id="projectTitle" type="text" placeholder="Project Title (Optional)">
+            <button type="submit">Continue➡️</button> 
+        </form>
+
+        <!--supervisor form-->
+        <form id="supervisorForm" class="role-form">
+            <input id="staffId" type="text" placeholder="Staff ID" required>
+            <select id="department" required>
+                <option value="" disabled selected>Select Department</option>
+                <option value="computer studies">Computer Studies</option>
+            </select> 
+            <input id="telephone" type="tel" placeholder="Telephone Number" required>
+            <input id="maxStudents" type="number" placeholder="Max Students" required>
+            <button type="submit">Continue➡️</button>
+        </form>
+    </div>
+    <div id="errorState" class="error-state hidden">
+        <h2>😮 Oops!...something went wrong</h2>
+        <p>
+            We couldn't figure out your role.
+            <br>
+            Don't stress - shall help you.
+        </p>
+        <button onclick="goBack()">Back to Sign Up</button>
+    </div>
+<script src="onboarding.js"></script>
+</body>
+</html>

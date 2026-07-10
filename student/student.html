@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="student.css">
+    <link rel="icon" type="image/png" href="../images/FAVICON FYPMS.drawio.png">
+</head>
+<body> 
+    <div class="top-bar">
+        <div class="search-box">
+            <input type="search" id="searchinput" placeholder="Search...">
+            <span class="icon">🔍</span>
+        </div>
+        <div class="theme-toggle" id="themeToggle">🌙</div>
+    </div>
+    <div class="app">
+        <!--sidebar-->
+        <aside class="sidebar-glass">
+            <div class="side-header">
+                <h2>STUDENT PORTAL</h2>
+            </div>
+            <div class="profile-box">
+                <div class="avatar">
+                    <img id="profileImage" alt="Profile">
+                </div>
+                <div class="student-info">
+                    <h3 id="sidebarName"></h3>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li data-target="profile">
+                            <span class="icon">👤</span>
+                            <span class="label">Profile</span>
+                    </li>
+                    <li data-target="submissions">
+                        <span class="icon">✉️</span>
+                        <span class="label">Submissions</span></li>
+                    <li data-target="status">
+                        <span class="icon">🚦</span> 
+                        <span class="label">Status</span></li>
+                    <li data-target="comments">
+                        <span class="icon">📫</span> 
+                        <span class="label">Comments</span></li>
+                    <li data-target="deadlines">
+                        <span class="icon">⏰</span>
+                        <span class="label">Deadlines</span></li>
+                    <li data-target="notifications">
+                        <span class="icon">🔔</span>
+                        <span class="label">Notifications</span></li>
+                    <li class="logout" onclick="openLogout()">
+                        <span class="icon">🚪</span>
+                        <span class="label">Logout</span></li>
+                </ul>             
+            </nav> 
+        </aside>
+    
+
+        <!--main content-->
+
+    
+        <main class="content">
+
+            <div class="dashboard">
+
+                <!--student portal-->
+                <section id="profile" class="glass card active">
+                    <h2>My Profile</h2>
+                    <div class="profile-layout">
+                        <div class="profile-display">
+                            <img id="profilePreview">
+
+                            <input type="file" id="profileUpload"><br>
+
+                            <h4 id="studentName"></h4>
+                            <p id="regNo"></p>
+                            <p id="email"></p>
+                        </div>
+
+                        <!--wave divider-->
+                        <div class="wave-divider">
+                            <div class="heartwave"></div>
+                        </div>
+
+                        <!--assigned supervisor-->
+                        <div class="supervisor-panel">
+                            <h2>My Supervisor</h2>
+                            <img id="supervisorImage"  src="../images/1.jpg" alt="Supervisor">
+                            <h3 id="supervisorName">Not Assigned</h3>
+                            <button class="view-supervisor-btn" id="viewSupervisorBtn">👁 View Details</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!--submissions-->
+                <section id="submissions" class="glass card">
+                    <h3>Project Submissions</h3>
+
+                    <div class="submission-card">
+                        <h4>Project Title</h4>
+                        <p class="hint">A precise & brief title</p>
+                        <input type="text">
+                        <button onclick="submitTitle()">Submit Title</button>
+
+                    </div>
+                    
+                    <div class="submission-card">
+                        <h4>Proposal</h4>
+                        <p class="hint">Upload PDF (max 5MB)</p>
+                        <input id="proposalFile" type="file" accept=".pdf, .docx">
+                        <button onclick="uploadProposal()">Upload Proposal</button>
+    
+                    </div>
+                    
+                    <div class="submission-card">
+                        <h4>Final Report</h4>
+                        <p class="hint">Upload PDF (max 5MB)</p>
+                        <input id="finalReportFile" type="file" accept=".pdf, .docx">
+                        <button onclick="uploadFinalReport()">Upload Final Report</button>
+                        
+                    </div>
+
+                    <div class="submission-card">
+                        <h4>GitHub Repository</h4>
+                        <p class="hint">Enter the URL of your GitHub repository</p>
+                        <input id="githubLink" placeholder="Paste your GitHub repository link">
+                        <button onclick="submitGitHubLink()">Save Link</button>
+                    </div>
+
+                    <div class="submission-card">
+                        <h4>Snapshots</h4>
+                        <div id="snapshotPreview" class="snapshot-grid"></div>
+                        <p class="hint">Upload max. 6 snapshots</p>
+                        <input id="snapshotFiles" type="file" accept="image/*" multiple>
+                        <button onclick="uploadSnapshots()">Upload Snapshots</button>
+                        
+                    </div>
+                    
+                </section>
+ 
+                <!--status-->
+                <section id="status" class="glass card">
+                    <h3>Submission Status</h3>
+                    <div class="status-grid" id="statusGrid"></div>
+                    
+                    
+                    <div class="battery-widget">
+                        <div class="battery-container">
+                            <div class="battery-body">
+                                <div class="battery-fill" id="batteryFill"></div>
+                            </div>
+                            <div class="batteryFill"></div>
+                            <div class="battery-tip"></div>
+                            <p id="batteryPercent">0%</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!--comments-->
+                <section id="comments" class="glass card">
+                    <h3>Supervisor Feedback</h3>
+                    <div id="commentThreads"></div>
+                </section>
+
+                <!--deadlines-->
+                <section id="deadlines" class="glass card">
+                    <h3> Upcoming Deadlines</h3>
+                    <div id="deadlineList" class="deadline-list"></div>
+                </section>
+ 
+                <!--notifications-->
+                <section id="notifications" class="glass card">
+                    <h3>Notifications</h3>
+                    <ul id="notificationsList" class="notifications-list">
+                        <li class="notify deadline">📆 Project title submission deadline: 6th Mar</li>
+                        <li class="notify success">📫 Supervisor approved your proposal</li>
+                        <li class="notify success">💻 GitHub Link approved</li>
+                        <li class="notify info">🪧 University Robotics Expo next week</li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+    <!--logout confirmation-->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-box">
+            <h3>logout</h3>
+            <p>Are you sure you want to leave?</p>
+
+            <div class="logout-actions">
+                <button class="btn-no" onclick="closeLogout()">No</button>
+                <button class="btn-yes" onclick="confirmLogout()">Yes</button>
+            </div>
+        </div>
+    </div>
+    <!--supervisor details modal-->
+    <div class="supervisor-modal" id="supervisorModal">
+        <div class="supervisor-modal-content">
+            <span class="close-supervisor">&times;</span>
+            <img id="modalSupervisorImage">
+            <h2 id="modalSupervisorName"></h2>
+            <p>
+                <strong>Email:</strong> <span id="modalSupervisorEmail"></span>
+            </p>
+            <p>
+                <strong>Telephone:</strong> <span id="modalSupervisorTelephone"></span>
+            </p>
+            <p>
+                <strong>Department:</strong> <span id="modalSupervisorDepartment"></span>   
+            </p>
+        </div>
+    </div>
+    <script type="module" src="student.js"></script>
+    
+</body>
+</html>
