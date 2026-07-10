@@ -118,18 +118,11 @@ function initProfileUpload() {
 
             if (!res.ok) throw new Error("Failed to upload profile image");
             await loadProfile();
-<<<<<<< HEAD
             alert("Profile image updated successfully ✅")
 
         } catch (err) {
             console.error(err);
             alert("Failed to update profile image ❌");
-=======
-
-        } catch (err) {
-            console.error(err);
-            alert("Failed to update profile image");
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         }
     });
 }
@@ -148,7 +141,6 @@ async function loadProfile() {
         document.getElementById("regNo").textContent = data.registrationNumber;
         document.getElementById("email").textContent = data.user.email;
 
-<<<<<<< HEAD
         //supervisor details
         if (data.supervisor) {
             document.getElementById("supervisorName").textContent = data.supervisor.fullName;
@@ -159,8 +151,6 @@ async function loadProfile() {
             document.getElementById("supervisorName").textContent = "Not Assigned";
         }
 
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         const defaultAvatar = "../images/1.jpg";
         
         const imgUrl = data.profileImagePath
@@ -169,21 +159,14 @@ async function loadProfile() {
 
             profileImage.src = imgUrl;
             profilePreview.src = imgUrl;
-<<<<<<< HEAD
 
             setupSupervisorModal(data.supervisor);
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
         
     } catch (err) {
         console.error("Failed to load profile:", err);
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 // SUBMISSION FORM
 
 // submissions
@@ -582,29 +565,6 @@ async function renderDeadlines() {
     });
 }
 
-<<<<<<< HEAD
-=======
-// //NOTIFICATIONS
-// async function renderNotifications() {
-
-//     const res = await fetch(`${API_URL}/student/notifications`, {
-//         headers: { "Authorization": `Bearer ${token}` }
-//     });
-
-//     const data = await res.json();
-//     const list  = document.getElementById("notificationsList");
-
-//     list.innerHTML = "";
-//     data.forEach(n => {
-//         const li = document.createElement("li");
-//         li.className = `notify ${n.type}`;
-//         li.textContent = n.message;
-//         list.appendChild(li);
-//     });
-// }
-
-
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 // LOGOUT
 window.openLogout = () => document.getElementById("logoutModal")?.classList.add("active");
 window.closeLogout = () => document.getElementById("logoutModal")?.classList.remove("active");
@@ -616,7 +576,6 @@ window.confirmLogout = () => {
 document.getElementById("logoutModal").addEventListener("click", e => {
     if (e.target.id === "logoutModal") closeLogout();
 });
-<<<<<<< HEAD
 
 //SUPERVISOR VIEW MODAL
 function setupSupervisorModal(supervisor) {
@@ -649,5 +608,3 @@ function setupSupervisorModal(supervisor) {
         }
     };
 }
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4

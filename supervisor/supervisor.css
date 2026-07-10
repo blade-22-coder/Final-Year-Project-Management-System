@@ -197,10 +197,7 @@ body::before {
     text-align: center;
     color: #fff;
     animation: popIn 0.4s ease;
-<<<<<<< HEAD
     border-top: 5px solid #e74c3c;
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 }
 .logout-box h3 {
     margin-bottom: 8px;

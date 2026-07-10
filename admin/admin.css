@@ -184,11 +184,7 @@ body::before {
 .logout {
     background: rgba(255, 0, 0, 0.2);
 }
-<<<<<<< HEAD
 .logout-modal, .delete-modal, .view-modal, .edit-modal {
-=======
-.logout-modal {
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
@@ -197,7 +193,6 @@ body::before {
     align-items: center;
     justify-content: center;
     opacity: 0;
-<<<<<<< HEAD
     /* pointer-events: none; */
     visibility: hidden;
     transition: 0.3s ease;
@@ -209,17 +204,6 @@ body::before {
     visibility: visible;
 }
 .logout-box, .delete-content, .view-content, .edit-content {
-=======
-    pointer-events: none;
-    transition: 0.3s ease;
-    z-index: 10000;
-}
-.logout-modal.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-.logout-box {
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
     border-radius: 16px;
@@ -229,7 +213,6 @@ body::before {
     color: #fff;
     animation: popIn 0.4s ease;
 }
-<<<<<<< HEAD
 .view-content h2, .edit-content h2, .delete-content h2 {
     margin-bottom: 20px;
     text-align: center;
@@ -303,8 +286,6 @@ body::before {
 .delete-content, .logout-box {
     border-top: 5px solid #e74c3c;
 }
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 .logout-box input {
     width: 100%;
     padding: 10px;
@@ -336,13 +317,10 @@ body::before {
     background: #ff4d4d;
     color: white;
 }
-<<<<<<< HEAD
 .btn-yes:hover {
     background: #ff3d2e;
     transform: translateY(-2px);
 }
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 @keyframes  popIn{
     from {
         transform: scale(0.85);
@@ -645,24 +623,15 @@ canvas {
 }
 .actions-buttons {
     display: flex;
-<<<<<<< HEAD
     flex-direction: row;
     gap: 5px;
 }
 .actions-buttons button {
-=======
-    flex-direction: column;
-    gap: 5px;
-}
-.actions-buttons button {
-    color: #fff;
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
     border: none;
     padding: 10px;
     border-radius: 8px;
     cursor: pointer;
 }
-<<<<<<< HEAD
 .actions-buttons button:hover {
     transform: scale(1.08);
 }
@@ -678,19 +647,6 @@ canvas {
     background: #e74c3c;
     color: white;
 }
-/* .view-modal, .edit-modal, .delete-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(6px);
-    display: block;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: auto;
-    transition: 0.3s ease;
-    z-index: 10;
-} */
 
 .view-content, .edit-content, .delete-content {
     background: rgba(255, 255, 255, 0.15);
@@ -712,8 +668,6 @@ canvas {
     cursor: pointer;
 }
 
-=======
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
 @media (max-width: 900px) {
     .sidebar {
         width: 200px;

@@ -14,11 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     icon.addEventListener("click", () => {
       const input = icon.previousElementSibling;
       input.type = input.type === "password" ? "text" : "password";
-<<<<<<< HEAD
       icon.textContent = input.type === "password" ? "😎" : "😲";
-=======
-      icon.textContent = input.type === "password" ? "🫣" : "😲";
->>>>>>> 359f3908c1a06fa3790356db28fd626c89c5fdc4
    });
   });
 
