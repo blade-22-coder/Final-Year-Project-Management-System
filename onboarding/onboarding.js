@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = {
             registrationNumber: document.getElementById("registrationNumber").value.toUpperCase(),
             course: document.getElementById("course").value.toUpperCase(),
-            projectTitle: document.getElementById("projectTitle").value.toUpperCase()
+            projectTitle: document.getElementById("projectTitle").value.toUpperCase(),
+            telephoneNumber: Number(document.getElementById("telephone").value)
         };
 
         const res = await fetch(`${API_URL}/onboarding/student`, {
@@ -80,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = {
             staffId: document.getElementById("staffId").value.toUpperCase(),
             department: document.getElementById("department").value.toUpperCase(),
-            maxStudents: Number(document.getElementById("maxStudents").value) || null
+            maxStudents: Number(document.getElementById("maxStudents").value) || null,
+            telephoneNumber: Number(document.getElementById("telephoneNumber").value) 
         };
 
         const res = await fetch(`${API_URL}/onboarding/supervisor`, {

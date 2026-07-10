@@ -67,34 +67,74 @@
         document.getElementById("viewer").src = fileUrl;
 
         async function approve() {
-            const endpoint = type === "proposal" 
-                ? "proposal/approve" 
-                : "finalReport/approve";
+            let endpoint = "";
 
-            await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
+            switch(type) {
+                case "proposal":
+                endpoint = "proposal/approve";
+                break;
+
+                case "report":
+                    endpoint = "finalReport/approve";
+                    break;
+
+                case "snapshot":
+                    endpoint ="snapshots/approve";
+                    break;
+
+                default:
+                    alert("Unknown document type");
+                    return;
+            }
+
+            const res = await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             });
-
-            alert(`${type === "proposal" ? "Proposal" : "Final Report"} Approved ✅`);
+            if(res.ok) {
+                alert(`${type} Approved ✅`);
+            } else {
+                alert("Approval failed");
+            }
         }
-
+        
         async function reject() {
-            const endpoint = type === "proposal" 
-                ? "proposal/reject" 
-                : "finalReport/reject";
+            let endpoint = "";
 
-            await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+            switch(type) {
+                case "proposal":
+                    endpoint =  "proposal/reject";
+                    break;
+
+                case "report":
+                    endpoint = "finalReport/reject";
+                    break;
+
+                case "snapshot":
+                    endpoint = "snapshots/reject";
+                    break;
+
+                default:
+                    alert("Unknown document type");
+                    return;
+            }
+
+            const res = await fetch(`${API_URL}/supervisor/${studentId}/${endpoint}`, {
+                method:"PUT",
+                headers:{
+                    "Authorization":`Bearer ${localStorage.getItem("token")}`
                 }
             });
 
-            alert(`${type === "proposal" ? "Proposal" : "Final Report"} Rejected ❌`);
-        }
+            if(res.ok) {
+                alert(`${type} Rejected ❌`);
+            } else {
+                alert("Rejection failed");
+            }  
+        }         
+    
     </script>
     
 </body>

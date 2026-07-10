@@ -719,6 +719,7 @@ body::before {
     backdrop-filter: blur(20px);
     color: #fff;
     position: relative;
+    border-top: 5px solid cyan;
 }
 .supervisor-modal img{
     width: 150px;

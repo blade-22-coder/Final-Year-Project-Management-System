@@ -118,10 +118,11 @@ function initProfileUpload() {
 
             if (!res.ok) throw new Error("Failed to upload profile image");
             await loadProfile();
+            alert("Profile image updated successfully ✅")
 
         } catch (err) {
             console.error(err);
-            alert("Failed to update profile image");
+            alert("Failed to update profile image ❌");
         }
     });
 }
@@ -140,6 +141,16 @@ async function loadProfile() {
         document.getElementById("regNo").textContent = data.registrationNumber;
         document.getElementById("email").textContent = data.user.email;
 
+        //supervisor details
+        if (data.supervisor) {
+            document.getElementById("supervisorName").textContent = data.supervisor.fullName;
+            document.getElementById("supervisorImage").src = data.supervisor.profileImagePath
+            ? `${API_URL}/supervisor/profile-image/${data.supervisor.profileImagePath}`
+            : "../images/1.jpg";
+        } else {
+            document.getElementById("supervisorName").textContent = "Not Assigned";
+        }
+
         const defaultAvatar = "../images/1.jpg";
         
         const imgUrl = data.profileImagePath
@@ -148,21 +159,14 @@ async function loadProfile() {
 
             profileImage.src = imgUrl;
             profilePreview.src = imgUrl;
+
+            setupSupervisorModal(data.supervisor);
         
     } catch (err) {
         console.error("Failed to load profile:", err);
     }
 }
 
-// // CLOSE SUPERVISOR MODAL
-// document.querySelector(".close-supervisor").onclick = () => {
-//     document.getElementById("supervisorModal").classList.remove("active");
-// };
-// document.getElementById("supervisorModal").addEventListener("click", e => {
-//     if (e.target.id === "supervisorModal"){
-//         e.currentTarget.classList.remove("active"); 
-//     }
-// });
 
 // SUBMISSION FORM
 
@@ -573,3 +577,35 @@ window.confirmLogout = () => {
 document.getElementById("logoutModal").addEventListener("click", e => {
     if (e.target.id === "logoutModal") closeLogout();
 });
+
+//SUPERVISOR VIEW MODAL
+function setupSupervisorModal(supervisor) {
+    const modal = document.getElementById("supervisorModal");
+    const btn = document.getElementById("viewSupervisorBtn");
+    const close = document.querySelector(".close-supervisor");
+
+    if (!modal || !btn || !close) return;
+    btn.onclick = () => {
+        if (!supervisor) {
+            alert("No supervisor assigned yet.");
+            return;
+        }
+        document.getElementById("modalSupervisorName").textContent = supervisor.fullName;
+        document.getElementById("modalSupervisorEmail").textContent = supervisor.email;
+        document.getElementById("modalSupervisorTelephone").textContent = supervisor.telephoneNumber;
+        document.getElementById("modalSupervisorDepartment").textContent = supervisor.department;
+        document.getElementById("modalSupervisorImage").src = supervisor.profileImagePath
+        ? `${API_URL}/supervisor/profile-image/${supervisor.profileImagePath}`
+        : "../images/1.jpg";
+
+        modal.classList.add("active");
+    };
+    close.onclick = () => {
+        modal.classList.remove("active");
+    };
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.classList.remove("active");
+        }
+    };
+}

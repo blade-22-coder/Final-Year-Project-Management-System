@@ -101,10 +101,10 @@ uploadInput.addEventListener("change", async (e) => {
         if (!res.ok) throw new Error("Failed to upload image");
 
         await loadProfile();
-        alert("Profile image updated successfully");
+        alert("Profile image updated successfully ✅");
     } catch (err) {
         console.error(err);
-        alert("Failed to update profile image");
+        alert("Failed to update profile image ❌");
     }
 });
 
@@ -319,7 +319,7 @@ async function loadGitHub(studentId) {
         link.href = github.githubLink;
         link.textContent = github.githubLink;
     } else {
-        link.textContent = "No repository submitted"
+        link.textContent = "No repository submitted."
         link.removeAttribute("href")
     }
 }
