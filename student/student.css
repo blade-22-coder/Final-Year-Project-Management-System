@@ -637,7 +637,7 @@ body::before {
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 20px 0;
+    margin: 10px;
     border : 5px solid cyan;
 }
 .view-supervisor-btn {

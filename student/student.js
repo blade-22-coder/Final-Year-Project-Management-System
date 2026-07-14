@@ -97,6 +97,47 @@ function initSidebar() {
     nav.querySelector("li[data-target]")?.click();
 }
 
+// LOAD PROFILE
+async function loadProfile() {
+    try {
+        const res = await fetch(`${API_URL}/student/me`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("Unauthorized");
+
+        const data = await res.json();
+        //sidebar  & profile
+        document.getElementById("sidebarName").textContent = data.user.fullName;
+        document.getElementById("studentName").textContent = data.user.fullName;
+        document.getElementById("regNo").textContent = data.registrationNumber;
+        document.getElementById("email").textContent = data.user.email;
+
+        //supervisor details
+        if (data.supervisor) {
+            document.getElementById("supervisorName").textContent = data.supervisor.fullName;
+            document.getElementById("supervisorImage").src = data.supervisor.profileImagePath
+            ? `${API_URL}/supervisor/profile-image/${data.supervisor.profileImagePath}`
+            : "../images/1.jpg";
+        } else {
+            document.getElementById("supervisorName").textContent = "Not Assigned";
+        }
+
+        const defaultAvatar = "../images/1.JPG";
+        
+        const imgUrl = data.profileImagePath
+            ? `${API_URL}/student/profile-image/${data.profileImagePath}?t=${Date.now()}`
+            : defaultAvatar;
+
+            profileImage.src = imgUrl;
+            profilePreview.src = imgUrl;
+
+            setupSupervisorModal(data.supervisor);
+        
+    } catch (err) {
+        console.error("Failed to load profile:", err);
+    }
+}
+
 // PROFILE IMAGE UPLOAD
 function initProfileUpload() {
     const uploadInput = document.getElementById("profileUpload");
@@ -125,46 +166,6 @@ function initProfileUpload() {
             alert("Failed to update profile image ❌");
         }
     });
-}
-
-// LOAD PROFILE
-async function loadProfile() {
-    try {
-        const res = await fetch(`${API_URL}/student/me`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error("Unauthorized");
-
-        const data = await res.json();
-        document.getElementById("sidebarName").textContent = data.user.fullName;
-        document.getElementById("studentName").textContent = data.user.fullName;
-        document.getElementById("regNo").textContent = data.registrationNumber;
-        document.getElementById("email").textContent = data.user.email;
-
-        //supervisor details
-        if (data.supervisor) {
-            document.getElementById("supervisorName").textContent = data.supervisor.fullName;
-            document.getElementById("supervisorImage").src = data.supervisor.profileImagePath
-            ? `${API_URL}/supervisor/profile-image/${data.supervisor.profileImagePath}`
-            : "../images/1.jpg";
-        } else {
-            document.getElementById("supervisorName").textContent = "Not Assigned";
-        }
-
-        const defaultAvatar = "../images/1.jpg";
-        
-        const imgUrl = data.profileImagePath
-            ? `${API_URL}/student/profile-image/${data.profileImagePath}?t=${Date.now()}`
-            : defaultAvatar;
-
-            profileImage.src = imgUrl;
-            profilePreview.src = imgUrl;
-
-            setupSupervisorModal(data.supervisor);
-        
-    } catch (err) {
-        console.error("Failed to load profile:", err);
-    }
 }
 
 // SUBMISSION FORM
