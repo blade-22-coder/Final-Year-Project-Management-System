@@ -477,27 +477,97 @@ async function loadAnalytics(studentId) {
         if (progressChart) progressChart.destroy();
         if (reportChart) reportChart.destroy();
 
+        const allProgressValues = [
+            ...data.proposal,
+            ...data.gitHub,
+            ...data.snapshots,
+            ...data.report
+        ];
+
+        const maxProgress = Math.max(...allProgressValues);
+        const minProgress = Math.min(...allProgressValues);
+
+        const yMin = Math.max(0, minProgress);
+        const yMax = Math.min(100, maxProgress);
+
         progressChart = new Chart(progressCtx, {
             type: "line",
             data: {
-                labels: ["Proposal", "GitHub", "Snapshots", "Report"],
-                datasets: [{
-                    label: "Project Progress (%)",
-                    data: data.progress,
+                labels: data.labels,
+                datasets: [
+                    {
+                    label: "Proposal",
+                    data: data.proposal,
                     fill: true,
-                    tension: 0.4
-                }]
+                    tension: 0.35,
+                },
+                {
+                    label: "GitHub",
+                    data: data.gitHub,
+                    fill: true,
+                    tension: 0.35,
+                },
+                {
+                    label: "Snapshots",
+                    data: data.snapshots,
+                    fill: true,
+                    tension: 0.35,
+                },
+                {
+                    label: " Final Report",
+                    data: data.report,
+                    fill: true,
+                    tension: 0.35,
+                }
+            ]
+            }, 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, 
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: yMin,
+                        max: yMax,
+
+                        ticks: {
+                            stepSize: 10
+                        },
+                        grace: "5%"
+                    }
+                }
             }
         });
 
         reportChart = new Chart(repoCtx, {
             type: "bar",
             data: {
-                labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7", "Week 8", "Week 9", "Week 10", "Week 11", "Week 12"],
                 datasets: [{
                     label: "Repository Activity (Commits)",
                     data: data.repoCommits
                 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                sclaes: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10,
+                        ticks: {
+                            stepSize: 5
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
+                    }
+                }
             }
         });
 
